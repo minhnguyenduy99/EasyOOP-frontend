@@ -1,0 +1,78 @@
+
+
+
+.default-markdown-body {
+  --blockquote-border-color: #00A8E8;
+  --blockquote-color: rgba(0, 0, 0, 0.6);
+  --link-color: #00A8E8;
+  --heading-color: rgba(#000, 0.75);
+  --text-color: #00171F;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+/* [a] */
+.default-markdown-body a {
+  color: var(--link-color);
+}
+
+/* [p] */
+.default-markdown-body p {
+  font-size: 1.25em;
+  text-align: justify;
+}
+
+/* [img] */
+.default-markdown-body img {
+  margin: 1em 0;
+}
+
+/* [heading] */
+.default-markdown-body h1 {
+  font-size: 2em;
+  margin: 0.75em 0;
+}
+
+.default-markdown-body h2 {
+  font-size: 1.5em;
+  margin: 0.75em 0;
+}
+
+/* [blockquote] */
+
+.default-markdown-body blockquote {
+  margin: 1.5em 0;
+  padding: 0 1.5em;
+  color: var(--blockquote-color);
+  border-left: 0.25em solid var(--blockquote-border-color);
+  position: relative;
+  width: fit-content;
+}
+
+.default-markdown-body blockquote::before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 0.5em;
+  font-size: 2em;
+  content: "\201F";
+  color: inherit;
+}
+
+.default-markdown-body blockquote::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-left: 0.5em;
+  font-size: 2em;
+  content: "\201D";
+  color: inherit;
+}
+
+.default-markdown-body blockquote p {
+  color: inherit;
+  margin-left: 0.5em;
+  width: fit-content;
+}
+
+

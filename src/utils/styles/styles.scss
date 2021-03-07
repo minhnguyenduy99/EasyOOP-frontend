@@ -1,0 +1,133 @@
+$button-border-radius: 7px;
+
+// [Button]
+
+.button {
+  border-radius: 7px;
+  transition: $easing;
+
+  &.is-small {
+    border-radius: 7px;
+  }
+
+  &.button-tag {
+    &.is-small {
+      font-size: $size-6;
+      border-radius: 10px;
+    }
+  }
+}
+
+// [Field]
+.field.is-horizontal {
+  .field-label {
+    white-space: nowrap;
+  }
+}
+
+.control.outlined {
+  input.input {
+    transition: $easing;
+    &:focus {
+      background: $primary;
+      color: $text-invert;
+
+      &::placeholder {
+        color: rgba($text-invert, $alpha: 0.7);
+      }
+
+      ~ .icon {
+        color: $text-invert;
+      }
+    }
+  }
+}
+
+// [Menu]
+.menu {
+  ul.menu-list {
+    li {
+      transition: $easing;
+    }
+  }
+}
+
+// [hr]
+.is-hr {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: 0;
+}
+
+// [table]
+
+.table {
+  tr.is-selected {
+    td {
+      border-color: transparent;
+      color: currentColor;
+    }
+  }
+}
+
+// [a]
+a.link-animation {
+  span {
+    padding: 5px;
+    position: relative;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 100%;
+      top: 0;
+      left: 0;
+      height: 100%;
+      transform: scaleY(0);
+      z-index: -1;
+      transform-origin: top;
+    }
+  }
+  &:hover {
+    span {
+      color: $text-invert;
+
+      &::before {
+        background: $primary;
+        animation: linkBackgroundSlideIn;
+        animation-duration: 0.3s;
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+}
+
+@keyframes linkBackgroundSlideIn {
+  from { transform: scaleY(0) }
+  to { transform: scaleY(1) }
+}
+
+// [custom]
+.ha-overlay {
+  position: relative;
+  &-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(10, 10, 10, 0.5);
+    transition: $easing;
+    z-index: 2;
+  }
+
+  &-image.b-image {
+    z-index: 1;
+  }
+
+  &.--light {
+    .ha-overlay-background {
+      background: transparent;
+    }
+  }
+}

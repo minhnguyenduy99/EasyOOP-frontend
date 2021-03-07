@@ -1,0 +1,51 @@
+.is-page-responsive {
+  padding-left: $page-padding-horizontal-small;
+  padding-right: $page-padding-horizontal-small;
+  
+  @include tablet {
+    padding-left: $page-padding-horizontal-medium;
+    padding-right: $page-padding-horizontal-medium;
+  }
+  
+  @include desktop {
+    padding-left: $page-padding-horizontal;
+    padding-right: $page-padding-horizontal;
+  }
+};
+
+$gapList: 3rem 2.5rem 2rem 1.5rem 1.25rem 1rem 0.75rem 0.25rem;
+
+@mixin verticalLayout($mixin: "") {
+
+  @each $gap in $gapList {
+    $i: index($gapList, $gap);
+
+    .ha-vertical-layout-#{$i}#{if($mixin == '', '', '-' + $mixin)} {
+      > * {
+        margin-bottom: #{$gap};
+  
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@include verticalLayout();
+
+@include mobile {
+  @include verticalLayout("mobile");
+}
+
+@include tablet {
+  @include verticalLayout("tablet");
+}
+
+@include desktop {
+  @include verticalLayout("desktop");
+}
+
+@include fullhd {
+  @include verticalLayout("fullhd");
+}
