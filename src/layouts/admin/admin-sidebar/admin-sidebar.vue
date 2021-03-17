@@ -68,22 +68,16 @@ export default {
     open: true,
     navigations: [
       {
-        icon: "home",
-        pack: "fas",
-        title: "Home",
-        to: { name: "Home" }
-      },
-      {
         icon: "th-large",
         pack: "fas",
         title: "Dashboard",
         to: { name: "Dashboard" }
       },
       {
-        icon: "user-alt",
+        icon: "question-circle",
         pack: "fas",
-        title: "Account",
-        to: { name: "CreatePost" }
+        title: "Q&A",
+        to: { name: "Q&A" }
       }
     ]
   })

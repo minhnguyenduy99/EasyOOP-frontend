@@ -10,6 +10,12 @@ $easing: 0.15s ease-out;
 @import "~bulma/sass/utilities/_all.sass";
 @import "./custom-variables.scss";
 
+// color system
+$new-colors: (
+  "primary-light": ($primary-light, $white)
+);
+$colors: mergeColorMaps($new-colors, $colors);
+
 // navbar
 $navbar-padding-horizontal: $page-padding-horizontal;
 $navbar-box-shadow-size: 0 0.75rem 0 0;

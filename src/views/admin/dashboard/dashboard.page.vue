@@ -4,7 +4,12 @@
       <template #header>
         <admin-content-header :title="title" icon="clipboard" iconPack="fas">
           <template #action>
-            <b-button type="is-primary" outlined>
+            <b-button
+              type="is-primary"
+              outlined
+              tag="router-link"
+              :to="{ name: 'CreatePost' }"
+            >
               Tạo bài viết mới
             </b-button>
           </template>
@@ -23,35 +28,9 @@
 </template>
 
 <script>
+import { posts, topics } from "../data.mock";
 import { AdminContent, AdminContentHeader } from "../../../components";
 import AdminPostSearch from "./admin-post-search";
-
-const posts = [
-  {
-    post_id: "post_id",
-    post_title: "Học OOP như thế nào ?",
-    topic_title: "CƠ BẢN",
-    created_date: Date.now()
-  },
-  {
-    post_id: "post_id",
-    post_title: "Học OOP như thế nào ?",
-    topic_title: "CƠ BẢN",
-    created_date: Date.now()
-  },
-  {
-    post_id: "post_id",
-    post_title: "Học OOP như thế nào ?",
-    topic_title: "CƠ BẢN",
-    created_date: Date.now()
-  },
-  {
-    post_id: "post_id",
-    post_title: "Học OOP như thế nào ?",
-    topic_title: "CƠ BẢN",
-    created_date: Date.now()
-  }
-];
 
 export default {
   components: {
@@ -93,29 +72,23 @@ export default {
       });
     },
     async $mock_deletePost(postId) {
-      return {
-        error: null
-      };
+      return new Promise(resolve => {
+        setTimeout(
+          function() {
+            resolve({
+              error: null
+            });
+          }.bind(this),
+          3000
+        );
+      });
     },
     async $mock_findTopcis() {
       return new Promise(resolve => {
         setTimeout(
           function() {
             resolve({
-              data: [
-                {
-                  topic_id: "topicid1",
-                  topic_title: "Khái niệm"
-                },
-                {
-                  topic_id: "topicid2",
-                  topic_title: "Nguyên lí SOLID"
-                },
-                {
-                  topic_id: "topicid3",
-                  topic_title: "Phương pháp xây dựng class"
-                }
-              ]
+              data: topics
             });
           }.bind(this),
           300

@@ -24,15 +24,26 @@
         </template>
       </b-table-column>
 
-      <b-table-column label="Post title" width="300" v-slot="{ row }">
+      <b-table-column label="Tên bài viết" width="300" v-slot="{ row }">
         {{ row.post_title }}
       </b-table-column>
 
-      <b-table-column label="Topic" width="200">
+      <b-table-column label="Chủ đề" width="100" v-slot="{ row }">
+        {{ row.topic_title }}
+      </b-table-column>
+
+      <b-table-column label="Nhãn dán" width="200">
         <template v-slot="{ row }">
-          <b-tag type="is-primary-light" size="is-small">{{
-            row.topic_title
-          }}</b-tag>
+          <b-taglist>
+            <b-tag
+              class="is-tag"
+              v-for="tag in row.tags"
+              :key="tag.id"
+              type="is-primary-light"
+              size="is-small"
+              >{{ tag }}</b-tag
+            >
+          </b-taglist>
         </template>
       </b-table-column>
 
@@ -83,7 +94,7 @@
     </b-table>
     <b-modal v-model="showModal" scroll="keep">
       <div class="card is-page-responsive py-6">
-        <ha-post-view :post="selectedPost" />
+        <post-preview :post="selectedPost" />
       </div>
     </b-modal>
   </div>
@@ -94,6 +105,9 @@ import { ToastNotifier } from "../../../utils";
 
 export default {
   name: "DashboardPostTable",
+  components: {
+    "post-preview": async () => (await import("@/components")).PostPreview
+  },
   props: {
     filter: {
       type: Object,
@@ -231,18 +245,39 @@ export default {
       });
     },
     onDeleteButtonClicked() {
-      this.loading = true;
       const postId = this.selectedPost?.post_id;
       if (!postId) {
         return;
       }
-      this.deletePost(postId).then(result => {
-        const { error } = result;
-        if (error) {
-          ToastNotifier.error(this.$buefy.toast, "Xóa bài viết thất bại");
-          return;
+      this.$buefy.dialog.confirm({
+        title: "Xóa bài viết",
+        message: "Bạn chắc chắc muốn xóa bài viết ?",
+        confirmText: "Agree",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          setTimeout(
+            function() {
+              this.loading = true;
+              this.deletePost(postId).then(result => {
+                const { error } = result;
+                this.loading = false;
+                if (error) {
+                  ToastNotifier.error(
+                    this.$buefy.toast,
+                    "Xóa bài viết thất bại"
+                  );
+                  return;
+                }
+                ToastNotifier.success(
+                  this.$buefy.toast,
+                  "Xóa bài viết thành công"
+                );
+              });
+            }.bind(this),
+            500
+          );
         }
-        ToastNotifier.success(this.$buefy.toast, "Xóa bài viết thành công");
       });
     },
     $_removePostFromTable(postId) {
