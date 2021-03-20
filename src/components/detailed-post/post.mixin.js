@@ -8,9 +8,7 @@ export default {
       topic_title: String,
       content_file_url: String,
       thumbnail_file_url: String,
-      fullContent: String,
-      next_post_id: String,
-      previous_post_id: String
+      fullContent: String
     }
   },
   computed: {

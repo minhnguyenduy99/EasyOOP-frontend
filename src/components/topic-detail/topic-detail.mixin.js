@@ -6,5 +6,10 @@ export default {
       topic_description: String,
       first_post_id: String
     }
+  },
+  computed: {
+    _isTopicEmpty() {
+      return !this.topic.first_post_id;
+    }
   }
 };

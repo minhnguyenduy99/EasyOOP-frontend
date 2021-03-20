@@ -1,12 +1,16 @@
 <template>
   <div class="post-preview-index">
     <div class="mb-4">
-      <span class="is-size-4 has-text-grey has-text-weight-bold">Index</span>
+      <span class="is-size-4 has-text-grey has-text-weight-bold">{{
+        title
+      }}</span>
     </div>
-    <div v-if="!isIndexTreeEmpty" ref="index-tree"></div>
-    <slot v-else name="empty-state">
-      <span class="is-size-5">{{ emptyText }}</span>
-    </slot>
+    <div ref="index-tree" />
+    <div v-if="isIndexTreeEmpty">
+      <slot name="empty-state">
+        <span class="is-size-5">{{ emptyText }}</span>
+      </slot>
+    </div>
   </div>
 </template>
 
@@ -16,6 +20,11 @@ const LINE_MARKUP = "data-v-md-line";
 export default {
   name: "PostPreviewIndex",
   props: {
+    title: {
+      type: String,
+      required: false,
+      default: () => "Index"
+    },
     html: String,
     allowLevels: {
       type: String,
@@ -34,15 +43,19 @@ export default {
   created: function() {
     this.levels = this.allowLevels.split(" ").map(level => parseInt(level[1]));
   },
+  mounted: function() {
+    this.indexTree = this.createIndex();
+    this.$on_renderIndexTree();
+  },
   watch: {
     html(val) {
       if (!val) {
+        delete this.indexTree;
+        this.indexTree = {};
         return;
       }
       this.indexTree = this.createIndex();
-      this.$nextTick(() => {
-        this.createHTMLTree();
-      });
+      this.$on_renderIndexTree();
     }
   },
   computed: {
@@ -51,10 +64,16 @@ export default {
     }
   },
   methods: {
+    $on_renderIndexTree() {
+      const indexEl = this.$refs["index-tree"];
+      while (indexEl.firstChild) {
+        indexEl.removeChild(indexEl.firstChild);
+      }
+      this.createHTMLTree();
+    },
     createIndex() {
       const div = document.createElement("div");
       div.innerHTML = this.html;
-      console.log(this.html[0]);
 
       const children = div?.childNodes;
       if (!children) {
@@ -65,12 +84,13 @@ export default {
         index: 0,
         list: []
       });
+      const levelStr = this.levels.reduce((pre, cur) => pre + cur, "");
 
-      const headingRegex = /^H[1-6]$/g;
+      const headingRegex = RegExp(`^H[${levelStr}]$`, "g");
 
       children.forEach(child => {
         const tagName = child?.tagName;
-        if (!tagName?.match(headingRegex)) {
+        if (!headingRegex.test(tagName)) {
           return;
         }
         const childIndexValue = parseInt(tagName[1]);
@@ -108,8 +128,9 @@ export default {
       const el = document.createElement("a");
       el.text = title;
       el.style.marginLeft = `${indentation}rem`;
-      el.style.marginBottom = "10px";
+      el.style.marginBottom = "8px";
       el.style.display = "block";
+      el.style.fontSize = "1rem";
       el.setAttribute(LINE_MARKUP, lineIndex);
       el.addEventListener(
         "click",

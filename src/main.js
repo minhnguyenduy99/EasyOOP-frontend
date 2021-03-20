@@ -5,8 +5,12 @@ import { createVueRouter } from "./router";
 import { createVuexStore } from "./store";
 import { ApiService } from "./apis";
 import { authHeaderInterceptor } from "./apis/interceptors";
-import { FormValidatorPlugin } from "@/plugins";
-import VueMarkdownPlugin from "@/plugins/vue-markdown";
+import {
+  FormValidatorPlugin,
+  ApiServicePlugin,
+  VueMarkdownPlugin
+} from "./plugins";
+import mockApiService from "./mocks";
 
 Vue.config.productionTip = false;
 
@@ -15,6 +19,10 @@ Vue.use(Buefy, {
 });
 Vue.use(new FormValidatorPlugin());
 Vue.use(VueMarkdownPlugin);
+Vue.use(ApiServicePlugin, {
+  apiService: mockApiService,
+  key: "$api"
+});
 
 // Init API services
 const apiServices = new ApiService({

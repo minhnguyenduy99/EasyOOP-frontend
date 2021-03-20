@@ -131,3 +131,17 @@ a.link-animation {
     }
   }
 }
+
+.dropdown {
+  &.is-right {
+    .dropdown-menu {
+      top: -15px;
+      left: calc(100% + 20px);
+      z-index: 20;
+      width: fit-content;
+    }
+  }
+  .dropdown-trigger {
+    width: 100%;
+  }
+}

@@ -1,3 +1,3 @@
-export { default as HomePage } from "./Home";
-export { default as AboutPage } from "./About";
+export { default as HomePage } from "./home.page";
+export { default as PostDetailPage } from "./post-detail.page";
 export * from "./admin";

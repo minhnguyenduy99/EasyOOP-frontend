@@ -2,7 +2,11 @@
   <div class="topic-list ha-vertical-layout-5 px-3 py-5">
     <div v-for="topic in topics" :key="topic.id">
       <slot name="topic-item" v-bind:topic="topic">
-        <topic-list-item :topic="topic" :to="to" />
+        <topic-list-item
+          :topic="topic"
+          :to="to"
+          :active-post-id="activePostId"
+        />
       </slot>
     </div>
   </div>
@@ -19,7 +23,8 @@ export default {
   },
   props: {
     title: String,
-    to: Function
+    to: Function,
+    activePostId: String
   }
 };
 </script>

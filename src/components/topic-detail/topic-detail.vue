@@ -1,19 +1,24 @@
 <template>
   <div class="topic-detail card">
-    <div class="card-content">
+    <div
+      class="card-content is-flex is-flex-direction-column is-justify-content-space-between is-align-items-stretch"
+    >
       <div class="topic-detail--info mb-5">
         <slot name="info" v-bind="topic">
-          <h1 class="is-size-3 has-text-weight-bold mb-2">
+          <h1 class="is-size-4 has-text-weight-bold mb-2 has-text-primary">
             {{ topic.topic_title }}
           </h1>
-          <h3 class="is-size-4">{{ topic.topic_description }}</h3>
+          <h3 class="is-size-5">{{ topic.topic_description }}</h3>
         </slot>
       </div>
-      <div class="topic-detail--actions">
-        <b-button tag="router-link" to="/" type="is-primary" outlined>{{
+      <div v-if="!_isTopicEmpty" class="topic-detail--actions">
+        <b-button @click="$_navigateToFirstPost" type="is-primary" outlined>{{
           startButtonLabel
         }}</b-button>
       </div>
+      <slot v-else name="empty">
+        <span class="is-italic is-align-self-flex-end">{{ emptyText }}</span>
+      </slot>
     </div>
   </div>
 </template>
@@ -25,7 +30,17 @@ export default {
   name: "TopicDetail",
   mixins: [TopicDetailMixin],
   props: {
-    startButtonLabel: String
+    startButtonLabel: String,
+    navigateFirstPost: {
+      type: Function,
+      required: false
+    },
+    emptyText: String
+  },
+  methods: {
+    $_navigateToFirstPost() {
+      this.navigateFirstPost?.(this.topic.first_post_id);
+    }
   }
 };
 </script>
@@ -41,6 +56,23 @@ $topic-detail-box-shadow-hover: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px;
 
   &:hover {
     box-shadow: $topic-detail-box-shadow-hover;
+  }
+
+  .card-content {
+    height: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  @include tablet {
+    .card-content {
+      align-items: flex-start;
+      text-align: left;
+    }
+
+    &--actions {
+      align-self: flex-end;
+    }
   }
 }
 </style>

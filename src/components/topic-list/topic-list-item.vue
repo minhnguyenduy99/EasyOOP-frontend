@@ -1,13 +1,16 @@
 <template>
   <div class="topic-list-item has-text-left">
-    <h3 class="topic-list-item--title mb-2 is-size-5 has-text-weight-bold">
+    <h3 class="topic-title mb-2 is-size-5 has-text-grey">
       {{ topic.topic_title }}
     </h3>
-    <div class="topic-list-item--list-post">
+    <div class="topic-post-list">
       <div v-for="post in topic.list_posts" :key="post.id">
         <slot name="post">
           <router-link
-            class="topic-list-item--list-post-item p-2 w-100 is-block is-size-6"
+            :class="[
+              postClass,
+              $_isPostActive(post.post_id) ? 'is-active' : ''
+            ]"
             :to="$_navigateTo(post)"
             >{{ post.post_title }}</router-link
           >
@@ -29,9 +32,17 @@ export default {
     to: {
       type: Function,
       required: true
-    }
+    },
+    activePostId: String
   },
+  data: () => ({
+    postClass:
+      "topic-post-item p-2 w-100 is-block is-size-6 has-text-weight-bold"
+  }),
   methods: {
+    $_isPostActive(postId) {
+      return postId === this.activePostId;
+    },
     $_navigateTo(post) {
       return this?.to(post);
     }
@@ -42,7 +53,7 @@ export default {
 <style scoped lang="scss">
 $topic-item-color: $grey;
 
-.topic-list-item--list-post-item {
+.topic-post-item {
   transition: 0.1s;
   color: $topic-item-color;
   white-space: nowrap;
@@ -52,6 +63,11 @@ $topic-item-color: $grey;
   &:hover {
     background: white;
     color: $primary;
+  }
+
+  &.is-active {
+    background: $primary;
+    color: $light;
   }
 }
 </style>

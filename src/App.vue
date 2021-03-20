@@ -11,4 +11,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+:root {
+  --animate-duration: 0.5s;
+}
 </style>

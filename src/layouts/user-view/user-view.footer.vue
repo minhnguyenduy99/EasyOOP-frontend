@@ -1,11 +1,7 @@
 <template>
-  <footer id="user-view-footer" class="has-background-grey-light">
-    <div class="card">
-      <div class="card-content">
-        <h1>This website is made for OOP learner</h1>
-      </div>
-    </div>
-  </footer>
+  <div id="user-view-footer-content">
+    <h1 class="is-size-4">This website is made for OOP learner</h1>
+  </div>
 </template>
 
 <script>
@@ -13,3 +9,9 @@ export default {
   name: "UserViewFooter"
 };
 </script>
+
+<style scoped>
+#user-view-footer-content {
+  width: 100%;
+}
+</style>
