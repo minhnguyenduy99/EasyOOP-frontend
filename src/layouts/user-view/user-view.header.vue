@@ -14,11 +14,7 @@
         :shadow="!isScrollTop"
       >
         <template #brand>
-          <b-navbar-item
-            tag="router-link"
-            to="Home"
-            class="is-align-self-center"
-          >
+          <b-navbar-item tag="router-link" to="/" class="is-align-self-center">
             <b-image
               id="website-icon"
               src="https://cdn4.iconfinder.com/data/icons/technology-83/1000/object_programming_development_oriented_developer_object-oriented_programming_software-512.png"
@@ -47,8 +43,7 @@
               <b-button
                 class="navigate-button"
                 type="is-primary-dark"
-                tag="router-link"
-                to="/"
+                @click="showLoginModal = true"
                 >Login</b-button
               >
             </div>
@@ -56,16 +51,38 @@
         </template>
       </b-navbar>
     </transition>
+    <b-modal v-model="showLoginModal" has-modal-card>
+      <div class="card">
+        <login-form
+          class="card-content"
+          @login-clicked="$on_formLoginClicked"
+        />
+        <b-loading
+          :is-full-page="false"
+          v-model="isLoading"
+          :can-cancel="false"
+        ></b-loading>
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { STORE_MODULES } from "../../store";
+import { ToastNotifier } from "../../utils";
+
 export default {
   name: "UserViewHeader",
+  components: {
+    "login-form": async () => (await import("@/components")).LoginForm
+  },
   data: () => ({
     isScrollTop: true,
     showNavbar: true,
-    scrollPosition: 0
+    scrollPosition: 0,
+    showLoginModal: false,
+    isLoading: false
   }),
   computed: {
     _themeType() {
@@ -87,6 +104,37 @@ export default {
         this.scrollPosition = scrollTop;
       }.bind(this)
     );
+  },
+  methods: {
+    ...mapActions(STORE_MODULES.AUTH, {
+      $store_login: "login"
+    }),
+    $on_formSubmitted(result) {
+      const { success } = result;
+      if (!success) {
+        return;
+      }
+      this.showLoginModal = false;
+    },
+    async $on_formLoginClicked({ data, validator }) {
+      const valid = await validator.validate();
+      if (!valid) {
+        return;
+      }
+      this.isLoading = true;
+      this.$store_login(data).then(result => {
+        this.isLoading = false;
+        const { error } = result;
+        if (error) {
+          this.validator.setErrors({
+            general: [error.message]
+          });
+          return;
+        }
+        ToastNotifier.success(this.$buefy.toast, "Đăng nhập thành công");
+        this.showLoginModal = false;
+      });
+    }
   }
 };
 </script>

@@ -5,6 +5,7 @@
       :post="post"
       index-sticky-top="50px"
       index-title="Mục lục"
+      empty-text="Không có mục lục"
     />
   </div>
 </template>

@@ -3,9 +3,12 @@ import {
   UserViewHeader,
   UserViewSidebar,
   UserViewFooter,
-  UserViewMenuNavbar
+  UserViewMenuNavbar,
+  EmptyLayout
 } from "../layouts";
 import { HomePage, PostDetailPage } from "../views";
+
+import { CocosTestPage } from "../cocos-test";
 
 export default [
   {
@@ -57,5 +60,10 @@ export default [
         }
       }
     ]
+  },
+  {
+    name: "CocosTest",
+    path: "/cocos",
+    component: CocosTestPage
   }
 ];

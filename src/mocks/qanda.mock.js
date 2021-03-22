@@ -21,5 +21,13 @@ export default {
     return {
       data: questions
     };
+  },
+  async searchQuestions(search) {
+    const filteredQuestions = questions.filter(() => Math.random() > 0.5);
+    return {
+      data: {
+        results: filteredQuestions
+      }
+    };
   }
 };

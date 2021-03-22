@@ -74,6 +74,7 @@
       @index-clicked="$on_indexClicked"
       :html="htmlContent"
       ref="post-index"
+      :empty-text="$attrs['empty-text']"
       :style="{ top: indexStickyTop }"
     />
   </div>

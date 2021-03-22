@@ -6,3 +6,5 @@ export * from "./post-preview";
 export * from "./detailed-post";
 export * from "./menu-dropdown";
 export * from "./qanda-card";
+export * from "./search-panel";
+export * from "./login-form";

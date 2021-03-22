@@ -4,16 +4,36 @@ import { VueRouterWrapper } from "./base";
 import UserViewRoutes from "./user-view.route";
 import AdminRoutes from "./admin.routes";
 
-Vue.use(VueRouter);
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject);
+  return originalPush.call(this, location).catch(err => {
+    if (VueRouter.isNavigationFailure(err)) {
+      // resolve err
+      return err;
+    }
+    // rethrow error
+    return Promise.reject(err);
+  });
+};
 
-const router = new VueRouter({
-  mode: "history",
-  base: process.env.BASE_URL,
-  routes: [...UserViewRoutes, ...AdminRoutes]
-});
+Vue.use(VueRouter);
 
 export * from "./guards";
 
 export function createVueRouter() {
-  return new VueRouterWrapper(router);
+  return new VueRouterWrapper(
+    new VueRouter({
+      mode: "history",
+      base: process.env.BASE_URL,
+      routes: [...UserViewRoutes, ...AdminRoutes],
+      scrollBehavior(to, from, savedPosition) {
+        return {
+          selector: "#app",
+          behavior: "smooth"
+        };
+      }
+    })
+  );
 }

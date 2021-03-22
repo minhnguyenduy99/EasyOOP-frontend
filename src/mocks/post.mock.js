@@ -129,6 +129,15 @@ const posts = [
 ];
 
 export default {
+  async searchPosts(search) {
+    const filteredPosts = posts.filter(() => Math.random() > 0.5);
+    return {
+      data: {
+        results: filteredPosts
+      }
+    };
+  },
+
   async getPostById(postId) {
     const post = posts.filter(post => post.post_id === postId)?.[0];
     if (!post) {
@@ -147,7 +156,7 @@ export default {
       const postObj = {
         post_title: post.post_title,
         post_id: post.post_id
-      }
+      };
       if (!topics.has(post.topic_id)) {
         topics.set(post.topic_id, {
           topic_id: post.topic_id,
