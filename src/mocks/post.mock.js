@@ -5,6 +5,7 @@ const posts = [
     topic_title: "KHÁI NIỆM CƠ BẢN",
     topic_id: "605415e98efd76b77a1c0257",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -19,6 +20,7 @@ const posts = [
     topic_title: "KHÁI NIỆM CƠ BẢN",
     topic_id: "605415e98efd76b77a1c0257",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -33,6 +35,7 @@ const posts = [
     topic_title: "KHÁI NIỆM CƠ BẢN",
     topic_id: "605415e98efd76b77a1c0257",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -47,6 +50,7 @@ const posts = [
     topic_title: "KHÁI NIỆM CƠ BẢN",
     topic_id: "605415e98efd76b77a1c0257",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -62,6 +66,7 @@ const posts = [
     topic_title: "Nguyên tắc SOLID",
     topic_id: "60477dbeb8229be06bbc061f",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -76,6 +81,7 @@ const posts = [
     topic_title: "Nguyên tắc SOLID",
     topic_id: "60477dbeb8229be06bbc061f",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -90,6 +96,7 @@ const posts = [
     topic_title: "Nguyên tắc SOLID",
     topic_id: "60477dbeb8229be06bbc061f",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -104,6 +111,7 @@ const posts = [
     topic_title: "Nguyên tắc SOLID",
     topic_id: "60477dbeb8229be06bbc061f",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -118,6 +126,7 @@ const posts = [
     topic_title: "Nguyên tắc SOLID",
     topic_id: "60477dbeb8229be06bbc061f",
     tags: ["Tag A", "Tag B"],
+    post_status: "0",
     thumbnail_file_url:
       "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b6/Image_created_with_a_mobile_phone.png/1200px-Image_created_with_a_mobile_phone.png",
     content_file_url:
@@ -134,6 +143,17 @@ export default {
     return {
       data: {
         results: filteredPosts
+      }
+    };
+  },
+
+  async getPostsByStatus(options) {
+    return {
+      data: {
+        page: 1,
+        next: null,
+        previous: null,
+        results: posts
       }
     };
   },

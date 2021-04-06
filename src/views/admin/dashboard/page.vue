@@ -28,11 +28,12 @@
 </template>
 
 <script>
-import { posts, topics } from "../data.mock";
+import { mapActions } from "vuex";
 import { AdminContent, AdminContentHeader } from "../../../components";
 import AdminPostSearch from "./admin-post-search";
 
 export default {
+  name: "DashboardPage",
   components: {
     AdminContent,
     AdminContentHeader,
@@ -41,9 +42,9 @@ export default {
   },
   provide() {
     return {
-      findPosts: this.$mock_findPosts,
-      deletePost: this.$mock_deletePost,
-      findTopics: this.$mock_findTopcis
+      findPosts: this.$api.posts.getPostsByStatus,
+      deletePost: this.deletePost,
+      findTopics: this.searchTopics
     };
   },
   data: () => ({
@@ -52,48 +53,12 @@ export default {
     searching: false
   }),
   methods: {
+    ...mapActions("POST", ["getPosts", "deletePost"]),
+    ...mapActions("TOPIC", ["searchTopics"]),
+
     onSearch(searchOptions) {
       this.searchOptions = searchOptions;
       this.searching = true;
-    },
-    $mock_findPosts(page, options) {
-      return new Promise(resolve => {
-        setTimeout(
-          function() {
-            resolve({
-              data: {
-                total_count: 10,
-                results: posts
-              }
-            });
-          }.bind(this),
-          1000
-        );
-      });
-    },
-    async $mock_deletePost(postId) {
-      return new Promise(resolve => {
-        setTimeout(
-          function() {
-            resolve({
-              error: null
-            });
-          }.bind(this),
-          3000
-        );
-      });
-    },
-    async $mock_findTopcis() {
-      return new Promise(resolve => {
-        setTimeout(
-          function() {
-            resolve({
-              data: topics
-            });
-          }.bind(this),
-          300
-        );
-      });
     }
   }
 };

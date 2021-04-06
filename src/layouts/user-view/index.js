@@ -1,6 +1,13 @@
-export { default as UserViewHeader } from "./user-view.header";
-export { default as UserViewHeroContent } from "./user-view.hero";
-export { default as UserViewLayout } from "./user-view.layout";
-export { default as UserViewSidebar } from "./user-view.sidebar";
-export { default as UserViewMenuNavbar } from "./user-view.menu-navbar";
-export { default as UserViewFooter } from "./user-view.footer";
+export default () => ({
+  name: "UserViewLayout",
+  components: () => ({
+    header: () => import("./user-view.header"),
+    sidebar: () => import("./user-view.sidebar"),
+    "menu-navbar": () => import("./user-view.menu-navbar"),
+    footer: () => import("./user-view.footer")
+  }),
+  layout: () => import("./layout"),
+  props: {
+    includeHero: true
+  }
+});

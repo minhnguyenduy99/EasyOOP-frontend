@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: "PostDetailPage",
+  name: "PostViewPage",
   components: {
     "post-view": async () => (await import("@/components")).PostPreview
   },

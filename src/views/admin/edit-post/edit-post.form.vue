@@ -1,4 +1,9 @@
+<script>
+import PostForm from "../post-form/post-form";
+
 export default {
+  name: "EditPostForm",
+  extends: PostForm,
   props: {
     post: {
       type: Object,
@@ -22,3 +27,4 @@ export default {
     }
   }
 };
+</script>

@@ -1,14 +1,14 @@
 <template>
   <div id="create-post-page">
     <admin-content :title="title" icon="pencil-alt" iconPack="fas">
-      <edit-post-form :post="initialPost" class="mb-5">
+      <create-post-form class="mb-5">
         <template #submit="{ form, validator }">
           <div id="submit-button-group">
             <b-button
               class="--submit"
               type="is-primary is-dark"
               @click="$on_submitForm(form, validator)"
-              >Cập nhật</b-button
+              >Tạo mới</b-button
             >
             <b-button
               class="--preview"
@@ -20,7 +20,7 @@
             >
           </div>
         </template>
-      </edit-post-form>
+      </create-post-form>
       <v-md-editor v-model="postContent" height="600px"></v-md-editor>
     </admin-content>
     <b-modal v-model="showModal" scroll="keep">
@@ -36,61 +36,37 @@
 </template>
 
 <script>
-import { tags, posts, topics } from "../data.mock";
-
-import { AdminContent } from "../../../components";
+import { AdminContent } from "@/components";
 import { FileReadHelper, ToastNotifier } from "../../../utils";
+import { mapActions } from "vuex";
 
 export default {
-  name: "EditPostPage",
+  name: "CreatePostPage",
   components: {
     AdminContent,
-    "edit-post-form": async () => await import("./edit-post.form"),
+    "create-post-form": () => import("./create-post.form"),
     "post-preview": async () => (await import("@/components")).PostPreview
-  },
-  props: {
-    postId: String
   },
   provide() {
     return {
-      $api_findTopics: this.$mock_findTopics,
-      $api_findPosts: this.$mock_findPosts,
-      $api_findTags: this.$mock_findTags
+      $api_findTopics: this.searchTopics,
+      $api_findPosts: this.getPosts,
+      $api_findTags: this.searchPostTags
     };
   },
   data: () => ({
-    title: "Cập nhật bài viết",
+    title: "Tạo bài viết mới",
     postContent: "",
     post: null,
     showModal: false,
-    isLoading: false,
-    initialPost: null
+    isLoading: false
   }),
-  mounted: function() {
-    this.$mock_getPostById(this.postId).then(result => {
-      const { error, data } = result;
-      if (error) {
-        return;
-      }
-      this.initialPost = data;
-    });
-  },
-  watch: {
-    initialPost: function(val) {
-      if (!val) {
-        return;
-      }
-      fetch(val.content_file_url)
-        .then(res => res.text())
-        .then(value => {
-          this.postContent = value;
-        });
-    }
-  },
   methods: {
+    ...mapActions("POST", ["createPost", "getPosts"]),
+    ...mapActions("TAG", ["searchPostTags"]),
+    ...mapActions("TOPIC", ["searchTopics"]),
+
     $on_previewButtonClicked(form) {
-      console.log("preview button clicked");
-      console.log(this.postContent[0]);
       this.showModal = true;
       this.post = {
         ...form,
@@ -107,8 +83,8 @@ export default {
         return;
       }
       this.isLoading = true;
-      const data = this.$_sanitizeFormData(form);
-      this.$mock_editPost(this.postId, data).then(result => {
+      console.log(form);
+      this.createPost(form).then(result => {
         const { error } = result;
         this.isLoading = false;
         if (error) {
@@ -125,33 +101,6 @@ export default {
           1000
         );
       });
-    },
-    async $mock_findTopics() {
-      return {
-        data: topics
-      };
-    },
-    async $mock_findPosts() {
-      return {
-        data: {
-          results: posts
-        }
-      };
-    },
-    async $mock_editPost(postId, data) {
-      return {
-        error: null
-      };
-    },
-    async $mock_findTags(keyword, tagType) {
-      return {
-        data: tags
-      };
-    },
-    async $mock_getPostById(postId) {
-      return {
-        data: posts[0]
-      };
     },
     $_sanitizeFormData(form) {
       const fileName = `${form.post_title.replace(" ", "_")}_${Date.now()}`;

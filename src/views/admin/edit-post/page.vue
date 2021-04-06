@@ -1,14 +1,14 @@
 <template>
   <div id="create-post-page">
     <admin-content :title="title" icon="pencil-alt" iconPack="fas">
-      <create-post-form class="mb-5">
+      <edit-post-form :post="initialPost" class="mb-5">
         <template #submit="{ form, validator }">
           <div id="submit-button-group">
             <b-button
               class="--submit"
               type="is-primary is-dark"
               @click="$on_submitForm(form, validator)"
-              >Tạo mới</b-button
+              >Cập nhật</b-button
             >
             <b-button
               class="--preview"
@@ -20,7 +20,7 @@
             >
           </div>
         </template>
-      </create-post-form>
+      </edit-post-form>
       <v-md-editor v-model="postContent" height="600px"></v-md-editor>
     </admin-content>
     <b-modal v-model="showModal" scroll="keep">
@@ -42,11 +42,14 @@ import { AdminContent } from "../../../components";
 import { FileReadHelper, ToastNotifier } from "../../../utils";
 
 export default {
-  name: "CreatePostPage",
+  name: "EditPostPage",
   components: {
     AdminContent,
-    "create-post-form": async () => await import("./create-post.form"),
+    "edit-post-form": import("./edit-post.form"),
     "post-preview": async () => (await import("@/components")).PostPreview
+  },
+  props: {
+    postId: String
   },
   provide() {
     return {
@@ -56,12 +59,34 @@ export default {
     };
   },
   data: () => ({
-    title: "Tạo bài viết mới",
+    title: "Cập nhật bài viết",
     postContent: "",
     post: null,
     showModal: false,
-    isLoading: false
+    isLoading: false,
+    initialPost: null
   }),
+  mounted: function() {
+    this.$mock_getPostById(this.postId).then(result => {
+      const { error, data } = result;
+      if (error) {
+        return;
+      }
+      this.initialPost = data;
+    });
+  },
+  watch: {
+    initialPost: function(val) {
+      if (!val) {
+        return;
+      }
+      fetch(val.content_file_url)
+        .then(res => res.text())
+        .then(value => {
+          this.postContent = value;
+        });
+    }
+  },
   methods: {
     $on_previewButtonClicked(form) {
       console.log("preview button clicked");
@@ -83,8 +108,7 @@ export default {
       }
       this.isLoading = true;
       const data = this.$_sanitizeFormData(form);
-      console.log(data);
-      this.$mock_createPost(data).then(result => {
+      this.$mock_editPost(this.postId, data).then(result => {
         const { error } = result;
         this.isLoading = false;
         if (error) {
@@ -114,7 +138,7 @@ export default {
         }
       };
     },
-    async $mock_createPost(data) {
+    async $mock_editPost(postId, data) {
       return {
         error: null
       };
@@ -122,6 +146,11 @@ export default {
     async $mock_findTags(keyword, tagType) {
       return {
         data: tags
+      };
+    },
+    async $mock_getPostById(postId) {
+      return {
+        data: posts[0]
       };
     },
     $_sanitizeFormData(form) {

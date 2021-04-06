@@ -9,11 +9,11 @@ export class AuthAPI extends BaseAPI {
         withCredentials: true
       });
       if (response.status === HTTP_CODES.OK) {
-        return this._responseFormatter.getDataFormat(response);
+        return this._formatter.getDataFormat(response);
       }
-      return this._responseFormatter.getErrorFormat(response);
+      return this._formatter.getErrorFormat(response);
     } catch (err) {
-      return this._responseFormatter.getErrorFormat(err?.response ?? err);
+      return this._formatter.getErrorFormat(err?.response ?? err);
     }
   }
 
@@ -24,11 +24,11 @@ export class AuthAPI extends BaseAPI {
         withCredentials: true
       });
       if (response.status === HTTP_CODES.OK) {
-        return this._responseFormatter.getDataFormat(response);
+        return this._formatter.getDataFormat(response);
       }
-      return this._responseFormatter.getErrorFormat(response);
+      return this._formatter.getErrorFormat(response);
     } catch (err) {
-      return this._responseFormatter.getErrorFormat(err?.response ?? err);
+      return this._formatter.getErrorFormat(err?.response ?? err);
     }
   }
 
@@ -39,11 +39,11 @@ export class AuthAPI extends BaseAPI {
         withCredentials: true
       });
       if (response.status === HTTP_CODES.OK) {
-        return this._responseFormatter.getDataFormat(response);
+        return this._formatter.getDataFormat(response);
       }
-      return this._responseFormatter.getErrorFormat(response);
+      return this._formatter.getErrorFormat(response);
     } catch (err) {
-      return this._responseFormatter.getErrorFormat(err?.response ?? err);
+      return this._formatter.getErrorFormat(err?.response ?? err);
     }
   }
 }

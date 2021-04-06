@@ -1,5 +1,5 @@
 <template>
-  <div id="create-post-form">
+  <div class="post-form">
     <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-5">
       <div id="form-first-row">
         <validated-form-element
@@ -30,7 +30,7 @@
             type="is-primary-light"
             field="tag_value"
             @typing="$on_tagInputTyping"
-            :create-tag="tag => tag.tag_value"
+            :create-tag="tag => tag.tag_id"
             :allow-new="false"
             :allow-duplicates="false"
             :before-adding="$taginput_beforeAdding"
@@ -40,6 +40,7 @@
       <div id="form-second-row">
         <validated-form-element label="Chọn bài viết trước">
           <b-autocomplete
+            rule="required"
             v-model="searchPostValue"
             :data="filteredPostList"
             field="post_title"
@@ -103,15 +104,68 @@
 <script>
 import { ValidationObserver } from "vee-validate";
 import { ValidatedFormElement } from "@/components";
-import PostFormMixin from "./mixins/post-form.mixin";
+import { FindPostsMixin, FindTagsMixin, FindTopicsMixin } from "./mixins";
 
 export default {
-  name: "CreatePostForm",
+  name: "PostForm",
   components: {
     ValidationObserver,
     ValidatedFormElement
   },
-  mixins: [PostFormMixin]
+  mixins: [FindPostsMixin, FindTagsMixin, FindTopicsMixin],
+  data: () => ({
+    form: {
+      post_title: "",
+      topic_id: null,
+      thumbnail_file: null,
+      tags: [],
+      previous_post_id: null
+    },
+    selectedPost: null,
+    validator: null,
+    thumbnailDataURL: null
+  }),
+  watch: {
+    "form.topic_id": function() {
+      this.$on_postSelected(this.DEFAULT_POST);
+      this.searchPostValue = "";
+    },
+    selectedPost: function(val) {
+      this.form.previous_post_id = val?.post_id;
+    }
+  },
+  mounted: function() {
+    this.$m_findTopics();
+    this.validator = this.$refs.validator;
+  },
+  methods: {
+    $taginput_beforeAdding(tag) {
+      const isAdded = this.form.tags.includes(tag.tag_value);
+      return !isAdded;
+    },
+    $on_postSelected(post) {
+      this.selectedPost = post;
+    },
+    $on_SelectedThumbnailChanged() {
+      const thumbnail = this.form.thumbnail_file;
+      if (!thumbnail) {
+        return;
+      }
+
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        this.thumbnailDataURL = e.target.result;
+      }.bind(this);
+
+      reader.readAsDataURL(thumbnail);
+    },
+    $on_selectNoPreviousPost() {
+      this.$refs["post-selector"].setSelected(this.DEFAULT_POST);
+    },
+    $on_tagInputTyping(value) {
+      this.$m_findTags(value);
+    }
+  }
 };
 </script>
 

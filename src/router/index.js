@@ -23,11 +23,11 @@ Vue.use(VueRouter);
 export * from "./guards";
 
 export function createVueRouter() {
-  return new VueRouterWrapper(
+  const vueRouter = new VueRouterWrapper(
     new VueRouter({
       mode: "history",
       base: process.env.BASE_URL,
-      routes: [...UserViewRoutes, ...AdminRoutes],
+      // routes: [...UserViewRoutes, ...AdminRoutes],
       scrollBehavior(to, from, savedPosition) {
         return {
           selector: "#app",
@@ -36,4 +36,9 @@ export function createVueRouter() {
       }
     })
   );
+
+  UserViewRoutes(vueRouter);
+  AdminRoutes(vueRouter);
+
+  return vueRouter;
 }

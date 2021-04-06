@@ -31,7 +31,7 @@ const apiServices = new ApiService({
 apiServices.useInterceptor(authHeaderInterceptor);
 
 // Init vue store
-const vuexStore = createVuexStore({ apiService: mockApiService });
+const vuexStore = createVuexStore({ apiService: apiServices.apis });
 
 // Init vue router
 const vueRouterWrapper = createVueRouter();

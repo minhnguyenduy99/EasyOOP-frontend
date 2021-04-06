@@ -95,7 +95,7 @@ export default {
       position: sticky;
       top: 0;
       flex-basis: 20%;
-      height: 100vh;
+      height: 90vh;
       overflow-y: auto;
     }
 

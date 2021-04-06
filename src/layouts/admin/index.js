@@ -1,2 +1,7 @@
-export { default as AdminLayout } from "./admin.layout.vue";
-export * from "./admin-sidebar";
+export default () => ({
+  name: "AdminLayout",
+  components: () => ({
+    sidebar: () => import("./admin-sidebar/admin-sidebar.vue")
+  }),
+  layout: () => import("./layout")
+});

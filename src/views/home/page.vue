@@ -31,8 +31,9 @@
 <script>
 export default {
   components: {
-    "topic-detail": async () => (await import("../components"))["TopicDetail"],
-    "qanda-card": async () => (await import("../components")).QandACard
+    "topic-detail": async () =>
+      (await import("../../components"))["TopicDetail"],
+    "qanda-card": async () => (await import("../../components")).QandACard
   },
   name: "Home",
   data: () => ({
@@ -52,7 +53,7 @@ export default {
   methods: {
     $_navigateFirstPost(postId) {
       this.$router.push({
-        name: "PostDetail",
+        name: "PostView",
         params: { post_id: postId }
       });
     }

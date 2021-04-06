@@ -41,20 +41,30 @@
               :key="tag.id"
               type="is-primary-light"
               size="is-small"
-              >{{ tag }}</b-tag
+              >{{ tag.tag_value }}</b-tag
             >
           </b-taglist>
         </template>
       </b-table-column>
 
       <b-table-column
-        field="time"
-        label="Last edited"
+        field="created_date"
+        label="Ngày tạo"
         width="100"
         v-slot="{ row }"
         sortable
       >
         {{ row.created_date.toLocaleDateString("en-GB") }}
+      </b-table-column>
+
+      <b-table-column
+        field="post_status"
+        label="Tình trạng"
+        width="100"
+        v-slot="{ row }"
+        sortable
+      >
+        {{ postStatuses[row.post_status] }}
       </b-table-column>
 
       <b-table-column
@@ -102,6 +112,7 @@
 
 <script>
 import { ToastNotifier } from "../../../utils";
+import { POST_STATUSES } from "./consts";
 
 export default {
   name: "DashboardPostTable",
@@ -155,7 +166,8 @@ export default {
     postFeatureHandler: [],
     showModal: false,
     selectedPost: null,
-    loading: false
+    loading: false,
+    postStatuses: {}
   }),
   created: function() {
     this.postFeatureHandler.push(
@@ -163,6 +175,9 @@ export default {
       this.onEditPostButtonClicked,
       this.onDeleteButtonClicked
     );
+    Object.values(POST_STATUSES).forEach(status => {
+      this.postStatuses[status.status.toString()] = status.title;
+    });
     this.$_loadAsyncData();
   },
   computed: {
@@ -204,7 +219,7 @@ export default {
     },
     onSort(field, order) {
       this.sorter["sort_by"] = field;
-      this.sorter.order = order === "asc" ? 1 : -1;
+      this.sorter.sort_order = order;
       this.$_loadAsyncData();
     },
     async $_loadAsyncData() {
@@ -213,7 +228,10 @@ export default {
         ...this.filter,
         ...this.sorter
       };
-      this.findPosts(this.page, searchOptions).then(result => {
+      this.findPosts({
+        page: this.page,
+        searchOptions: searchOptions
+      }).then(result => {
         const { error, data } = result;
         this.loading = false;
         this._search = false;
