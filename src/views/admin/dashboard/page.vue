@@ -29,21 +29,22 @@
 
 <script>
 import { mapActions } from "vuex";
-import { AdminContent, AdminContentHeader } from "../../../components";
 import AdminPostSearch from "./admin-post-search";
 
 export default {
   name: "DashboardPage",
   components: {
-    AdminContent,
-    AdminContentHeader,
+    "admin-content": () =>
+      import("../components/admin-content/admin-content.vue"),
+    "admin-content-header": () =>
+      import("../components/admin-content/admin-content-header.vue"),
     AdminPostSearch,
     "admin-post-table": () => import("./dashboard-post-table")
   },
   provide() {
     return {
-      findPosts: this.$api.posts.getPostsByStatus,
-      deletePost: this.deletePost,
+      findPosts: this.creator_findPosts,
+      deletePost: this.creator_deletePost,
       findTopics: this.searchTopics
     };
   },
@@ -53,8 +54,12 @@ export default {
     searching: false
   }),
   methods: {
-    ...mapActions("POST", ["getPosts", "deletePost"]),
-    ...mapActions("TOPIC", ["searchTopics"]),
+    ...mapActions("POST", [
+      "getPosts",
+      "searchTopics",
+      "creator_deletePost",
+      "creator_findPosts"
+    ]),
 
     onSearch(searchOptions) {
       this.searchOptions = searchOptions;

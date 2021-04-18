@@ -1,7 +1,8 @@
 <template>
   <div id="create-post-page">
     <admin-content :title="title" icon="pencil-alt" iconPack="fas">
-      <edit-post-form :post="initialPost" class="mb-5">
+      <breadcrumb v-if="initialPost" :titles="breadcumbInfo" :active="2" />
+      <edit-post-form v-if="initialPost" :post="initialPost" class="mb-5">
         <template #submit="{ form, validator }">
           <div id="submit-button-group">
             <b-button
@@ -36,26 +37,26 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { tags, posts, topics } from "../data.mock";
-
-import { AdminContent } from "../../../components";
 import { FileReadHelper, ToastNotifier } from "../../../utils";
 
 export default {
   name: "EditPostPage",
   components: {
-    AdminContent,
-    "edit-post-form": import("./edit-post.form"),
-    "post-preview": async () => (await import("@/components")).PostPreview
+    "admin-content": () => import("../components/admin-content/admin-content.vue"),
+    "edit-post-form": () => import("./edit-post.form"),
+    "post-preview": () => import("@/components/post-preview/post-preview.vue"),
+    breadcrumb: () => import("@/components/base/breadcrumb.vue")
   },
   props: {
     postId: String
   },
   provide() {
     return {
-      $api_findTopics: this.$mock_findTopics,
-      $api_findPosts: this.$mock_findPosts,
-      $api_findTags: this.$mock_findTags
+      $api_findTopics: this.searchTopics,
+      $api_findPosts: this.getPosts,
+      $api_findTags: this.searchTags
     };
   },
   data: () => ({
@@ -67,7 +68,7 @@ export default {
     initialPost: null
   }),
   mounted: function() {
-    this.$mock_getPostById(this.postId).then(result => {
+    this.getPostById(this.postId).then(result => {
       const { error, data } = result;
       if (error) {
         return;
@@ -87,10 +88,39 @@ export default {
         });
     }
   },
+  computed: {
+    breadcumbInfo() {
+      return [
+        {
+          value: "Bài viết",
+          to: {
+            name: "Dashboard"
+          }
+        },
+        {
+          value: this.initialPost.post_title,
+          to: {
+            name: "AdminPostDetail",
+            params: {
+              post_id: this.initialPost.post_id
+            }
+          }
+        },
+        {
+          value: "Cập nhật"
+        }
+      ];
+    }
+  },
   methods: {
+    ...mapActions("POST", [
+      "getPostById",
+      "searchTopics",
+      "searchTags",
+      "getPosts",
+      "creator_updatePost"
+    ]),
     $on_previewButtonClicked(form) {
-      console.log("preview button clicked");
-      console.log(this.postContent[0]);
       this.showModal = true;
       this.post = {
         ...form,
@@ -108,7 +138,10 @@ export default {
       }
       this.isLoading = true;
       const data = this.$_sanitizeFormData(form);
-      this.$mock_editPost(this.postId, data).then(result => {
+      this.creator_updatePost({
+        postId: this.postId,
+        data
+      }).then(result => {
         const { error } = result;
         this.isLoading = false;
         if (error) {

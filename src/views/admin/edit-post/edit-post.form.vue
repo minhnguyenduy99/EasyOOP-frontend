@@ -1,5 +1,5 @@
 <script>
-import PostForm from "../post-form/post-form";
+import PostForm from "../components/post-form/post-form.vue";
 
 export default {
   name: "EditPostForm",

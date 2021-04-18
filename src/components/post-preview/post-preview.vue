@@ -17,21 +17,21 @@
               </span>
             </div>
           </div>
-          <slot name="trigger-header" v-bind="{ post }">
+          <slot v-if="trigger" name="trigger-header" v-bind="{ post }">
             <div class="is-flex is-flex-direction-column">
               <b-button
                 v-if="_hasPreviousPost"
                 class="mb-3"
                 type="is-primary-light"
                 icon-left="chevron-left"
-                @click="$_navigateToPost(post.previous_post_id)"
+                @click="$_navigate(post.previous_post_id)"
                 >Bài trước</b-button
               >
               <b-button
                 v-if="_hasNextPost"
                 type="is-primary-light"
                 icon-right="chevron-right"
-                @click="$_navigateToPost(post.next_post_id)"
+                @click="$_navigate(post.next_post_id)"
                 >Bài tiếp theo</b-button
               >
             </div>
@@ -48,14 +48,14 @@
         @html-changed="$on_htmlChanged"
       ></post-preview-content>
       <hr />
-      <slot name="trigger" v-bind="{ post }">
+      <slot v-if="trigger" name="trigger" v-bind="{ post }">
         <div class="is-flex mt-3 is-justify-content-space-between">
           <b-button
             class="trigger-action--previous"
             v-if="_hasPreviousPost"
             type="is-primary-light"
             icon-left="chevron-left"
-            @click="$_navigateToPost(post.previous_post_id)"
+            @click="$_navigate(post.previous_post_id)"
             >Bài trước</b-button
           >
           <b-button
@@ -63,20 +63,20 @@
             class="trigger-action--next"
             type="is-primary-light"
             icon-right="chevron-right"
-            @click="$_navigateToPost(post.next_post_id)"
+            @click="$_navigate(post.next_post_id)"
             >Bài tiếp theo</b-button
           >
         </div>
       </slot>
     </div>
-    <post-preview-index
-      :title="indexTitle"
-      @index-clicked="$on_indexClicked"
-      :html="htmlContent"
-      ref="post-index"
-      :empty-text="$attrs['empty-text']"
-      :style="{ top: indexStickyTop }"
-    />
+    <div class="post-preview-index-wrapper" :style="{ top: indexStickyTop }">
+      <post-preview-index
+        :title="indexTitle"
+        @index-clicked="$on_indexClicked"
+        :html="htmlContent"
+        :empty-text="$attrs['empty-text']"
+      />
+    </div>
   </div>
 </template>
 
@@ -96,6 +96,14 @@ export default {
       type: String,
       required: false,
       default: () => "0"
+    },
+    trigger: {
+      type: Boolean,
+      default: () => true
+    },
+    navigate: {
+      type: Function,
+      required: false
     }
   },
   data: () => ({
@@ -119,10 +127,10 @@ export default {
   },
   computed: {
     _hasPreviousPost() {
-      return this.post.previous_post_id !== null;
+      return this.post?.previous_post_id;
     },
     _hasNextPost() {
-      return this.post.next_post_id !== null;
+      return this.post?.next_post_id;
     }
   },
   methods: {
@@ -132,11 +140,8 @@ export default {
     $on_htmlChanged(html) {
       this.htmlContent = html;
     },
-    $_navigateToPost(postId) {
-      this.$router.push({
-        name: "PostDetail",
-        params: { post_id: postId }
-      });
+    $_navigate(postId) {
+      this.navigate?.(postId);
     }
   }
 };
@@ -165,7 +170,7 @@ export default {
   justify-content: space-between;
   position: relative;
 
-  .post-preview-index {
+  .post-preview-index-wrapper {
     display: none;
   }
 
@@ -174,11 +179,12 @@ export default {
       flex-basis: 70%;
     }
 
-    .post-preview-index {
+    .post-preview-index-wrapper {
       display: block;
       position: sticky;
       height: fit-content;
       top: 0;
+      right: 0;
       flex-basis: 27%;
     }
   }
@@ -188,7 +194,7 @@ export default {
       flex-basis: 75%;
     }
 
-    .post-preview-index {
+    .post-preview-index-wrapper {
       flex-basis: 22%;
     }
   }

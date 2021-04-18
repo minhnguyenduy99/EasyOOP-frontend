@@ -38,7 +38,10 @@
             <div id="search-panel-container" class="card-content">
               <search-panel panel-title="Bài viết" :items="listPosts">
                 <template #item="{ item }">
-                  <post-panel-item :item="item" @click="$on_postClicked" />
+                  <search-post-view
+                    :post="item"
+                    @click="$_navigateToPostView"
+                  />
                 </template>
               </search-panel>
               <search-panel panel-title="Q & A" :items="listQuestions">
@@ -56,30 +59,32 @@
 
 <script>
 import { MenuDropdownContent } from "@/components";
+import { mapActions } from "vuex";
+import { FunctionDelayer } from "../../utils";
 
 export default {
   name: "UserViewMenuNavbar",
   components: {
     MenuDropdownContent,
-    "search-panel": async () => (await import("@/components")).SearchPanel,
-    "post-panel-item": async () => (await import("@/components")).PostPanelItem,
-    // "question-panel-item": async () =>
-    //   (await import("@/components")).QuestionPanelItem,
-    "qanda-card": async () => (await import("@/components")).QandACard
+    "search-panel": () => import("./components/search-panel"),
+    "qanda-card": async () => (await import("@/components")).QandACard,
+    "search-post-view": () => import("./components/search-post-view")
   },
   data: () => ({
     rootMenus: [],
     search: "",
     listPosts: [],
     listQuestions: [],
-    showSearchModal: false
+    showSearchModal: false,
+    handler: new FunctionDelayer()
   }),
   watch: {
     search(val) {
       if (!val) {
+        this.handler.reset();
         return;
       }
-      this.$_updateFilteredPosts();
+      this.handler.execute(() => this.$_updateFilteredPosts(val));
       this.$_udpateFilteredQuestions();
     }
   },
@@ -93,17 +98,23 @@ export default {
     });
   },
   methods: {
-    $on_postClicked(post) {
+    ...mapActions("POST", ["getPosts"]),
+    $_navigateToPostView(post) {
+      this.search = "";
       this.showSearchModal = false;
       this.$nextTick(() => {
         this.$router.push({
-          name: "PostDetail",
+          name: "PostView",
           params: { post_id: post.post_id }
         });
       });
     },
     async $_updateFilteredPosts(search) {
-      return this.$api.posts.searchPosts(search).then(result => {
+      return this.getPosts({
+        searchOptions: {
+          search
+        }
+      }).then(result => {
         const { error, data } = result;
         if (error) {
           return;

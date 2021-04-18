@@ -1,11 +1,14 @@
-import DashboardPageConfig from "./dashboard";
-import CreatePostPageConfig from "./create-post";
-import EditPostPageConfig from "./edit-post";
-import CommonQuestionPageConfig from "./common-question";
+const loadPageConfig = () => {
+  const requireConfig = require.context("./", true, /\.?page\.(js)$/);
 
-export default [
-  DashboardPageConfig,
-  CreatePostPageConfig,
-  EditPostPageConfig,
-  CommonQuestionPageConfig
-];
+  const listConfigs = [];
+
+  requireConfig.keys().forEach(key => {
+    const config = requireConfig(key);
+    listConfigs.push(config.default || config);
+  })
+
+  return listConfigs;
+}
+
+export default loadPageConfig();

@@ -2,11 +2,14 @@
   <nav class="breadcrumb">
     <ul>
       <li
-        v-for="title in titles"
+        v-for="(title, index) in titles"
         :key="title.id"
-        :class="[active.value === title.value ? 'is-active' : '']"
+        :class="[_active === index ? 'is-active' : '']"
       >
-        {{ title.value }}
+        <router-link v-if="title.to" :to="title.to">
+          {{ title.value }}
+        </router-link>
+        <a v-else>{{ title.value }}</a>
       </li>
     </ul>
   </nav>
@@ -21,10 +24,10 @@ export default {
       required: false,
       default: () => []
     },
-    active: Object
+    active: Number
   },
   model: {
-    prop: "value",
+    prop: "active",
     event: "active-changed"
   },
   computed: {

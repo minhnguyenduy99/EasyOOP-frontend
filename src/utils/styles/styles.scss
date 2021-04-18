@@ -8,6 +8,10 @@ $button-border-radius: 7px;
 
   &.is-small {
     border-radius: 7px;
+
+    &.is-rounded {
+      border-radius: 50%;
+    }
   }
 
   &.button-tag {
@@ -15,6 +19,22 @@ $button-border-radius: 7px;
       font-size: $size-6;
       border-radius: 10px;
     }
+  }
+}
+
+.button.is-icon-button {
+  padding: 0;
+  &.is-small {
+    width: 30px;
+    height: 30px;
+  }
+  &.is-medium {
+    width: 48px;
+    height: 48px;
+  }
+  &.is-large {
+    width: 60px;
+    height: 60px;
   }
 }
 

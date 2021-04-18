@@ -31,15 +31,14 @@ export default {
   mixins: [TopicDetailMixin],
   props: {
     startButtonLabel: String,
-    navigateFirstPost: {
-      type: Function,
-      required: false
-    },
     emptyText: String
   },
   methods: {
     $_navigateToFirstPost() {
-      this.navigateFirstPost?.(this.topic.first_post_id);
+      this.$router.push({
+        name: "PostView",
+        params: { post_id: this.topic.first_post_id }
+      });
     }
   }
 };

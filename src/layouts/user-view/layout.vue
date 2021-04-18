@@ -21,13 +21,8 @@
 
       <!-- Main body  -->
       <section id="main-body-section">
-        <div id="main-body-layout">
-          <div id="navbar-section">
-            <router-view name="sidebar" />
-          </div>
-          <div id="body-section">
-            <router-view name="default" />
-          </div>
+        <div id="body-section">
+          <router-view name="default" />
         </div>
       </section>
       <footer id="user-view-footer" class="hero is-medium is-primary-light">
@@ -40,6 +35,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import UserViewHeroBody from "./user-view.hero";
 
 export default {
@@ -49,7 +45,7 @@ export default {
   },
   provide() {
     return {
-      $api_getPostsGroupedByTopics: this.$api.posts.getPostGroupedByTopics
+      $api_getPostsGroupedByTopic: this.getPostsByTopic
     };
   },
   props: {
@@ -58,6 +54,9 @@ export default {
       required: false,
       default: () => false
     }
+  },
+  methods: {
+    ...mapActions("POST", ["getPostsByTopic"])
   }
 };
 </script>

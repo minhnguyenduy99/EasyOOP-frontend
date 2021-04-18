@@ -41,7 +41,7 @@ export default {
     searchOptions: {
       search: "",
       topic_id: null,
-      post_status: null
+      post_status: -1
     },
     post_statuses: [],
     topics: [
@@ -52,7 +52,10 @@ export default {
     ]
   }),
   created: function() {
-    this.post_statuses = Object.values(POST_STATUSES);
+    this.post_statuses = Object.values(POST_STATUSES).concat({
+      status: -1,
+      title: "Chọn tất cả"
+    });
   },
   mounted: function() {
     this.$_getTopcis();

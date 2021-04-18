@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-header card ">
+  <div class="admin-header card">
     <div class="admin-header-content card-content">
       <div class="admin-header-content--title">
         <h1 class="mr-3 is-size-4">{{ title }}</h1>

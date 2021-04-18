@@ -18,14 +18,21 @@
       @sort="onSort"
       @click="onRowClicked"
     >
-      <b-table-column label="ID" width="40" numeric>
+      <b-table-column label="ID" width="40" numeric centered>
         <template v-slot="{ row }">
           <strong>{{ row.id }}</strong>
         </template>
       </b-table-column>
 
-      <b-table-column label="Tên bài viết" width="300" v-slot="{ row }">
-        {{ row.post_title }}
+      <b-table-column
+        label="Tên bài viết"
+        width="300"
+        v-slot="{ row }"
+        cell-class="is-align-items-center"
+      >
+        <router-link :to="$_getPostDetailView(row.post_id)">
+          {{ row.post_title }}
+        </router-link>
       </b-table-column>
 
       <b-table-column label="Chủ đề" width="100" v-slot="{ row }">
@@ -61,10 +68,20 @@
         field="post_status"
         label="Tình trạng"
         width="100"
-        v-slot="{ row }"
         sortable
       >
-        {{ postStatuses[row.post_status] }}
+        <template v-slot="{ row }">
+          <div class="is-flex is-flex-direction-column is-align-items-center">
+            <b-icon
+              :icon="postStatuses[row.post_status].icon"
+              :type="postStatuses[row.post_status].type"
+              size="is-small"
+            />
+            <span class="is-size-7 has-text-weight-bold mt-2">{{
+              postStatuses[row.post_status].title
+            }}</span>
+          </div>
+        </template>
       </b-table-column>
 
       <b-table-column
@@ -138,6 +155,7 @@ export default {
     itemsPerPage: 6,
     totalCount: 0,
     posts: [],
+    postStatusIcons: {},
     postFeatures: [
       {
         icon: "eye",
@@ -176,7 +194,11 @@ export default {
       this.onDeleteButtonClicked
     );
     Object.values(POST_STATUSES).forEach(status => {
-      this.postStatuses[status.status.toString()] = status.title;
+      this.postStatuses[status.status.toString()] = {
+        title: status.title,
+        icon: status.icon,
+        type: status.type
+      };
     });
     this.$_loadAsyncData();
   },
@@ -301,6 +323,14 @@ export default {
     $_removePostFromTable(postId) {
       this.posts = this.posts.filter(post => post.post_id !== postId);
       this.totalCount--;
+    },
+    $_getPostDetailView(postId) {
+      return {
+        name: "AdminPostDetail",
+        params: {
+          post_id: postId
+        }
+      };
     }
   }
 };
@@ -337,5 +367,9 @@ export default {
       margin-right: 0.5rem;
     }
   }
+}
+
+.is-vertical-middle {
+  vertical-align: middle;
 }
 </style>

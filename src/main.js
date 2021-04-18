@@ -3,7 +3,7 @@ import Buefy from "buefy";
 import App from "./App.vue";
 import { createVueRouter } from "./router";
 import { createVuexStore } from "./store";
-import { ApiService } from "./apis";
+import createAPIPack from "./apis";
 import { authHeaderInterceptor } from "./apis/interceptors";
 import {
   FormValidatorPlugin,
@@ -25,13 +25,14 @@ Vue.use(ApiServicePlugin, {
 });
 
 // Init API services
-const apiServices = new ApiService({
+const apiPack = createAPIPack({
   baseURL: process.env.VUE_APP_API_ENDPOINT
 });
-apiServices.useInterceptor(authHeaderInterceptor);
+
+console.log(apiPack.apis);
 
 // Init vue store
-const vuexStore = createVuexStore({ apiService: apiServices.apis });
+const vuexStore = createVuexStore({ apiService: apiPack.apis });
 
 // Init vue router
 const vueRouterWrapper = createVueRouter();

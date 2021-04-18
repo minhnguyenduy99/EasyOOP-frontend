@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BaseResponseFormatter } from "./helpers";
+import { BaseResponseFormatter } from "../helpers";
 
 export class BaseAPI {
   _context;

@@ -25,7 +25,7 @@
     </admin-content>
     <b-modal v-model="showModal" scroll="keep">
       <div id="preview-container" class="card is-page-responsive py-6">
-        <post-preview :post="post" />
+        <post-preview :post="post" :trigger="false" />
       </div>
     </b-modal>
     <b-loading :is-full-page="true" v-model="isLoading" :can-cancel="false">
@@ -36,14 +36,13 @@
 </template>
 
 <script>
-import { AdminContent } from "@/components";
 import { FileReadHelper, ToastNotifier } from "../../../utils";
 import { mapActions } from "vuex";
 
 export default {
   name: "CreatePostPage",
   components: {
-    AdminContent,
+    "admin-content": () => import("../components/admin-content/admin-content.vue"),
     "create-post-form": () => import("./create-post.form"),
     "post-preview": async () => (await import("@/components")).PostPreview
   },
@@ -62,9 +61,12 @@ export default {
     isLoading: false
   }),
   methods: {
-    ...mapActions("POST", ["createPost", "getPosts"]),
-    ...mapActions("TAG", ["searchPostTags"]),
-    ...mapActions("TOPIC", ["searchTopics"]),
+    ...mapActions("POST", [
+      "creator_createPost",
+      "getPosts",
+      "searchTopics",
+      "searchPostTags"
+    ]),
 
     $on_previewButtonClicked(form) {
       this.showModal = true;
@@ -83,8 +85,7 @@ export default {
         return;
       }
       this.isLoading = true;
-      console.log(form);
-      this.createPost(form).then(result => {
+      this.creator_createPost({ ...form }).then(result => {
         const { error } = result;
         this.isLoading = false;
         if (error) {

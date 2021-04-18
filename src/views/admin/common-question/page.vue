@@ -85,13 +85,11 @@ const tags = [
   }
 ];
 
-import { AdminContent, AdminContentHeader } from "../../../components";
-
 export default {
   name: "CommonQuestionPage",
   components: {
-    AdminContent,
-    AdminContentHeader,
+    "admin-content": () => import("../components/admin-content/admin-content.vue"),
+    "admin-content-header": () => import("../components/admin-content/admin-content-header.vue"),
     "common-question-table": () => import("./common-question.table"),
     "create-question-form": () => import("./create-question.form")
   },

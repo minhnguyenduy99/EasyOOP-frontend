@@ -4,7 +4,7 @@
       <span class="is-size-4">{{ panelTitle }}</span>
       <hr class="is-hr" />
     </div>
-    <div class="panel-content ha-vertical-layout-5">
+    <div :class="[panelContentClass ? panelContentClass : 'panel-content']">
       <div v-for="item in items" :key="item.id" class="panel-item is-clickable">
         <slot name="item" v-bind="{ item }" />
       </div>
@@ -20,7 +20,8 @@ export default {
     items: {
       type: Array,
       default: () => []
-    }
+    },
+    panelContentClass: String
   }
 };
 </script>

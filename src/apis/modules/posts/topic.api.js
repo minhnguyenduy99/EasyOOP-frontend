@@ -1,4 +1,4 @@
-import { BaseAPI } from "./base.api";
+import { BaseAPI } from "../../base";
 
 const endpoints = {
   search: "/search"

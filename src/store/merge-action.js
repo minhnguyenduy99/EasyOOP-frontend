@@ -1,11 +1,10 @@
-export default apis => {
-  if (!apis) {
-    return {};
-  }
+export default (...listApis) => {
   const actions = {};
-  Object.keys(apis).forEach(key => {
-    let api = apis[key];
-    actions[key] = (context, data) => api?.(data);
+  listApis.forEach(apis => {
+    Object.keys(apis).forEach(key => {
+      let api = apis[key];
+      actions[key] = (context, data) => api?.(data);
+    });
   });
   return actions;
 };

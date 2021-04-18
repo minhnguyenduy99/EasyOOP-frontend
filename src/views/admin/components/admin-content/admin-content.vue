@@ -1,9 +1,9 @@
 <template>
-  <div class="admin-content ha-vertical-layout-5">
+  <div class="admin-content">
     <slot name="header">
       <admin-content-header :title="title" :icon="icon" :iconPack="iconPack" />
     </slot>
-    <div class="px-4 py-3">
+    <div :class="[contentClass ? contentClass : 'admin-content-body']">
       <slot></slot>
     </div>
   </div>
@@ -17,7 +17,10 @@ export default {
   components: {
     AdminContentHeader
   },
-  mixins: [AdminContentHeaderMixin]
+  mixins: [AdminContentHeaderMixin],
+  props: {
+    contentClass: String
+  }
 };
 </script>
 
@@ -25,5 +28,9 @@ export default {
 $admin-content-background-color: rgb(250, 250, 250);
 .admin-content {
   background: $admin-content-background-color;
+
+  &-body {
+    padding: 1rem 0.75rem;
+  }
 }
 </style>

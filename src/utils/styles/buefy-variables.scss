@@ -52,9 +52,12 @@ $input-focus-color: $primary;
 // $input-icon-active-color: $text-invert;
 
 // Menu
-$menu-item-hover-color: $text-invert;
-$menu-item-hover-background-color: $primary-light;
 $menu-list-link-padding: 0.5em 0.75em;
+$menu-item-color: rgba(0, 0, 0, 0.7);
+$menu-item-hover-background-color: rgb(235, 235, 235);
+$menu-item-hover-color: $text;
+$menu-item-active-color: $text-invert;
+$menu-item-active-background-color: $primary-light;
 
 // Drodown
 $dropdown-menu-min-width: 10rem;

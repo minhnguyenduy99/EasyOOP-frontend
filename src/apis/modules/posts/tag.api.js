@@ -1,4 +1,4 @@
-import { BaseAPI } from "./base.api";
+import { BaseAPI } from "../../base";
 
 const endpoints = {
   search: "/search"
@@ -8,7 +8,7 @@ const TAG_TYPES = {
   post: "post",
   example: "example",
   question: "question"
-}
+};
 
 export class TagAPI extends BaseAPI {
   async searchTags(options) {

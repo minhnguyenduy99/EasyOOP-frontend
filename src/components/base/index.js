@@ -1,2 +1,2 @@
 export { default as ValidatedFormElement } from "./validated-form-element";
-export { default as Breadcumb } from "./breadcumb";
+export { default as Breadcrumb } from "./breadcrumb";

@@ -1,5 +1,5 @@
 import { BaseAPI } from "./base.api";
-import { HTTP_CODES } from "./helpers";
+import { HTTP_CODES } from "../../helpers";
 
 export class AuthAPI extends BaseAPI {
   async login(data) {

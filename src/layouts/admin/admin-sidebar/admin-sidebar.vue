@@ -32,11 +32,12 @@
         <b-menu :activable="false" class="is-custom-mobile">
           <b-menu-list label="NAVIGATION">
             <b-menu-item
-              v-for="item in navigations"
+              v-for="(item, index) in navigations"
               :key="item.id"
-              class="sidebar-navigation-list-item"
+              :class="['sidebar-navigation-list-item']"
               tag="router-link"
               :to="item.to"
+              :active="index === currentViewIndex"
             >
               <template #label>
                 <b-icon
@@ -55,6 +56,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import AdminSidebarUserBadge from "./admin-sidebar-user-badge";
 
 export default {
@@ -68,19 +70,63 @@ export default {
     open: true,
     navigations: [
       {
+        name: "Dashboard",
         icon: "th-large",
         pack: "fas",
         title: "Dashboard",
         to: { name: "Dashboard" }
       },
       {
+        name: "CreatePost",
+        icon: "pencil-alt",
+        pack: "fas",
+        title: "Tạo bài viết",
+        to: { name: "CreatePost" }
+      },
+      {
+        name: "ListPosts",
+        icon: "clipboard",
+        pack: "fas",
+        title: "Danh sách bài viết",
+        to: { name: "ListPosts" }
+      },
+      {
+        name: "PendingPosts",
+        icon: "clipboard-check",
+        pack: "fas",
+        title: "Bài viết chờ duyệt",
+        to: { name: "PendingPosts" }
+      },
+      {
+        name: "Q&A",
         icon: "question-circle",
         pack: "fas",
         title: "Q&A",
         to: { name: "Q&A" }
       }
-    ]
-  })
+    ],
+    currentViewIndex: 0
+  }),
+  beforeRouteEnter: function(to, from, next) {
+    next(vm => {
+      vm.$root.$store.commit("setCurrentView", to.name);
+    });
+  },
+  created: function() {
+    this.currentViewIndex = this.navigations.findIndex(
+      navItem => navItem.name === this.currentView
+    );
+  },
+  watch: {
+    appCurrentView(val) {
+      this.currentViewIndex = this.navigations.findIndex(
+        navItem => navItem.name === this.appCurrentView
+      );
+    }
+  },
+  computed: {
+    ...mapGetters(["appCurrentView"])
+  }
 };
 </script>
 
