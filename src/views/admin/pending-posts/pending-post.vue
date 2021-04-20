@@ -7,11 +7,11 @@
     }"
     @click="$on_postClicked"
   >
-    <div class="card-image">
+    <div class="card-image" style="z-index: 20">
       <b-image
-        ratio="16by12"
+        ratio="16by9"
         class="pending-post-thumbnail"
-        :src="post.thumbnail_file_url"
+        :src="detailedPost.thumbnail_file_url"
       />
       <div
         :class="{
@@ -33,7 +33,7 @@
             size="is-small"
             ref="selectButton"
           />
-          <div class="buttons">
+          <div class="pending-post-actions-group">
             <b-button
               class="is-icon-button"
               type="is-primary-light"
@@ -48,6 +48,7 @@
               icon-right="trash"
               size="is-small"
               rounded
+              @click.stop="$on_deleteButtonClicked"
             />
           </div>
         </div>
@@ -76,13 +77,15 @@
     </div>
     <b-modal v-model="showPost" scroll="keep">
       <div class="card is-page-responsive py-6">
-        <post-preview :post="post" :trigger="false" />
+        <post-preview :post="detailedPost" :trigger="false" />
       </div>
     </b-modal>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { ToastNotifier } from "../../../utils";
 import PostMixin from "./mixins/post.mixin";
 
 export default {
@@ -100,6 +103,14 @@ export default {
     selected: Boolean
   },
   data: () => ({
+    ACTIONS: [
+      {
+        icon: "pen",
+        text: "Chỉnh sửa bài viết",
+        to: { name: "EditPost" }
+      }
+    ],
+    actionGroupActive: false,
     isChecked: false,
     showPost: false
   }),
@@ -109,8 +120,40 @@ export default {
     }
   },
   methods: {
+    ...mapActions("POST", ["creator_cancelVerification"]),
     $on_postClicked() {
       this.$emit("select", !this.selected);
+    },
+    $on_actionTriggerClicked() {
+      this.$refs["action-dropdown"].toggle();
+    },
+    $on_deleteButtonClicked() {
+      this.$buefy.dialog.confirm({
+        title: "Xóa bài duyệt",
+        message: "Bạn chắc chắc muốn xóa bài duyệt này ?",
+        confirmText: "Đồng ý",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          this.$_deleteVerification().then(result => {
+            const { data, error } = result;
+            if (error) {
+              ToastNotifier.error(this.$buefy.toast, error);
+              return;
+            }
+            ToastNotifier.success(
+              this.$buefy.toast,
+              "Xóa bài duyệt thành công"
+            );
+            this.$emit("deleted");
+          });
+        }
+      });
+    },
+    $_deleteVerification() {
+      return this.creator_cancelVerification({
+        verification_id: this.post.verification_id
+      });
     }
   }
 };
@@ -123,6 +166,7 @@ $card-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
 
 .pending-post {
   border: 2px solid transparent;
+  position: relative;
   &:hover {
     .pending-post-actions {
       opacity: 1;
@@ -142,6 +186,15 @@ $card-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
 
   > .pending-post-field {
     padding: 0.25rem 0;
+  }
+}
+
+.pending-post-actions-group {
+  z-index: 12;
+  > * {
+    &:not(:last-child) {
+      margin-right: 0.25rem;
+    }
   }
 }
 
@@ -178,10 +231,6 @@ $card-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
 
   &:hover {
     box-shadow: $card-shadow;
-  }
-
-  & > &-image {
-    position: relative;
   }
 
   & > &-content {

@@ -1,81 +1,198 @@
 <template>
   <div id="pending-post-search">
-    <div id="pending-post-search-group">
-      <b-input
-        placeholder="Nhập tên bài viết"
-        type="is-primary"
-        icon="search"
-        v-model="searchOptions.search"
-        @keyup.enter.native="onSearchButtonClicked"
-      />
-      <b-select placeholder="Loại bài viết" v-model="searchOptions.post_type">
-        <option v-for="type in postTypes" :value="type.value" :key="type.id">
-          {{ type.text }}
-        </option>
-      </b-select>
-      <b-select placeholder="Tình trạng" v-model="searchOptions.post_status">
-        <option
-          v-for="post_status in postStatuses"
-          :value="post_status.status"
-          :key="post_status.id"
-        >
-          {{ post_status.title }}
-        </option>
-      </b-select>
-    </div>
-    <div class="mt-3">
-      <b-button type="is-primary is-dark" @click="onSearchButtonClicked"
-        >Tìm kiếm</b-button
-      >
-    </div>
+    <b-input
+      id="search-input"
+      placeholder="Nhập tên bài viết"
+      type="is-primary"
+      icon="search"
+      v-model="searchOptions.search"
+      @keyup.enter.native="$on_applySearch"
+    />
+    <b-button
+      class="ml-3"
+      type="is-primary"
+      icon-right="filter"
+      @click="showModal = true"
+      >Bộ lọc</b-button
+    >
+    <b-modal v-model="showModal">
+      <template>
+        <div class="card">
+          <div class="card-header has-background-primary-light">
+            <div class="card-header-title">
+              <span class="is-size-5 has-text-light">Lọc nâng cao</span>
+            </div>
+          </div>
+          <div id="advanced-search-container" class="card-content">
+            <div class="search-group">
+              <div class="search-group-header">
+                <span class="search-group-header-title">Bộ lọc</span>
+                <b-icon type="is-primary" icon="filter"></b-icon>
+              </div>
+              <div class="search-group-content">
+                <b-select v-model="searchOptions.type">
+                  <option
+                    v-for="type in verificationTypes"
+                    :value="type.value"
+                    :key="type.id"
+                  >
+                    {{ type.text }}
+                  </option>
+                </b-select>
+              </div>
+            </div>
+            <div class="search-group">
+              <div class="search-group-header">
+                <span class="search-group-header-title">Sắp xếp</span>
+                <b-icon type="is-primary" icon="sort"></b-icon>
+              </div>
+              <div class="search-group-content">
+                <b-select placeholder="Sắp xếp" v-model="searchOptions.sort_by">
+                  <option
+                    v-for="sort in sortOptions"
+                    :value="sort.value"
+                    :key="sort.id"
+                  >
+                    {{ sort.text }}
+                  </option>
+                </b-select>
+                <b-select
+                  v-show="selectedSortOrderOption"
+                  v-model="sortOptions.sort_order"
+                  placeholder="Thứ tự sắp xếp"
+                >
+                  <option
+                    v-for="order in selectedSortOrderOption"
+                    :value="order.value"
+                    :key="order.id"
+                  >
+                    {{ order.text }}
+                  </option>
+                </b-select>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer p-5">
+            <b-button type="is-primary" outlined @click="$on_applySearch"
+              >Áp dụng</b-button
+            >
+          </div>
+        </div>
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import { POST_STATUSES, POST_TYPES } from "./consts";
+import { POST_STATUSES, VERIFICATION_TYPES } from "./consts";
+const DEFAULT_SEARCH_OPTIONS = {
+  search: null,
+  sort_by: "created_date",
+  sort_order: "desc",
+  type: null
+};
 
 export default {
   name: "PostSearch",
   data: () => ({
+    DEFAULT_SEARCH_OPTIONS: {
+      search: null,
+      sort_by: "created_date",
+      sort_order: "desc",
+      type: null
+    },
+    showModal: false,
     searchOptions: {
-      search: "",
-      post_status: -1,
-      post_type: null
+      search: null,
+      sort_by: "created_date",
+      sort_order: "desc",
+      type: null
+    },
+    sortOptions: [
+      {
+        text: "Sắp xếp",
+        value: null
+      },
+      {
+        text: "Theo thời gian",
+        value: "created_date"
+      }
+    ],
+    sortOrderOptions: {
+      created_date: [
+        {
+          text: "Mới nhất",
+          value: "desc"
+        },
+        {
+          text: "Cũ nhất",
+          value: "asc"
+        }
+      ]
     },
     postStatuses: [],
-    postTypes: []
+    verificationTypes: []
   }),
   created: function() {
     this.postStatuses = POST_STATUSES;
-    this.postTypes = POST_TYPES;
+    this.verificationTypes = VERIFICATION_TYPES;
+  },
+  computed: {
+    selectedSortOrderOption() {
+      return this.sortOrderOptions[this.searchOptions.sort_by];
+    }
   },
   methods: {
-    onSearchButtonClicked() {
-      this.$emit("search", this.searchOptions);
+    $on_applySearch() {
+      this.showModal = false;
+      this.$nextTick(() => {
+        this.$emit("search", this.searchOptions);
+      });
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-#pending-post-search-group {
-  > .control {
-    width: 100%;
-    &:not(:last-child) {
-      margin-bottom: 0.5rem;
-    }
+#pending-post-search {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  width: 100%;
+  box-sizing: border-box;
+  justify-content: center;
+  margin: 0 auto;
+
+  button {
+    width: fit-content;
   }
 
   @include tablet {
-    display: flex;
+    width: 70%;
+  }
 
-    > .control {
-      width: fit-content;
-      &:not(:last-child) {
-        margin-bottom: 0;
-        margin-right: 1rem;
-      }
+  @include desktop {
+    width: 50%;
+  }
+}
+
+#advanced-search-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1rem;
+}
+
+.search-group {
+  &-header {
+    margin-bottom: 1rem;
+
+    &-title {
+      color: $grey;
+      font-weight: bold;
     }
+  }
+
+  &-content {
+    @extend .ha-vertical-layout-6;
   }
 }
 </style>

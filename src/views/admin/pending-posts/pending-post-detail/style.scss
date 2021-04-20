@@ -1,0 +1,15 @@
+.pending-post {
+  &-container {
+    @extend .ha-vertical-layout-7; 
+    padding-bottom: 1rem;
+  }
+
+  &-field {
+    display: flex;
+    flex-direction: column;
+  
+    &--label {
+      color: $grey;
+    }
+  }
+}

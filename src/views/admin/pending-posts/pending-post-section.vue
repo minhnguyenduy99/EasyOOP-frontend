@@ -1,29 +1,34 @@
 <template>
   <div id="pending-post-section">
-    <post-search class="mb-5" @search="$on_search" />
-    <div>
-      <div
-        v-if="!isSearching"
-        class="pending-posts-layout ha-vertical-layout-6-mobile"
+    <div
+      v-if="!isEmpty"
+      class="pending-posts-layout ha-vertical-layout-6-mobile"
+    >
+      <pending-post
+        v-for="(post, index) in pendingPosts"
+        :key="post.id"
+        :post="post"
+        :selected="index === selectedIndex"
+        :checkMode="isCheckMode"
+        @check="$on_postChecked(index, $event)"
+        @select="$on_postSelected(index, $event)"
+        @deleted="$on_postDeleted"
+      />
+    </div>
+    <div v-else>
+      <empty-state
+        image-src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1618931250/oop-learning-helper/post_empty_state_xcrbog.png"
+        text="Bạn không có bài duyệt nào"
+      />
+    </div>
+    <div class="my-5 is-flex is-justify-content-center">
+      <b-button
+        v-show="canLoadMore"
+        type="is-primary"
+        outlined
+        @click="$on_loadButtonClicked"
+        >Xem thêm</b-button
       >
-        <pending-post
-          v-for="(post, index) in pendingPosts"
-          :key="post.id"
-          :post="post"
-          :selected="index === selectedIndex"
-          :checkMode="isCheckMode"
-          @check="$on_postChecked(index, $event)"
-          @select="$on_postSelected(index, $event)"
-        />
-      </div>
-      <div class="my-5 is-flex is-justify-content-center">
-        <b-button type="is-primary" outlined>Xem thêm</b-button>
-      </div>
-      <b-loading
-        :is-full-page="false"
-        v-model="isSearching"
-        :can-cancel="false"
-      ></b-loading>
     </div>
   </div>
 </template>
@@ -31,38 +36,50 @@
 <script>
 export default {
   components: {
-    "pending-post": () => import("./pending-post"),
-    "post-search": () => import("./post-search")
+    "empty-state": () => import("@/components/empty-state.vue"),
+    "pending-post": () => import("./pending-post")
   },
-  inject: ["findPendingPosts"],
+  props: {
+    searchResult: Object
+  },
+  inject: ["findPendingPosts", "reloadTab"],
   data: () => ({
     pendingPosts: [],
-    isSearching: true,
-    pagination: {
-      total: 6,
-      perPage: 6,
-      current: 1
+    queriedResults: {
+      remain_item_count: 0,
+      total_count: 0
     },
     checkedIndex: new Set(),
     selectedIndex: -1,
     isCheckMode: false
   }),
-  mounted: function() {
-    this.$_updatePendingPosts();
-  },
   watch: {
+    searchResult: {
+      handler(val) {
+        this.selectedIndex = -1;
+        if (!val) {
+          return;
+        }
+        this.pendingPosts.length = 0;
+        const { results, ...queriedResults } = val;
+        this.queriedResults = queriedResults;
+        this.pendingPosts.push(...results);
+      },
+      deep: true
+    },
     selectedIndex(val) {
       this.$emit("selected-changed", this.pendingPosts[val]);
     }
   },
-  methods: {
-    $on_search(options) {
-      this.pendingPosts.length = 0;
-      this.isSearching = true;
-      setTimeout(() => {
-        this.$_updatePendingPosts();
-      }, 2000);
+  computed: {
+    canLoadMore() {
+      return this.queriedResults.remain_item_count > 0;
     },
+    isEmpty() {
+      return this.pendingPosts.length === 0;
+    }
+  },
+  methods: {
     $on_postChecked(index, checked) {
       if (checked) {
         this.checkedIndex.add(index);
@@ -78,15 +95,11 @@ export default {
     $on_postSelected(index, selected) {
       this.selectedIndex = selected ? index : -1;
     },
-    $_updatePendingPosts() {
-      this.findPendingPosts().then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        this.pendingPosts.push(...data);
-        this.isSearching = false;
-      });
+    $on_loadButtonClicked() {
+      this.$emit("load");
+    },
+    $on_postDeleted() {
+      this.reloadTab();
     }
   }
 };
@@ -94,6 +107,10 @@ export default {
 
 <style scoped lang="scss">
 .pending-posts-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);
+  gap: 1rem;
+
   @include tablet {
     display: grid;
     grid-template-columns: repeat(auto-fill, 150px);

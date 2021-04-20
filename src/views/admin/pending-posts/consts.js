@@ -23,17 +23,40 @@ export const POST_STATUSES = [
   }
 ];
 
-export const POST_TYPES = [
+export const VERIFICATION_TYPES = [
   {
-    text: "Loại bài viết",
+    text: "Chọn loại duyệt",
     value: null
   },
   {
-    text: "Series",
-    value: "series"
+    text: "Duyệt tạo",
+    value: "1"
   },
   {
-    text: "Tự do",
-    value: "non-series"
+    text: "Duyệt cập nhật",
+    value: "2"
+  },
+  {
+    text: "Duyệt xóa",
+    value: "3"
+  }
+];
+
+export const VERIFICATION_STATUSES = [
+  {
+    text: "Không được duyệt",
+    color: "has-text-danger"
+  },
+  {
+    text: "Đã duyệt",
+    color: "has-text-success"
+  },
+  {
+    text: "Đang chờ",
+    color: "has-text-primary-dark"
+  },
+  {
+    text: "Đã hủy",
+    color: "has-text-grey"
   }
 ];

@@ -5,7 +5,9 @@ const endpoints = {
   createPost: "",
   deletePost: "",
   updatePost: "",
-  findPosts: "/search"
+  updatePendingPost: "/pending",
+  findPosts: "/search",
+  findPendingPosts: "/pending/search"
 };
 
 export class CreatorPostAPI extends BaseAPI {
@@ -72,12 +74,58 @@ export class CreatorPostAPI extends BaseAPI {
     }
   }
 
+  async updatePendingPost(options) {
+    const { postId, data } = options;
+    data.post_type = "series";
+    data.content_file = createFile(data.content_file, { type: "text/plain" });
+    const formData = createForm(data);
+    const endpoint = this._addURLParams(endpoints.updatePendingPost, postId);
+    try {
+      const response = await this._context.put(endpoint, formData);
+      if (response.status === HTTP_CODES.OK) {
+        return this._formatter.getDataFormat(response);
+      }
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
+  async findPendingPosts(options) {
+    const {
+      search = null,
+      sort_by = "created_date",
+      sort_order = "desc",
+      type = null,
+      status = null,
+      limit = null,
+      group = false
+    } = options;
+    try {
+      const response = await this._context.get(endpoints.findPendingPosts, {
+        params: {
+          search,
+          sort_by,
+          sort_order,
+          type,
+          status,
+          limit,
+          group
+        }
+      });
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
   getEndpointObject() {
     return {
       createPost: this.createPost.bind(this),
       deletePost: this.deletePost.bind(this),
       findPosts: this.findPosts.bind(this),
-      updatePost: this.updatePost.bind(this)
+      updatePost: this.updatePost.bind(this),
+      findPendingPosts: this.findPendingPosts.bind(this),
+      updatePendingPost: this.updatePendingPost.bind(this)
     };
   }
 

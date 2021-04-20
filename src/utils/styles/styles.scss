@@ -165,3 +165,35 @@ a.link-animation {
     width: 100%;
   }
 }
+
+// [Tabs]
+
+.b-tabs {
+  .tab-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  &.is-no-vertical-padding {
+    .tab-content {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+
+  &.is-paddingless {
+    .tab-content {
+      padding: 0;
+    }
+  }
+
+  > .tabs {
+    a {
+      color: $grey;
+      font-weight: bold;
+
+      &:hover {
+        color: black;
+      }
+    }
+  }
+}
