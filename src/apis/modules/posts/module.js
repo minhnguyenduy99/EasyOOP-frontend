@@ -4,6 +4,7 @@ import { CreatorVerificationAPI } from "./creator/creator.verification.api";
 import { PostAPI } from "./posts.api";
 import { TagAPI } from "./tag.api";
 import { TopicAPI } from "./topic.api";
+import { ManagerVerificationAPI } from "./manager/verification.api";
 
 export class PostAPIModule extends BaseAPIModule {
   _initModule() {
@@ -18,6 +19,12 @@ export class PostAPIModule extends BaseAPIModule {
       new CreatorVerificationAPI(),
       "creator/verifications",
       "creator"
+    );
+    // manager group
+    this._useAPI(
+      new ManagerVerificationAPI(),
+      "manage/verifications",
+      "manager"
     );
   }
 }

@@ -14,11 +14,18 @@
 <script>
 export default {
   name: "AdminLayout",
+  props: {
+    navigations: {
+      type: Array,
+      default: () => []
+    }
+  },
   provide() {
     return {
       user: {
         username: "Minh"
-      }
+      },
+      navigations: this.navigations
     };
   }
 };
