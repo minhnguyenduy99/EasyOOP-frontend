@@ -1,41 +1,38 @@
-import { VERIFICATION_STATUSES } from "../consts";
-
 export default {
   props: {
     post: {
       type: Object,
-      default: () => null
+      default: () => {}
     }
   },
   computed: {
     createdDateInStr() {
       return new Date(this.post?.created_date).toLocaleString("en-US");
     },
-    detailedPost() {
-      return this.post?.post;
-    },
-    postStatusText() {
-      switch (this.detailedPost?.post_status) {
+    postStatus() {
+      switch (this.post?.post_status) {
+        case 0:
+          return {
+            text: "Đã duyệt",
+            color: "has-text-success"
+          };
         case 1:
-          return "Chờ duyệt tạo";
+          return {
+            text: "Chờ duyệt tạo",
+            color: "has-text-primary"
+          };
         case 2:
-          return "Chờ duyệt cập nhật";
+          return {
+            text: "Chờ duyệt cập nhật",
+            color: "has-text-primary"
+          };
         case 3:
-          return "Chở duyệt xóa";
+          return {
+            text: "Chờ duyệt xóa",
+            color: "has-text-danger"
+          };
       }
       return null;
-    },
-    postCustomInfo() {
-      return this.post.custom_info ?? {};
-    },
-    status() {
-      return VERIFICATION_STATUSES[this.post.status];
-    },
-    isPending() {
-      return this.post.status === 2;
-    },
-    managerName() {
-      return this.post.manager_name ?? "Chưa có";
     }
   }
 };

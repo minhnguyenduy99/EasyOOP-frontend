@@ -1,14 +1,15 @@
 import { BaseAPI } from "@/apis/base";
 
 const endpoints = {
-  deletePendingVerifications: "",
+  deleteVerifications: "",
   updateVerification: "",
   cancelVerification: "/cancel",
+  findVerifications: "/search",
   getById: ""
 };
 
 export class CreatorVerificationAPI extends BaseAPI {
-  async deletePendingVerifications(opts) {
+  async deleteVerifications(opts) {
     const { verifications = [] } = opts;
     const input = {
       action: "delete",
@@ -16,7 +17,7 @@ export class CreatorVerificationAPI extends BaseAPI {
     };
     try {
       const response = await this._context.patch(
-        endpoints.deletePendingVerifications,
+        endpoints.deleteVerifications,
         input
       );
       return this._formatter.getDataFormat(response);
@@ -47,7 +48,7 @@ export class CreatorVerificationAPI extends BaseAPI {
       verification_id
     );
     try {
-      const response = await this._context.delete(endpoint, data);
+      const response = await this._context.delete(endpoint);
       return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err);
@@ -65,12 +66,41 @@ export class CreatorVerificationAPI extends BaseAPI {
     }
   }
 
+  async findVerifications(options) {
+    const {
+      search = null,
+      sort_by = "created_date",
+      sort_order = "desc",
+      type = null,
+      status = null,
+      limit = null,
+      group = false
+    } = options;
+    try {
+      const response = await this._context.get(endpoints.findVerifications, {
+        params: {
+          search,
+          sort_by,
+          sort_order,
+          type,
+          status,
+          limit,
+          group
+        }
+      });
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
   getEndpointObject() {
     return {
-      deletePendingVerifications: this.deletePendingVerifications.bind(this),
+      deleteVerifications: this.deleteVerifications.bind(this),
       updateVerification: this.updateVerification.bind(this),
       cancelVerification: this.cancelVerification.bind(this),
-      getVerificationById: this.getVerificationById.bind(this)
+      getVerificationById: this.getVerificationById.bind(this),
+      findVerifications: this.findVerifications.bind(this)
     };
   }
 

@@ -3,7 +3,7 @@
     <b-image
       ratio="16by9"
       class="pending-post-thumbnail"
-      :src="detailedPost.thumbnail_file_url"
+      :src="post.thumbnail_file_url"
     />
     <div class="px-3 py-3">
       <div class="is-flex is-justify-content-space-between">
@@ -24,15 +24,11 @@
       <div class="py-3 ha-vertical-layout-7">
         <div class="pending-post-field">
           <span class="pending-post-field--label">Loại bài viết </span>
-          <span class="pending-post-field--value">{{
-            detailedPost.post_type
-          }}</span>
+          <span class="pending-post-field--value">{{ post.post_type }}</span>
         </div>
         <div class="pending-post-field">
           <span class="pending-post-field--label">Chủ đề </span>
-          <span class="pending-post-field--value">{{
-            detailedPost.topic_title
-          }}</span>
+          <span class="pending-post-field--value">{{ post.topic_title }}</span>
         </div>
         <div class="pending-post-field">
           <span class="pending-post-field--label">Ngày tạo</span>
@@ -41,8 +37,12 @@
         <div class="pending-post-field">
           <span class="pending-post-field--label">Tình trạng</span>
           <span
-            class="pending-post-field--value has-text-danger has-text-weight-bold"
-            >{{ postStatusText }}</span
+            :class="[
+              'pending-post-field--value',
+              'has-text-weight-bold',
+              postStatus.color
+            ]"
+            >{{ postStatus.text }}</span
           >
         </div>
       </div>

@@ -11,7 +11,7 @@
       <b-image
         ratio="16by9"
         class="pending-post-thumbnail"
-        :src="detailedPost.thumbnail_file_url"
+        :src="thumbnailUrl"
       />
       <div
         :class="{
@@ -35,6 +35,7 @@
           />
           <div class="pending-post-actions-group">
             <b-button
+              v-if="viewable"
               class="is-icon-button"
               type="is-primary-light"
               icon-right="eye"
@@ -43,12 +44,22 @@
               @click.stop="showPost = true"
             />
             <b-button
+              v-if="deletable"
               class="is-icon-button"
               type="is-danger"
               icon-right="trash"
               size="is-small"
               rounded
               @click.stop="$on_deleteButtonClicked"
+            />
+            <b-button
+              v-if="cancellable"
+              class="is-icon-button"
+              type="is-danger"
+              icon-right="window-close"
+              size="is-small"
+              rounded
+              @click.stop="$on_cancelButtonClicked"
             />
           </div>
         </div>
@@ -71,9 +82,10 @@
     </div>
     <div class="card-footer">
       <span class="is-size-7 is-italic">{{ createdDateInStr }}</span>
-      <span class="is-size-7 has-text-weight-bold mt-2 has-text-danger">{{
-        postStatusText
-      }}</span>
+      <span
+        :class="['is-size-7', 'has-text-weight-bold', 'mt-2', postStatus.color]"
+        >{{ postStatus.text }}</span
+      >
     </div>
     <b-modal v-model="showPost" scroll="keep">
       <div class="card is-page-responsive py-6">
@@ -86,14 +98,14 @@
 <script>
 import { mapActions } from "vuex";
 import { ToastNotifier } from "../../../utils";
-import PostMixin from "./mixins/post.mixin";
+import VerificationMixin from "./mixins/verification.mixin";
 
 export default {
   name: "PendingPost",
   components: {
     "post-preview": () => import("@/components/post-preview/post-preview.vue")
   },
-  mixins: [PostMixin],
+  mixins: [VerificationMixin],
   props: {
     checkMode: {
       type: Boolean,
@@ -120,22 +132,27 @@ export default {
     }
   },
   methods: {
-    ...mapActions("POST", ["creator_cancelVerification"]),
+    ...mapActions("POST", [
+      "creator_cancelVerification",
+      "creator_deleteVerifications"
+    ]),
     $on_postClicked() {
       this.$emit("select", !this.selected);
     },
     $on_actionTriggerClicked() {
       this.$refs["action-dropdown"].toggle();
     },
-    $on_deleteButtonClicked() {
+    $on_cancelButtonClicked() {
       this.$buefy.dialog.confirm({
-        title: "Xóa bài duyệt",
-        message: "Bạn chắc chắc muốn xóa bài duyệt này ?",
+        title: "Hủy bài duyệt",
+        message: "Bạn chắc chắc muốn hủy bài duyệt này ?",
         confirmText: "Đồng ý",
         cancelText: "Hủy bỏ",
         type: "is-danger",
         onConfirm: () => {
-          this.$_deleteVerification().then(result => {
+          this.creator_cancelVerification({
+            verification_id: this.post.verification_id
+          }).then(result => {
             const { data, error } = result;
             if (error) {
               ToastNotifier.error(this.$buefy.toast, error);
@@ -143,16 +160,22 @@ export default {
             }
             ToastNotifier.success(
               this.$buefy.toast,
-              "Xóa bài duyệt thành công"
+              "Hủy bài duyệt thành công"
             );
-            this.$emit("deleted");
+            this.$emit("cancelled", this.post);
           });
         }
       });
     },
-    $_deleteVerification() {
-      return this.creator_cancelVerification({
-        verification_id: this.post.verification_id
+    $on_deleteButtonClicked() {
+      this.creator_deleteVerifications({
+        verifications: [this.post.verification_id]
+      }).then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.$emit("deleted", this.post);
       });
     }
   }
@@ -205,7 +228,7 @@ $card-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px,
   width: 100%;
   height: fit-content;
   padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
   transition: 0.1s ease;
   opacity: 0;
 

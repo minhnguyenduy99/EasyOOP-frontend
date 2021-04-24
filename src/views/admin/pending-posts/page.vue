@@ -54,10 +54,12 @@
 
                 <template>
                   <pending-post-section
+                    v-if="activeTab === 1"
                     :search-result="searchResult"
                     @selected-changed="$on_selectedPostChanged"
                     @load="$on_loadMorePosts(1)"
                   />
+                  <div v-else></div>
                 </template>
               </b-tab-item>
 
@@ -74,10 +76,12 @@
 
                 <template>
                   <pending-post-section
+                    v-if="activeTab === 2"
                     :search-result="searchResult"
                     @selected-changed="$on_selectedPostChanged"
                     @load="$on_loadMorePosts(2)"
                   />
+                  <div v-else></div>
                 </template>
               </b-tab-item>
             </b-tabs>
@@ -92,8 +96,8 @@
               class="is-paddingless"
               type="is-toggle"
             >
-              <b-tab-item label="Bài viết">
-                <pending-post-detail :post="selectedPost" />
+              <b-tab-item label="Bài viết" v-if="activeTab !== 2">
+                <pending-post-detail :post="selectedDetailedPost" />
               </b-tab-item>
               <b-tab-item label="Duyệt">
                 <verification-info-tab :post="selectedPost" />
@@ -127,7 +131,7 @@ export default {
   },
   provide() {
     return {
-      findPendingPosts: this.creator_findPendingPosts,
+      creator_findVerifications: this.creator_findVerifications,
       reloadTab: this.$_reloadTab
     };
   },
@@ -157,23 +161,31 @@ export default {
   }),
   watch: {
     activeTab(val) {
+      if (val < 0) {
+        return;
+      }
       this.$_reloadTab();
     }
   },
+  computed: {
+    selectedDetailedPost() {
+      return this.selectedPost?.post ?? {};
+    }
+  },
   methods: {
-    ...mapActions("POST", ["creator_findPendingPosts"]),
+    ...mapActions("POST", ["creator_findVerifications"]),
     $on_selectedPostChanged(post) {
       this.selectedPost = post;
     },
     $on_search(searchOptions) {
+      this.searchOptions = searchOptions;
       this.$_updatePendingPosts({
         status: this.TAB_STATUS_MAPS[this.activeTab].status,
         ...searchOptions
       });
     },
     $_updatePendingPosts(options) {
-      this.isSearching = true;
-      this.creator_findPendingPosts(options).then(result => {
+      this.creator_findVerifications(options).then(result => {
         const { error, data } = result;
         if (error) {
           return;
@@ -193,6 +205,28 @@ export default {
       });
     },
     $on_loadMorePosts(tabIndex) {
+      const search = {
+        ...this.searchOptions,
+        page: this.searchOptions.page + 1,
+        status: this.TAB_STATUS_MAPS[tabIndex].status
+      };
+      this.isSearching = true;
+      this.creator_findVerifications(search).then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.isSearching = false;
+        const { groups, results, ...searchResult } = data;
+        this.searchResult = {
+          ...searchResult,
+          results: this.searchResult.push(...results)
+        };
+        if (!groups) {
+          return;
+        }
+        this.$_updateTabInfo(groups);
+      });
       fetch(this.searchResult.next)
         .then(res => res.json())
         .then(result => {
@@ -204,11 +238,11 @@ export default {
     },
     $_reloadTab() {
       this.isSearching = true;
-      this.searchResult = null;
       this.selectedPost = null;
       this.$_updatePendingPosts({
         status: this.TAB_STATUS_MAPS[this.activeTab].status,
-        group: true
+        group: true,
+        ...this.searchOptions
       });
     }
   }

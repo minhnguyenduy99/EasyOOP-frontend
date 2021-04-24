@@ -84,6 +84,7 @@ export default {
       if (!valid) {
         return;
       }
+      form.content_file = this.postContent;
       this.isLoading = true;
       this.creator_createPost({ ...form }).then(result => {
         const { error } = result;

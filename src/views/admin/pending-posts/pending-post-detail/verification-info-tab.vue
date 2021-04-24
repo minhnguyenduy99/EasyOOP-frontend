@@ -29,15 +29,12 @@
       <div
         class="px-3 pb-3 ha-vertical-layout-6 is-flex is-flex-direction-column"
       >
-        <validated-form-element
-          :disabled="!isPending"
-          label="Tin nhắn"
-          placeholder="Tin nhắn"
-        >
+        <validated-form-element label="Tin nhắn" placeholder="Tin nhắn">
           <b-input
             v-model.lazy="customInfo.message"
             placeholder="Lời nhắn"
             type="textarea"
+            :disabled="!isPending"
           />
         </validated-form-element>
         <b-button
@@ -57,14 +54,14 @@
 import { ValidatedFormElement } from "@/components";
 import { mapActions } from "vuex";
 import { ToastNotifier } from "@/utils";
-import PostMixin from "../mixins/post.mixin";
+import VerificationMixin from "../mixins/verification.mixin";
 
 export default {
   name: "VerificaitonInfoTab",
   components: {
     ValidatedFormElement
   },
-  mixins: [PostMixin],
+  mixins: [VerificationMixin],
   data: () => ({
     customInfo: {
       message: ""
