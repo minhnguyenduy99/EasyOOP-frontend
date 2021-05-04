@@ -41,11 +41,13 @@
                 >About</b-button
               >
               <b-button
+                v-if="!isAuthenticated"
                 class="navigate-button"
                 type="is-primary-dark"
                 @click="showLoginModal = true"
                 >Login</b-button
               >
+              <user-badge v-else :user="user" />
             </div>
           </b-navbar-item>
         </template>
@@ -55,7 +57,9 @@
       <div class="card">
         <login-form
           class="card-content"
-          @login-clicked="$on_formLoginClicked"
+          @logined="$on_logined"
+          fail-text="Đăng nhập thất bại"
+          success-text="Đăng nhập thành công"
         />
         <b-loading
           :is-full-page="false"
@@ -68,14 +72,15 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { STORE_MODULES } from "../../store";
 import { ToastNotifier } from "../../utils";
 
 export default {
   name: "UserViewHeader",
   components: {
-    "login-form": async () => (await import("@/components")).LoginForm
+    "login-form": async () => (await import("@/components")).LoginForm,
+    "user-badge": () => import("./components/user-badge")
   },
   data: () => ({
     isScrollTop: true,
@@ -85,6 +90,7 @@ export default {
     isLoading: false
   }),
   computed: {
+    ...mapGetters("AUTH", ["isAuthenticated", "user"]),
     _themeType() {
       return this.isScrollTop ? "is-primary-light" : "is-white";
     }
@@ -116,24 +122,8 @@ export default {
       }
       this.showLoginModal = false;
     },
-    async $on_formLoginClicked({ data, validator }) {
-      const valid = await validator.validate();
-      if (!valid) {
-        return;
-      }
-      this.isLoading = true;
-      this.$store_login(data).then(result => {
-        this.isLoading = false;
-        const { error } = result;
-        if (error) {
-          this.validator.setErrors({
-            general: [error.message]
-          });
-          return;
-        }
-        ToastNotifier.success(this.$buefy.toast, "Đăng nhập thành công");
-        this.showLoginModal = false;
-      });
+    async $on_logined() {
+      this.showLoginModal = false;
     }
   }
 };

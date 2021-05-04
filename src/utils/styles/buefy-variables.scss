@@ -5,6 +5,9 @@ $danger: #F32013;
 $text: #00171F;
 $easing: 0.08s ease-out;
 
+$facebook: #1877f2;
+$google: #db4437;
+
 
 @import "~bulma/sass/utilities/_all.sass";
 @import "./custom-variables.scss";
@@ -34,7 +37,9 @@ $button-padding-vertical: 12px;
 $button-padding-horizontal: 20px;
 $new-button-colors: (
   "primary-light": ($primary-light, $white),
-  "primary-dark": ($primary-dark, $white)
+  "primary-dark": ($primary-dark, $white),
+  "facebook": ($facebook, $white),
+  "google": ($google, $white)
 );
 $button-colors: mergeColorMaps($new-button-colors, $colors);
 

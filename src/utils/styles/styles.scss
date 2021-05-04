@@ -38,6 +38,28 @@ $button-border-radius: 7px;
   }
 }
 
+.button.is-badge-button {
+  > span {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 0.5rem;
+    align-items: center;
+
+    .badge-avatar {
+      width: 36px;
+      img {
+        max-height: fit-content;
+      }
+
+      &.is-rounded {
+        img {
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+}
+
 // [Field]
 .field.is-horizontal {
   .field-label {

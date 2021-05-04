@@ -1,10 +1,10 @@
 <template>
   <div class="login-form ha-vertical-layout-4">
     <div class="form-header">
-      <h1 class="is-size-4">Đăng nhập</h1>
+      <h1 class="is-size-4 has-text-weight-bold">Đăng nhập</h1>
       <hr class="is-hr" />
     </div>
-    <div class="form-body">
+    <!-- <div class="form-body">
       <ValidationObserver
         tag="form"
         ref="validator"
@@ -40,41 +40,37 @@
           >Đăng nhập</b-button
         >
       </ValidationObserver>
-    </div>
+    </div> -->
     <div class="form-footer">
-      <div class="login-options">
+      <div>
         <div
-          class="fb-login-button"
-          data-width=""
-          data-size="medium"
-          data-button-type="login_with"
-          data-layout="default"
-          data-auto-logout-link="false"
-          data-use-continue-as="false"
-        ></div>
-      </div>
-      <div
-        class="is-flex is-justify-content-space-between is-align-items-center"
-      >
-        <label>Chưa có tài khoản ?</label>
-        <b-button type="is-primary-light" outlined>Đăng ký</b-button>
+          class="login-options is-flex is-flex-direction-column ha-vertical-layout-7"
+        >
+          <login-fb-button outlined @logined="$on_logined" />
+          <login-google-button outlined @logined="$on_logined" />
+        </div>
+        <!-- <hr class="has-background-primary-dark" />
+        <div class="register-options">
+          <label>Chưa có tài khoản ?</label>
+          <b-button type="is-primary-light" outlined>Đăng ký</b-button>
+        </div> -->
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ValidationObserver } from "vee-validate";
-import { ValidatedFormElement } from "../base";
-
+import { ToastNotifier } from "../../utils";
 export default {
   name: "LoginForm",
   components: {
-    ValidationObserver,
-    ValidatedFormElement
+    "login-fb-button": () => import("./facebook-login-button"),
+    "login-google-button": () => import("./google-login-button")
   },
   props: {
-    submitHandler: Function
+    submitHandler: Function,
+    successText: String,
+    failedText: String
   },
   data: () => ({
     form: {
@@ -93,7 +89,31 @@ export default {
         data: this.form,
         validator: this.validator
       });
+    },
+    async $on_logined(result) {
+      const { error } = result;
+      if (error) {
+        ToastNotifier.fail(this.$buefy.toast, this.failedText);
+        return;
+      }
+      ToastNotifier.success(this.$buefy.toast, this.successText);
+      this.$emit("logined");
     }
   }
 };
 </script>
+
+<style scoped lang="scss">
+// .login-options {
+//   display: grid;
+//   grid-template-columns: 1fr 1fr;
+//   gap: 1rem;
+// }
+
+.register-options {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 1rem;
+  align-items: center;
+}
+</style>
