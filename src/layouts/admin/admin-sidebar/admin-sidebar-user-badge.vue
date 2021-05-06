@@ -4,8 +4,10 @@
       {{ greetUser }}
     </h1>
     <div v-if="!reduce" class="user-badge--actions is-flex">
-      <b-button type="is-primary" class="mr-3">Detail</b-button>
-      <b-button type="is-primary" outlined>Logout</b-button>
+      <b-button type="is-primary" class="mr-3">Tài khoản</b-button>
+      <b-button type="is-primary" outlined @click="$on_logOut"
+        >Đăng xuất</b-button
+      >
     </div>
     <div v-else class="ha-vertical-layout-6">
       <b-button type="is-primary" icon-right="user" />
@@ -15,6 +17,7 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 export default {
   name: "AdminSidebarUserBadge",
   props: {
@@ -29,8 +32,20 @@ export default {
   },
   computed: {
     greetUser() {
-      const username = this.user?.username ?? "Unknown";
-      return `Hello, ${username}`;
+      const username = this.user?.profile?.first_name;
+      return `Xin chào, ${username}`;
+    }
+  },
+  methods: {
+    ...mapActions("AUTH", ["logout"]),
+    $on_logOut() {
+      this.logout().then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.$router.push({ name: "Home" });
+      });
     }
   }
 };

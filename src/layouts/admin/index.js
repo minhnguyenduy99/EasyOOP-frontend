@@ -11,6 +11,7 @@ export default () => ({
         icon: "th-large",
         pack: "fas",
         title: "Dashboard",
+        roles: ["creator", "manager"],
         to: { name: "Dashboard" }
       },
       {
@@ -18,6 +19,7 @@ export default () => ({
         icon: "pencil-alt",
         pack: "fas",
         title: "Tạo bài viết",
+        roles: ["creator"],
         to: { name: "CreatePost" }
       },
       {
@@ -25,6 +27,7 @@ export default () => ({
         icon: "clipboard",
         pack: "fas",
         title: "Danh sách bài viết",
+        roles: ["creator"],
         to: { name: "ListPosts" }
       },
       {
@@ -32,6 +35,7 @@ export default () => ({
         icon: "clipboard-check",
         pack: "fas",
         title: "Bài viết chờ duyệt",
+        roles: ["creator"],
         to: { name: "PendingPosts" }
       },
       {
@@ -39,6 +43,7 @@ export default () => ({
         icon: "question-circle",
         pack: "fas",
         title: "Q&A",
+        roles: ["manager"],
         to: { name: "Q&A" }
       },
       {
@@ -46,7 +51,16 @@ export default () => ({
         icon: "file-signature",
         pack: "fas",
         title: "Duyệt bài viết",
+        roles: ["manager"],
         to: { name: "PostVerification" }
+      },
+      {
+        name: "CreatorManagement",
+        icon: "user-edit",
+        pack: "fas",
+        title: "Quản lí người viết",
+        roles: ["manager"],
+        to: { name: "CreatorManagement" }
       }
     ]
   })

@@ -30,9 +30,9 @@
       >
         <admin-sidebar-user-badge :reduce="reduce" :user="user" />
         <b-menu :activable="false" class="is-custom-mobile">
-          <b-menu-list label="NAVIGATION">
+          <b-menu-list label="BẢNG ĐIỀU KHIỂN">
             <b-menu-item
-              v-for="(item, index) in navigations"
+              v-for="(item, index) in authNavigations"
               :key="item.id"
               :class="['sidebar-navigation-list-item']"
               tag="router-link"
@@ -64,7 +64,7 @@ export default {
   components: {
     AdminSidebarUserBadge
   },
-  inject: ["user", "navigations"],
+  inject: ["navigations"],
   data: () => ({
     reduce: false,
     open: true,
@@ -76,19 +76,25 @@ export default {
     });
   },
   created: function() {
-    this.currentViewIndex = this.navigations.findIndex(
+    this.currentViewIndex = this.authNavigations.findIndex(
       navItem => navItem.name === this.currentView
     );
   },
   watch: {
     appCurrentView(val) {
-      this.currentViewIndex = this.navigations.findIndex(
+      this.currentViewIndex = this.authNavigations.findIndex(
         navItem => navItem.name === this.appCurrentView
       );
     }
   },
   computed: {
-    ...mapGetters(["appCurrentView"])
+    ...mapGetters(["appCurrentView"]),
+    ...mapGetters("AUTH", ["user", "activeRole"]),
+    authNavigations() {
+      return this.navigations.filter(
+        nav => nav.roles?.includes(this.activeRole) ?? true
+      );
+    }
   }
 };
 </script>

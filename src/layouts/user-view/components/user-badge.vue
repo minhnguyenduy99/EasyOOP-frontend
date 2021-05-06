@@ -40,12 +40,34 @@
       </b-dropdown-item>
       <b-dropdown-item separator />
       <b-dropdown-item
+        v-if="activeRole !== 'viewer'"
+        @click="$on_navigate('Dashboard')"
+      >
+        <div class="media is-align-items-center">
+          <b-icon
+            class="media-left"
+            icon="th-large"
+            size="is-medium"
+            type="is-primary"
+          ></b-icon>
+          <div class="media-content">
+            <span>Quản lí</span>
+          </div>
+        </div>
+      </b-dropdown-item>
+      <b-dropdown-item separator />
+      <b-dropdown-item
         v-for="role in userRolesWithoutActive"
         :key="role.id"
         @click="$on_loginWithRole(role)"
       >
-        <div class="media">
-          <b-icon class="media-left" :icon="ROLES[role].icon"></b-icon>
+        <div class="media is-align-items-center">
+          <b-icon
+            class="media-left"
+            :icon="ROLES[role].icon"
+            size="is-medium"
+            type="is-primary"
+          ></b-icon>
           <div class="media-content">
             <span>{{ ROLES[role].text }}</span>
           </div>
@@ -53,8 +75,13 @@
       </b-dropdown-item>
       <b-dropdown-item separator />
       <b-dropdown-item @click="$on_logout">
-        <div class="media">
-          <b-icon class="media-left" icon="sign-out-alt"></b-icon>
+        <div class="media is-align-items-center">
+          <b-icon
+            class="media-left"
+            icon="sign-out-alt"
+            size="is-medium"
+            type="is-primary"
+          ></b-icon>
           <div class="media-content">
             <span>Đăng xuất</span>
           </div>
@@ -109,7 +136,7 @@ export default {
         if (error) {
           return;
         }
-        this.$router.push({ name: this.ROLES[role].redirect });
+        location.reload();
       });
     },
 
@@ -120,6 +147,10 @@ export default {
         }
         location.reload();
       });
+    },
+
+    $on_navigate(name) {
+      this.$router.push({ name });
     }
   }
 };

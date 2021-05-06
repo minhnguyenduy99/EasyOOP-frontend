@@ -1,2 +1,3 @@
 export { default as AuthModule } from "./auth.module";
 export { default as PostModule } from "./post.module";
+export { default as CreatorModule } from "./creators.module";
