@@ -1,14 +1,20 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedState from "./persisted-state.plugin";
-import { AuthModule, PostModule, CreatorModule } from "./modules";
+import {
+  AuthModule,
+  PostModule,
+  CreatorModule,
+  ManagerModule
+} from "./modules";
 
 Vue.use(Vuex);
 
 export const STORE_MODULES = {
   AUTH: "AUTH",
   POST: "POST",
-  CREATOR: "CREATOR"
+  CREATOR: "CREATOR",
+  MANAGER: "MANAGER"
 };
 
 export function createVuexStore(context) {
@@ -30,7 +36,8 @@ export function createVuexStore(context) {
     modules: {
       [STORE_MODULES.AUTH]: AuthModule(context),
       [STORE_MODULES.POST]: PostModule(context),
-      [STORE_MODULES.CREATOR]: CreatorModule(context)
+      [STORE_MODULES.CREATOR]: CreatorModule(context),
+      [STORE_MODULES.MANAGER]: ManagerModule(context)
     }
   });
 }

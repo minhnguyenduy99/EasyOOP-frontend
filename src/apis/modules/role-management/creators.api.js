@@ -2,7 +2,9 @@
 import { BaseAPI } from "../../base";
 
 const endpoints = {
-  findCreators: "/search"
+  findCreators: "/search",
+  findById: "",
+  updateCreator: ""
 };
 
 export class CreatorAPI extends BaseAPI {
@@ -30,9 +32,35 @@ export class CreatorAPI extends BaseAPI {
     }
   }
 
+  async getCreatorById(opts) {
+    const { creator_id } = opts;
+    const endpoint = this._addURLParams(endpoints.findById, creator_id);
+    try {
+      const response = await this._context.get(endpoint);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
+  async updateCreator(opts) {
+    const { creator_id, form } = opts;
+    const endpoint = this._addURLParams(endpoints.updateCreator, creator_id);
+    try {
+      const response = await this._context.put(endpoint, form, {
+        withCredentials: true
+      });
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
   getEndpointObject() {
     return {
-      findCreators: this.findCreators.bind(this)
+      findCreators: this.findCreators.bind(this),
+      updateCreator: this.updateCreator.bind(this),
+      getCreatorById: this.getCreatorById.bind(this)
     };
   }
 
