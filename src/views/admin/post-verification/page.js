@@ -3,6 +3,9 @@ export default () => ({
   path: "verifications",
   page: () => import("./page.vue"),
   meta: {
-    role: ["user"]
+    auth: {
+      requires: true,
+      roles: ["manager"]
+    }
   }
 });

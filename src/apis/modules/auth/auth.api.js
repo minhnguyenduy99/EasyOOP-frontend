@@ -6,7 +6,8 @@ const endpoints = {
   loginFacebook: "/facebook/login",
   loginFacebookToken: "/facebook/login-with-token",
   loginWithGoogleToken: "/google/login-with-token",
-  logout: "/logout"
+  logout: "/logout",
+  relogin: "/relogin"
 };
 
 export class AuthAPI extends BaseAPI {
@@ -72,16 +73,10 @@ export class AuthAPI extends BaseAPI {
     }
   }
 
-  async getAuthenticatedUser() {
-    const reqEndpoint = `${this.endpoint}/user`;
+  async relogin() {
     try {
-      const response = await this._context.get(reqEndpoint, {
-        withCredentials: true
-      });
-      if (response.status === HTTP_CODES.OK) {
-        return this._formatter.getDataFormat(response);
-      }
-      return this._formatter.getErrorFormat(response);
+      const response = await this._context.post(endpoints.relogin);
+      return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err?.response ?? err);
     }
@@ -106,7 +101,8 @@ export class AuthAPI extends BaseAPI {
     return {
       loginWithGoogleToken: this.loginWithGoogleToken.bind(this),
       loginWithFacebookToken: this.loginWithFacebookToken.bind(this),
-      logout: this.logout.bind(this)
+      logout: this.logout.bind(this),
+      relogin: this.relogin.bind(this)
     };
   }
 

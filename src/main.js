@@ -35,7 +35,7 @@ console.log(apiPack.apis);
 const vuexStore = createVuexStore({ apiService: apiPack.apis });
 
 // Init vue router
-const vueRouterWrapper = createVueRouter();
+const vueRouterWrapper = createVueRouter({ store: vuexStore });
 
 new Vue({
   router: vueRouterWrapper.router,

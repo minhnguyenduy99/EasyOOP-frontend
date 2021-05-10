@@ -1,5 +1,4 @@
 import VueRouter from "vue-router";
-import { MODULES } from "../../store";
 
 /**
  * @param {VueRouter} router
@@ -9,24 +8,29 @@ export default (router, opts = {}) => {
   if (!store) {
     return;
   }
-  router.beforeEach((to, from, next) => {
+  router.beforeEach(async (to, from, next) => {
     const record =
       to.matched.filter(route => route.meta.name === "AuthMeta")?.[0] ?? to;
-    const { requiresAuth, redirectIfAuth, redirectIfNotAuth } = record.meta;
-    const isAuthenticated =
-      store.getters?.[`${MODULES.AUTH}/isAuthenticated`] ?? false;
-    if (requiresAuth) {
-      if (isAuthenticated) {
-        next();
-      } else {
-        next(redirectIfNotAuth);
-      }
-    } else {
-      if (isAuthenticated) {
-        next(redirectIfAuth);
-      } else {
-        next();
-      }
+    const { requires = false, roles = [], redirectIfNotAuth = "Home" } =
+      record.meta.auth ?? {};
+    if (!requires) {
+      next();
+      return;
     }
+    const { data, error } = await store.dispatch("AUTH/relogin");
+    if (error) {
+      next({ name: redirectIfNotAuth });
+      return;
+    }
+    const { active_role } = data;
+    if (isRoleAllow(active_role, roles)) {
+      next();
+      return;
+    }
+    next({ name: redirectIfNotAuth });
   });
 };
+
+function isRoleAllow(activeRole, roles) {
+  return roles.indexOf(activeRole) > -1;
+}

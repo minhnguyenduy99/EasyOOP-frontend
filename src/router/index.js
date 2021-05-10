@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import { VueRouterWrapper } from "./base";
 import UserViewRoutes from "./user-view.route";
 import AdminRoutes from "./admin.routes";
+import { authGuard } from "./guards";
 
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location, onResolve, onReject) {
@@ -21,9 +22,8 @@ VueRouter.prototype.push = function push(location, onResolve, onReject) {
 
 Vue.use(VueRouter);
 
-export * from "./guards";
-
-export function createVueRouter() {
+export function createVueRouter(opts) {
+  const { store } = opts;
   const vueRouter = new VueRouterWrapper(
     new VueRouter({
       mode: "history",
@@ -37,6 +37,8 @@ export function createVueRouter() {
       }
     })
   );
+
+  vueRouter.addGuard(authGuard, { store });
 
   UserViewRoutes(vueRouter);
   AdminRoutes(vueRouter);

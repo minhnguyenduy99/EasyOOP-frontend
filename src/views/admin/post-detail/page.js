@@ -4,5 +4,11 @@ export default () => ({
   page: () => import("./page.vue"),
   props: {
     default: route => ({ postId: route.params.post_id })
+  },
+  meta: {
+    auth: {
+      requires: true,
+      roles: ["manager", "creator"]
+    }
   }
 });

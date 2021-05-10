@@ -3,6 +3,9 @@ export default () => ({
   path: "posts/pending",
   page: () => import("./page.vue"),
   meta: {
-    role: ["user"]
+    auth: {
+      requires: true,
+      roles: ["creator"]
+    }
   }
 });

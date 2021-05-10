@@ -1,8 +1,14 @@
 import mergeAction from "../merge-action";
+import Cookie from "js-cookie";
+
+const ACCESS_TOKEN_COOKIE = "accessToken";
+const ROLE_ID_COOKIE = "auth_role";
 
 const DEFAULT_STATE = {
   isAuthenticated: false,
-  user: null
+  user: null,
+  active_role: null,
+  role_id: null
 };
 
 export default context => {
@@ -18,11 +24,18 @@ export default context => {
       reset(state) {
         state.isAuthenticated = false;
         state.user = null;
+        state.role_id = null;
+        state.active_role = null;
       },
       updateAuth(state, data) {
         state.isAuthenticated = true;
-        console.log(data);
-        state.user = data.user;
+        state.user = data;
+        state.role_id = data.role_id;
+        state.active_role = data.active_role;
+      },
+      updateRole(state, data) {
+        state.active_role = data.active_role;
+        state.role_id = data.role_id;
       }
     },
     getters: {
@@ -33,24 +46,41 @@ export default context => {
         return state.user?.profile;
       },
       isAuthenticated(state) {
-        return state.isAuthenticated;
+        const result = !!(state.isAuthenticated && state.user.access_token);
+        return result;
       },
       userRoles(state) {
         return state.user?.roles ?? [];
       },
       activeRole(state) {
-        return state.user?.active_role;
+        return state.active_role;
+      },
+      roleId(state) {
+        return state.role_id;
       }
     },
     actions: {
       ...mergeAction(authApi),
+      async relogin({ commit, getters }) {
+        const cookie = Cookie.get(ACCESS_TOKEN_COOKIE);
+        // the current access token in user is still valid
+        if (getters.isAuthenticated && cookie) {
+          return { data: getters.user };
+        }
+        let { error, data } = await authApi.relogin();
+        if (error) {
+          commit("reset");
+          return { error };
+        }
+        commit("updateAuth", data);
+        return { data };
+      },
       async loginWithFacebookToken({ commit }) {
         const { error, data } = await authApi.loginWithFacebookToken();
         if (error) {
           commit("reset");
           return { error };
         }
-        console.log(data);
         commit("updateAuth", data.data);
         return { data };
       },
