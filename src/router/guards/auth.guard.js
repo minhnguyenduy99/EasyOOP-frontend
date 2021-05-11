@@ -13,11 +13,11 @@ export default (router, opts = {}) => {
       to.matched.filter(route => route.meta.name === "AuthMeta")?.[0] ?? to;
     const { requires = false, roles = [], redirectIfNotAuth = "Home" } =
       record.meta.auth ?? {};
+    const { data, error } = await store.dispatch("AUTH/relogin");
     if (!requires) {
       next();
       return;
     }
-    const { data, error } = await store.dispatch("AUTH/relogin");
     if (error) {
       next({ name: redirectIfNotAuth });
       return;
