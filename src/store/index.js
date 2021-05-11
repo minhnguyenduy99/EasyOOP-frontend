@@ -5,7 +5,8 @@ import {
   AuthModule,
   PostModule,
   CreatorModule,
-  ManagerModule
+  ManagerModule,
+  UserModule
 } from "./modules";
 
 Vue.use(Vuex);
@@ -14,7 +15,8 @@ export const STORE_MODULES = {
   AUTH: "AUTH",
   POST: "POST",
   CREATOR: "CREATOR",
-  MANAGER: "MANAGER"
+  MANAGER: "MANAGER",
+  USER: "USER"
 };
 
 export function createVuexStore(context) {
@@ -37,7 +39,8 @@ export function createVuexStore(context) {
       [STORE_MODULES.AUTH]: AuthModule(context),
       [STORE_MODULES.POST]: PostModule(context),
       [STORE_MODULES.CREATOR]: CreatorModule(context),
-      [STORE_MODULES.MANAGER]: ManagerModule(context)
+      [STORE_MODULES.MANAGER]: ManagerModule(context),
+      [STORE_MODULES.USER]: UserModule(context)
     }
   });
 }

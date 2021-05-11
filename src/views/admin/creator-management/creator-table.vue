@@ -5,7 +5,7 @@
       :paginated="!isTableEmpty"
       hoverable
       pagination-rounded
-      :selected.sync="selectedVerification"
+      :selected.sync="selectedCreator"
       :is-row-selectable="() => true"
       :loading="loading"
       pagination-size="is-small"
@@ -52,7 +52,7 @@
       </template>
       <template v-if="!isTableEmpty" #footer>
         <div>
-          <span class="has-text-grey">Total results: </span>
+          <span class="has-text-grey">Số lượng kết quả: </span>
           <span class="has-text-weight-bold">{{ totalCount }}</span>
         </div>
       </template>
@@ -67,7 +67,7 @@
 
 <script>
 export default {
-  name: "PostTable",
+  name: "CreatorTable",
   components: {
     "post-preview": async () => (await import("@/components")).PostPreview,
     "empty-state": () => import("@/components/empty-state.vue")
@@ -92,7 +92,7 @@ export default {
     },
     actionHandler: [],
     showModal: false,
-    selectedVerification: null,
+    selectedCreator: null,
     loading: false,
     selected: {}
   }),
@@ -101,39 +101,31 @@ export default {
   },
   computed: {
     selectedId() {
-      return this.selectedVerification?.verification_id;
+      return this.selectedCreator?.creator_id;
     },
     isRowSelected() {
-      return this.selectedVerification !== null;
-    },
-    selectedApi() {
-      if (this.type === 2) {
-        return this.manager_getPendingVerifications;
-      }
-      return this.manager_findVerifications;
-    },
-    filteredActions() {
-      return this.ACTIONS.filter(action => action.statuses.includes(this.type));
+      return this.selectedCreator !== null;
     },
     isTableEmpty() {
       return this.creators.length === 0;
     }
   },
   watch: {
-    selectedVerification(val) {
+    selectedCreator(val) {
       this.$emit("selected", val);
     },
     creators: function() {
-      this.selectedVerification = null;
+      this.selectedCreator = null;
     },
     searchOptions(val) {
-      this.$_loadAsyncData(val);
+      this.$_loadAsyncData();
     }
   },
   methods: {
     $on_rowClicked(row) {
-      if (row.verification_id === this.selectedId) {
-        this.selectedVerification = null;
+      console.log(row);
+      if (row.creator_id === this.selectedId) {
+        this.selectedCreator = null;
       }
     },
     $on_pageChanged(page) {
@@ -149,7 +141,6 @@ export default {
       let search = {
         ...this.searchOptions,
         ...this.sorter,
-        status: this.type,
         page: this.page
       };
       this.$api_findCreators(search).then(result => {
@@ -170,22 +161,6 @@ export default {
           return result;
         })
       );
-    },
-    $_isActionsGroupShown(row) {
-      return (
-        this.selectedId === row.verification_id &&
-        this.filteredActions.length > 0
-      );
-    },
-    $on_viewButtonClicked() {
-      this.showModal = true;
-      this.getPostById(this.selectedVerification.post_id).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        this.selected = data;
-      });
     }
   }
 };

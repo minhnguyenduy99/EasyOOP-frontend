@@ -1,26 +1,41 @@
 <template>
   <div id="creator-management-page">
-    <admin-content
-      title="Quản lí người viết bài"
-      icon="user-edit"
-      iconPack="fas"
-    >
+    <admin-content>
+      <template #header>
+        <admin-content-header
+          title="Danh sách tác giả"
+          icon="clipboard"
+          iconPack="fas"
+        >
+          <template #action>
+            <b-button type="is-primary" outlined @click="$_openFormModal">
+              Tạo tác giả mới
+            </b-button>
+          </template>
+        </admin-content-header>
+      </template>
       <admin-detail-sidebar :sidebar-card="false">
         <div class="py-3">
           <div class="admin-content-container">
-            <creator-search />
-            <creator-table />
+            <creator-search @search="$on_search" />
+            <creator-table
+              :search-options="searchOptions"
+              @selected="$on_creatorSelected"
+            />
           </div>
         </div>
         <template #detail-content>
           <div class="card">
-            <div class="card-content p-3">
-              <creator-info :creator="creator" />
+            <div class="card-content py-3 px-0">
+              <creator-info v-if="selectedCreator" :creator="selectedCreator" />
             </div>
           </div>
         </template>
       </admin-detail-sidebar>
     </admin-content>
+    <b-modal v-model="showFormModal" has-modal-card>
+      <creator-form @submitted="$on_creatorCreated" />
+    </b-modal>
   </div>
 </template>
 
@@ -31,10 +46,13 @@ export default {
   components: {
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
+    "admin-content-header": () =>
+      import("../components/admin-content/admin-content-header.vue"),
     "admin-detail-sidebar": () => import("../components/admin-detail-sidebar"),
     "creator-table": () => import("./creator-table"),
     "creator-search": () => import("./creator-search"),
-    "creator-info": () => import("./creator-info")
+    "creator-info": () => import("./creator-info"),
+    "creator-form": () => import("./creator-form")
   },
   provide() {
     return {
@@ -42,16 +60,39 @@ export default {
     };
   },
   data: () => ({
-    creator: {
-      alias: "Minh",
-      profile: {
-        display_name: "Nguyễn Duy Minh",
-        profile_pic: "https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
-      }
-    }
+    selectedCreator: null,
+    showFormModal: false,
+    searchOptions: null
   }),
   methods: {
-    ...mapActions("CREATOR", ["creatorRole_findCreators"])
+    ...mapActions("CREATOR", [
+      "creatorRole_findCreators",
+      "creatorRole_getCreatorById"
+    ]),
+    $on_search(searchOptions) {
+      this.searchOptions = { ...searchOptions };
+    },
+    $_openFormModal() {
+      this.showFormModal = true;
+    },
+    $on_creatorCreated() {
+      this.showFormModal = false;
+    },
+    $on_creatorSelected(creator) {
+      if (!creator) {
+        this.selectedCreator = null;
+        return;
+      }
+      this.creatorRole_getCreatorById({
+        creator_id: creator.creator_id
+      }).then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.selectedCreator = data.data;
+      });
+    }
   }
 };
 </script>

@@ -72,8 +72,9 @@ export default context => {
           commit("reset");
           return { error };
         }
-        commit("updateAuth", data);
-        return { data };
+        const { data: user } = data;
+        commit("updateAuth", user);
+        return { data: user };
       },
       async loginWithFacebookToken({ commit }) {
         const { error, data } = await authApi.loginWithFacebookToken();
