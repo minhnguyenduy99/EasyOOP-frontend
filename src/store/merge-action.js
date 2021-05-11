@@ -22,7 +22,7 @@ export const mergeActionsWithOptions = (api, opts = {}) => {
     action => action.startsWith(prefix) && exclude.indexOf(action) === -1
   );
   includedActions.forEach(actionName => {
-    actions[actionName] = (context, data) => api?.(data);
+    actions[actionName] = (context, data) => api?.[actionName]?.(data);
   });
   return actions;
 };
