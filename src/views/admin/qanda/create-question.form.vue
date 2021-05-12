@@ -1,9 +1,13 @@
 <template>
-  <div id="edit-question-form">
-    <h1 class="is-size-4 has-text-weight-bold">Cập nhật câu hỏi</h1>
-    <hr class="is-hr" />
+  <modal-form
+    id="create-question-form"
+    :has-card="true"
+    rounded
+    title="Tạo câu hỏi"
+    headerClass="has-background-primary-light has-text-white"
+  >
     <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-5">
-      <validated-form-element name="tag" rules="required" label="Nhãn dán">
+      <validated-form-element name="tags" rules="required" label="Nhãn dán">
         <b-taginput
           maxtags="1"
           icon="tag"
@@ -11,11 +15,18 @@
           v-model="chosenTags"
           autocomplete
           type="is-primary-light"
-          field="tag_value"
+          field="tag_id"
           @typing="$on_tagInputTyping"
-          :create-tag="tag => tag.tag_value"
+          :create-tag="tag => tag.tag_id"
           :allow-new="false"
-        />
+        >
+          <template #default="{ option }">
+            <div>
+              <span class="has-text-weight-bold">{{ option.tag_value }} </span>
+              <span class="ml-1">({{ option.tag_id }})</span>
+            </div>
+          </template>
+        </b-taginput>
       </validated-form-element>
       <validated-form-element
         name="question"
@@ -37,34 +48,31 @@
       <b-button
         type="is-primary is-dark"
         @click="$on_submitButtonClicked"
-        class="w-100"
-        >Cập nhật</b-button
+        class="is-fullwidth"
+        >Tạo</b-button
       >
     </ValidationObserver>
-  </div>
+  </modal-form>
 </template>
 
 <script>
 import { ValidationObserver } from "vee-validate";
-import { ValidatedFormElement } from "@/components";
+import { ValidatedFormElement, ModalForm } from "@/components";
 import { ToastNotifier } from "../../../utils";
+import { mapActions } from "vuex";
 
 export default {
-  name: "EditQuestionForm",
+  name: "CreateQuestionForm",
   components: {
     ValidationObserver,
-    ValidatedFormElement
+    ValidatedFormElement,
+    ModalForm
   },
-  props: {
-    question: Object
-  },
-  inject: ["$api_updateQuestion", "$api_findTags"],
   data: () => ({
-    qaId: "",
     form: {
       question: "",
       answer: "",
-      tag: ""
+      tag_id: ""
     },
     filteredTags: [],
     chosenTags: []
@@ -74,21 +82,16 @@ export default {
       return this.$refs["validator"];
     }
   },
-  created: function() {
-    const { qa_id, ...question } = this.question;
-    this.form = question;
-    this.qaId = qa_id;
-    this.chosenTags = [{ tag_value: this.form.tag }];
-  },
   methods: {
+    ...mapActions("QANDA", ["createQuestion", "getUnusedQuestionTags"]),
+
     async $on_submitButtonClicked() {
       const isValid = await this.validator.validate();
       if (!isValid) {
         return;
       }
-      this.form.tag = this.chosenTags[0];
-      console.log(this.form);
-      this.$api_updateQuestion(this.qaId, this.form).then(result => {
+      this.form.tag_id = this.chosenTags[0];
+      this.createQuestion(this.form).then(result => {
         const { error } = result;
         if (error) {
           this.validator.setErrors({
@@ -97,28 +100,27 @@ export default {
           this.$emit("submitted", { data: null, success: false });
           return;
         }
-        ToastNotifier.success(this.$buefy.toast, "Cập nhật câu hỏi thành công");
+        ToastNotifier.success(this.$buefy.toast, "Tạo câu hỏi thành công");
         this.$emit("submitted", { data: this.form, success: true });
       });
     },
     $on_tagInputTyping(value) {
-      this.$api_findTags(value).then(result => {
+      this.getUnusedQuestionTags({ search: value }).then(result => {
         const { error, data } = result;
         this.filteredTags.length = 0;
         if (error) {
           return;
         }
-        this.filteredTags.push(...data);
+        const { results } = data;
+        this.filteredTags.push(...results);
       });
     }
   }
 };
 </script>
 
-<style scoped lang="scss">
-#edit-question-form {
-  @include tablet {
-    width: 300px;
-  }
+<style scoped>
+#create-question-form {
+  width: 500px;
 }
 </style>

@@ -6,7 +6,9 @@ import {
   PostModule,
   CreatorModule,
   ManagerModule,
-  UserModule
+  UserModule,
+  Q8AModule,
+  TagModule
 } from "./modules";
 
 Vue.use(Vuex);
@@ -16,7 +18,9 @@ export const STORE_MODULES = {
   POST: "POST",
   CREATOR: "CREATOR",
   MANAGER: "MANAGER",
-  USER: "USER"
+  USER: "USER",
+  TAG: "TAG",
+  QANDA: "QANDA"
 };
 
 export function createVuexStore(context) {
@@ -40,7 +44,9 @@ export function createVuexStore(context) {
       [STORE_MODULES.POST]: PostModule(context),
       [STORE_MODULES.CREATOR]: CreatorModule(context),
       [STORE_MODULES.MANAGER]: ManagerModule(context),
-      [STORE_MODULES.USER]: UserModule(context)
+      [STORE_MODULES.USER]: UserModule(context),
+      [STORE_MODULES.QANDA]: Q8AModule(context),
+      [STORE_MODULES.TAG]: TagModule(context)
     }
   });
 }

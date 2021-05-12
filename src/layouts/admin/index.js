@@ -43,7 +43,7 @@ export default () => ({
         icon: "question-circle",
         pack: "fas",
         title: "Q&A",
-        roles: ["manager"],
+        roles: ["manager", "creator"],
         to: { name: "Q&A" }
       },
       {

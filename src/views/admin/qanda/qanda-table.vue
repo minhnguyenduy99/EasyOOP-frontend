@@ -19,7 +19,7 @@
       @click="$on_rowClicked"
       ref="table"
     >
-      <b-table-column label="ID" width="50px" numeric centered>
+      <b-table-column label="ID" numeric width="20" centered>
         <template v-slot="{ row }">
           <strong>{{ row.id }}</strong>
         </template>
@@ -31,7 +31,10 @@
 
       <b-table-column label="Nhãn dán" width="300">
         <template v-slot="{ row }">
-          <b-tag type="is-primary-light">{{ row.tag }}</b-tag>
+          <b-tag v-if="row.tag_id" type="is-primary-light">
+            <span class="has-text-weight-bold">{{ row.tag_value }}</span>
+          </b-tag>
+          <span class="has-text-grey" v-else>Chưa có nhãn</span>
         </template>
       </b-table-column>
 
@@ -40,10 +43,7 @@
           {{ props.row.answer }}
         </h1>
         <hr />
-        <section
-          class="tooltip-section"
-          style="margin-top: -4px; margin-bottom: -6px"
-        >
+        <section class="tooltip-section">
           <b-tooltip
             v-for="(feature, index) in features"
             :key="feature.id"
@@ -68,37 +68,25 @@
       </template>
     </b-table>
     <b-modal v-model="showModal" has-modal-card>
-      <div class="modal-content card">
-        <div class="card-content ha-vertical-layout-5">
-          <edit-question-form
-            :question="selectedQuestion"
-            @submitted="$on_formSubmitted"
-          />
-        </div>
-      </div>
+      <edit-question-form
+        :question="selectedQuestion"
+        @submitted="$on_formSubmitted"
+      />
     </b-modal>
   </div>
 </template>
 
 <script>
-import { ToastNotifier } from "../../../utils";
-
+import { mapActions } from "vuex";
 export default {
-  name: "CommonQuestionTable",
+  name: "QandATable",
   components: {
     "edit-question-form": () => import("./edit-question.form")
   },
   props: {
-    searching: {
-      type: Boolean,
-      default: () => false
-    }
+    searchOptions: Object
   },
-  inject: ["$api_findQuestions", "$api_deleteQuestion"],
-  model: {
-    prop: "searching",
-    event: "table-searching"
-  },
+  inject: ["$api_findQuestions"],
   data: () => ({
     itemsPerPage: 6,
     totalCount: 0,
@@ -110,12 +98,6 @@ export default {
         tooltip: "Edit post",
         type: "is-primary",
         outlined: true
-      },
-      {
-        icon: "trash-alt",
-        tooltip: "Delete post",
-        type: "is-danger",
-        outlined: false
       }
     ],
     page: 1,
@@ -125,10 +107,7 @@ export default {
     openedDetailedRows: []
   }),
   created: function() {
-    this.featureHandler.push(
-      this.$on_editButtonClicked,
-      this.$on_deleteButtonClicked
-    );
+    this.featureHandler.push(this.$on_editButtonClicked);
     this.$_loadAsyncData();
   },
   computed: {
@@ -138,27 +117,16 @@ export default {
     isRowSelected() {
       return this.selectedQuestion !== null;
     },
-    _searching: {
-      get() {
-        return this.searching;
-      },
-      set(val) {
-        this.$emit("table-searching", val);
-      }
-    },
     _table() {
       return this.$refs.table;
     }
   },
   watch: {
-    searching: function(newVal) {
-      if (newVal) {
-        this.$_loadAsyncData();
-        return;
-      }
-    },
     questions: function() {
       this.selectedQuestion = null;
+    },
+    searchOptions() {
+      this.$_loadAsyncData();
     }
   },
   methods: {
@@ -186,7 +154,10 @@ export default {
     },
     async $_loadAsyncData() {
       this.loading = true;
-      this.$api_findQuestions(this.page).then(result => {
+      this.$api_findQuestions({
+        page: this.page,
+        ...this.searchOptions
+      }).then(result => {
         const { error, data } = result;
         this.loading = this._searching = false;
         this.$_resetTableState();
@@ -209,41 +180,6 @@ export default {
     },
     $on_editButtonClicked() {
       this.showModal = true;
-    },
-    $on_deleteButtonClicked() {
-      const questionId = this.selectedQuestion?.qa_id;
-      if (!questionId) {
-        return;
-      }
-      this.$buefy.dialog.confirm({
-        title: "Xóa câu hỏi",
-        message: "Bạn chắc chắc muốn xóa câu hỏi ?",
-        confirmText: "Đồng ý",
-        cancelText: "Hủy bỏ",
-        type: "is-danger",
-        onConfirm: () =>
-          setTimeout(
-            function() {
-              this.loading = true;
-              this.$api_deleteQuestion(questionId).then(result => {
-                const { error } = result;
-                this.loading = false;
-                if (error) {
-                  ToastNotifier.error(
-                    this.$buefy.toast,
-                    "Xóa câu hỏi thất bại"
-                  );
-                  return;
-                }
-                ToastNotifier.success(
-                  this.$buefy.toast,
-                  "Xóa câu hỏi thành công"
-                );
-              });
-            }.bind(this),
-            500
-          )
-      });
     },
     $_resetTableState() {
       if (this.selectedQuestion) {
