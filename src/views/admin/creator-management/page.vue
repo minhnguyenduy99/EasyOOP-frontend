@@ -1,18 +1,10 @@
 <template>
   <div id="creator-management-page">
-    <admin-content>
-      <template #header>
-        <admin-content-header
-          title="Danh sách tác giả"
-          icon="clipboard"
-          iconPack="fas"
-        >
-          <template #action>
-            <b-button type="is-primary" outlined @click="$_openFormModal">
-              Tạo tác giả mới
-            </b-button>
-          </template>
-        </admin-content-header>
+    <admin-content title="Danh sách tác giả" icon="clipboard" iconPack="fas">
+      <template #action>
+        <b-button type="is-primary" outlined @click="$_openFormModal">
+          Tạo tác giả mới
+        </b-button>
       </template>
       <admin-detail-sidebar :sidebar-card="false">
         <div class="py-3">
@@ -46,8 +38,6 @@ export default {
   components: {
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
-    "admin-content-header": () =>
-      import("../components/admin-content/admin-content-header.vue"),
     "admin-detail-sidebar": () => import("../components/admin-detail-sidebar"),
     "creator-table": () => import("./creator-table"),
     "creator-search": () => import("./creator-search"),

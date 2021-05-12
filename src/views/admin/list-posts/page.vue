@@ -1,19 +1,15 @@
 <template>
   <div id="dashboard-page">
-    <admin-content>
-      <template #header>
-        <admin-content-header :title="title" icon="clipboard" iconPack="fas">
-          <template #action>
-            <b-button
-              type="is-primary"
-              outlined
-              tag="router-link"
-              :to="{ name: 'CreatePost' }"
-            >
-              Tạo bài viết mới
-            </b-button>
-          </template>
-        </admin-content-header>
+    <admin-content :title="title" icon="clipboard" iconPack="fas">
+      <template #action>
+        <b-button
+          type="is-primary"
+          outlined
+          tag="router-link"
+          :to="{ name: 'CreatePost' }"
+        >
+          Tạo bài viết mới
+        </b-button>
       </template>
       <div id="post-area">
         <post-search @search="onSearch" />
@@ -31,8 +27,6 @@ export default {
   components: {
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
-    "admin-content-header": () =>
-      import("../components/admin-content/admin-content-header.vue"),
     "post-search": () => import("./post-search"),
     "post-table": () => import("./post-table")
   },

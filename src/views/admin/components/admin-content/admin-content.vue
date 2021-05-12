@@ -1,7 +1,11 @@
 <template>
   <div class="admin-content">
     <slot name="header">
-      <admin-content-header :title="title" :icon="icon" :iconPack="iconPack" />
+      <admin-content-header :title="title" :icon="icon" :iconPack="iconPack">
+        <template #action>
+          <slot name="action"></slot>
+        </template>
+      </admin-content-header>
     </slot>
     <div :class="[contentClass ? contentClass : 'admin-content-body']">
       <slot></slot>
