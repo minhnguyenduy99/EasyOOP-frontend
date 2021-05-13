@@ -1,6 +1,6 @@
 <template>
   <div class="admin-sidebar">
-    <b-sidebar fullheight position="static" :reduce="reduce" v-model="open">
+    <b-sidebar fullheight position="fixed" :reduce="reduce" v-model="open">
       <div class="ha-vertical-layout-6 p-3">
         <div
           :class="[
@@ -52,6 +52,7 @@
         </b-menu>
       </div>
     </b-sidebar>
+    <div :class="['sidebar-filler', reduce ? '--reduce' : '']" />
   </div>
 </template>
 
@@ -100,6 +101,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$sidebar-width-reduce: 80px;
+
 .admin-sidebar {
   height: 100%;
 
@@ -123,6 +126,14 @@ export default {
         }
       }
     }
+  }
+}
+
+.sidebar-filler {
+  width: $sidebar-width;
+
+  &.--reduce {
+    width: $sidebar-width-reduce;
   }
 }
 </style>

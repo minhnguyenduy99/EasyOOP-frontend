@@ -1,7 +1,10 @@
 <template>
   <div class="admin-sidebar-user-badge">
-    <h1 :class="[reduce ? 'is-size-5' : 'is-size-4', 'pt-2 pb-3']">
-      {{ greetUser }}
+    <h1
+      v-if="!reduce"
+      :class="[reduce ? 'is-size-5' : 'is-size-4', 'pt-2 pb-3']"
+    >
+      {{ reduce ? greetUserInReduce : greetUser }}
     </h1>
     <div
       v-if="!reduce"
@@ -51,8 +54,17 @@
       >
     </div>
     <div v-else class="ha-vertical-layout-6">
-      <b-button type="is-primary" icon-right="user" />
-      <b-button type="is-primary" outlined icon-right="sign-out-alt" />
+      <b-button
+        type="is-primary"
+        icon-right="user"
+        @click="$on_accountButtonClicked"
+      />
+      <b-button
+        type="is-primary"
+        outlined
+        icon-right="sign-out-alt"
+        @click="$on_logOut"
+      />
     </div>
   </div>
 </template>
@@ -71,6 +83,7 @@ export default {
       default: () => true
     }
   },
+  inject: ["$p_loadPage"],
   data: () => ({
     ROLES: {
       viewer: {
@@ -96,6 +109,9 @@ export default {
       const username = this.user?.profile?.first_name;
       return `Xin chào, ${username}`;
     },
+    greetUserInReduce() {
+      return this.user?.profile?.first_name;
+    },
     userRolesWithoutActive() {
       return this.userRoles.filter(role => role !== this.activeRole);
     }
@@ -103,24 +119,31 @@ export default {
   methods: {
     ...mapActions("AUTH", ["logout", "loginAsRole"]),
     $on_logOut() {
+      this.$p_loadPage(true);
       this.logout().then(result => {
         const { error, data } = result;
         if (error) {
           return;
         }
         this.$router.push({ name: "Home" });
+        setTimeout(() => {
+          this.$p_loadPage(false);
+        }, 2000);
       });
     },
     $on_accountButtonClicked() {
       this.$router.push({ name: "AdminAccountInfo" });
     },
     $on_loginWithRole(role) {
+      this.$p_loadPage(true);
       this.loginAsRole({ role }).then(result => {
         const { error, data } = result;
         if (error) {
+          this.$p_loadPage(false);
           return;
         }
-        this.$router.push({ name: this.ROLES[role].redirect });
+        this.$p_loadPage(false);
+        location.reload();
       });
     }
   }
