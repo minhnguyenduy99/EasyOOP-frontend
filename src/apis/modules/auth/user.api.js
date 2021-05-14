@@ -4,7 +4,8 @@ import { BaseAPI } from "../../base";
 const endpoints = {
   updatePassword: "/update-password",
   updateProfile: "/profile",
-  updateAvatar: "/avatar"
+  updateAvatar: "/avatar",
+  getUserInfo: "/info"
 };
 
 export class AuthUserAPI extends BaseAPI {
@@ -42,11 +43,21 @@ export class AuthUserAPI extends BaseAPI {
     }
   }
 
+  async getUserInfo() {
+    try {
+      const response = await this._context.get(endpoints.getUserInfo);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response ?? err);
+    }
+  }
+
   getEndpointObject() {
     return {
       updatePassword: this.updatePassword.bind(this),
       updateProfile: this.updateProfile.bind(this),
-      updateAvatar: this.updateAvatar.bind(this)
+      updateAvatar: this.updateAvatar.bind(this),
+      getUserInfo: this.getUserInfo.bind(this)
     };
   }
 

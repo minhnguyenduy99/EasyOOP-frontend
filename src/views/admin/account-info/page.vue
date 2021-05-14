@@ -1,5 +1,5 @@
 <template>
-  <div id="admin-account-info-page">
+  <div v-if="user" id="admin-account-info-page">
     <admin-content title="Tài khoản" icon="user-circle" iconPack="fas">
       <div class="main-body-content">
         <section id="account-badge-info">
@@ -94,20 +94,27 @@ export default {
       creator: {
         text: "Tác giả"
       }
-    }
+    },
+    user: null
   }),
+  mounted: function() {
+    this.$_getUserInfo();
+  },
   computed: {
-    ...mapGetters("AUTH", ["user", "userRoles", "profile", "activeRole"]),
+    ...mapGetters("AUTH", ["userRoles", "activeRole"]),
 
     userAvatar() {
       return this.profile?.profile_pic;
     },
     filteredRoles() {
       return [this.activeRole];
+    },
+    profile() {
+      return this.user?.profile;
     }
   },
   methods: {
-    ...mapActions("AUTH", ["updateAvatar", "loginAsRole"]),
+    ...mapActions("AUTH", ["updateAvatar", "loginAsRole", "getUserInfo"]),
     ...mapActions("CREATOR", ["creatorRole_updateCreator"]),
 
     $on_avatarChanged(file) {
@@ -128,6 +135,16 @@ export default {
         case "creator":
           return this.creatorRole_updateCreator;
       }
+    },
+
+    $_getUserInfo() {
+      this.getUserInfo().then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.user = data;
+      });
     }
   }
 };
