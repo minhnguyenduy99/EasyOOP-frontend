@@ -31,6 +31,14 @@
         </div>
       </footer>
     </div>
+    <b-loading is-full-page v-model="isLoading" :can-cancel="false">
+      <b-icon
+        pack="fas"
+        icon="sync-alt"
+        size="is-large"
+        custom-class="fa-spin"
+      />
+    </b-loading>
   </div>
 </template>
 
@@ -45,7 +53,7 @@ export default {
   },
   provide() {
     return {
-      $api_getPostsGroupedByTopic: this.getPostsByTopic
+      $p_loadPage: this.loadPage.bind(this)
     };
   },
   props: {
@@ -55,8 +63,14 @@ export default {
       default: () => false
     }
   },
+  data: () => ({
+    isLoading: false
+  }),
   methods: {
-    ...mapActions("POST", ["getPostsByTopic"])
+    ...mapActions("POST", ["getPostsByTopic"]),
+    loadPage(loading) {
+      this.isLoading = loading;
+    }
   }
 };
 </script>

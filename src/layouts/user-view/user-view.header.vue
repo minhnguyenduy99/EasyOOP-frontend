@@ -23,7 +23,7 @@
         </template>
         <template #end>
           <b-navbar-item tag="div" id="navigation-bar">
-            <div class="buttons">
+            <div class="navigate-button-group">
               <b-button
                 class="navigate-button"
                 type="is-primary-light"
@@ -138,6 +138,18 @@ export default {
 .navigate-button {
   border: none;
   font-weight: bold;
+  display: block;
+  height: 100%;
+
+  &-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+
+    > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
 }
 
 #navigation-bar {

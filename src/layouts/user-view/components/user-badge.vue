@@ -22,12 +22,12 @@
       <b-dropdown-item custom class="user-badge-profile">
         <div class="media">
           <div class="media-left">
-            <img class="user-badge-avatar" :src="user.profile.profile_pic" />
+            <img class="badge-avatar-detail" :src="user.profile.profile_pic" />
           </div>
           <div class="media-content">
-            <span class="is-size-5 has-text-weight-bold">{{
-              user.profile.display_name
-            }}</span>
+            <div class="is-size-5 has-text-weight-bold">
+              {{ user.profile.display_name }}
+            </div>
             <b-button
               class="mt-2"
               outlined
@@ -101,6 +101,7 @@ export default {
       default: () => null
     }
   },
+  inject: ["$p_loadPage"],
   data: () => ({
     ROLES: {
       viewer: {
@@ -141,8 +142,10 @@ export default {
     },
 
     $on_logout() {
+      this.$p_loadPage(true);
       this.logout().then(success => {
         if (!success) {
+          this.$p_loadPage(false);
           return;
         }
         location.reload();
@@ -194,5 +197,12 @@ export default {
       border: 2px solid white;
     }
   }
+}
+
+.badge-avatar-detail {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  max-height: 100% !important;
 }
 </style>
