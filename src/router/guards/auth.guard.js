@@ -9,10 +9,8 @@ export default (router, opts = {}) => {
     return;
   }
   router.beforeEach(async (to, from, next) => {
-    const record =
-      to.matched.filter(route => route.meta.name === "AuthMeta")?.[0] ?? to;
     const { requires = false, roles = [], redirectIfNotAuth = "Home" } =
-      record.meta.auth ?? {};
+      to.meta.auth ?? {};
     const { data, error } = await store.dispatch("AUTH/relogin");
     if (!requires) {
       next();
