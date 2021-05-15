@@ -74,7 +74,11 @@ export default {
       return this.post.status === 2;
     },
     managerName() {
-      return this.post.manager_name ?? "Chưa có";
+      if (!this.post.manager_id) {
+        return "Chưa có";
+      }
+      const verifiedBy = `${this.post.alias} (${this.post.manager_id})`;
+      return verifiedBy;
     }
   }
 };

@@ -20,8 +20,8 @@ export default {
     isPending() {
       return this.verification.status === 2;
     },
-    managerName() {
-      return this.verification.manager_name ?? "Chưa có";
+    creatorId() {
+      return this.verification.author_id;
     }
   }
 };

@@ -10,8 +10,8 @@
           >
         </div>
         <div class="info-field">
-          <span class="info-field--label">Duyệt bởi</span>
-          <span class="info-field--value">{{ managerName }}</span>
+          <span class="info-field--label">Tác giả</span>
+          <span class="info-field--value">{{ creatorId }}</span>
         </div>
       </div>
     </div>
