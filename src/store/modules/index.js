@@ -5,3 +5,4 @@ export { default as ManagerModule } from "./managers.module";
 export { default as UserModule } from "./users.module";
 export { default as TagModule } from "./tag.module";
 export { default as Q8AModule } from "./qanda.module";
+export { default as TestModule } from "./tests.module";

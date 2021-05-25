@@ -1,11 +1,11 @@
 export default () => ({
-  name: "CreatorManagement",
-  path: "creators",
+  name: "TestManagement",
+  path: "tests",
   page: () => import("./page.vue"),
   meta: {
     auth: {
       requires: true,
-      roles: ["manager"]
+      roles: ["creator"]
     }
   }
 });

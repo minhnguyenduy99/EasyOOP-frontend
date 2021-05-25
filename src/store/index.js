@@ -8,7 +8,8 @@ import {
   ManagerModule,
   UserModule,
   Q8AModule,
-  TagModule
+  TagModule,
+  TestModule
 } from "./modules";
 
 Vue.use(Vuex);
@@ -20,7 +21,8 @@ export const STORE_MODULES = {
   MANAGER: "MANAGER",
   USER: "USER",
   TAG: "TAG",
-  QANDA: "QANDA"
+  QANDA: "QANDA",
+  TEST: "TEST"
 };
 
 export function createVuexStore(context) {
@@ -46,7 +48,8 @@ export function createVuexStore(context) {
       [STORE_MODULES.MANAGER]: ManagerModule(context),
       [STORE_MODULES.USER]: UserModule(context),
       [STORE_MODULES.QANDA]: Q8AModule(context),
-      [STORE_MODULES.TAG]: TagModule(context)
+      [STORE_MODULES.TAG]: TagModule(context),
+      [STORE_MODULES.TEST]: TestModule(context)
     }
   });
 }

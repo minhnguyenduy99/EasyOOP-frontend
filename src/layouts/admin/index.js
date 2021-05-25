@@ -61,6 +61,14 @@ export default () => ({
         title: "Quản lí người viết",
         roles: ["manager"],
         to: { name: "CreatorManagement" }
+      },
+      {
+        name: "TestManagement",
+        icon: "spell-check",
+        pack: "fas",
+        title: "Quản lí bài test",
+        roles: ["creator"],
+        to: { name: "TestManagement" }
       }
     ]
   })
