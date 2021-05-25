@@ -1,6 +1,12 @@
 <template>
   <div class="admin-sidebar">
-    <b-sidebar fullheight position="fixed" :reduce="reduce" v-model="open">
+    <b-sidebar
+      fullheight
+      position="fixed"
+      :reduce="reduce"
+      v-model="open"
+      :can-cancel="['outside']"
+    >
       <div class="ha-vertical-layout-6 p-3">
         <div
           :class="[
