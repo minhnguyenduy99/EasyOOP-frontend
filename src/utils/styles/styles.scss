@@ -36,6 +36,11 @@ $button-border-radius: 7px;
     width: 60px;
     height: 60px;
   }
+
+  &.is-transparent {
+    background: transparent;
+    border: none;
+  }
 }
 
 .button.is-badge-button {
