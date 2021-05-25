@@ -1,7 +1,11 @@
 <template>
   <div class="account-info form-groups">
     <form-group title="THÔNG TIN CHUNG">
-      <profile-info-group :data="profile" @submitted="$on_updateProfile" />
+      <profile-info-group
+        v-if="userProfile"
+        :data="userProfile"
+        @submitted="$on_updateProfile"
+      />
     </form-group>
     <form-group title="THAY ĐỔI MẬT KHẨU">
       <change-password-group
@@ -25,13 +29,25 @@ export default {
   data: () => ({
     passwordForm: {
       password: ""
-    }
+    },
+    userProfile: null
   }),
   computed: {
     ...mapGetters("AUTH", ["profile"])
   },
+  mounted: function() {
+    this.getUserInfo().then(result => {
+      const { error, data } = result;
+      if (error) {
+        this.userProfile = this.profile;
+        return;
+      }
+      const { profile } = data;
+      this.userProfile = profile;
+    });
+  },
   methods: {
-    ...mapActions("AUTH", ["updatePassword", "updateProfile"]),
+    ...mapActions("AUTH", ["updatePassword", "updateProfile", "getUserInfo"]),
     $on_updatePassword(data) {
       const { form, validator } = data;
       this.updatePassword({ password: form.password }).then(result => {
