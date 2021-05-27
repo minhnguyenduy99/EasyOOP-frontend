@@ -9,7 +9,8 @@ import {
   UserModule,
   Q8AModule,
   TagModule,
-  TestModule
+  TestModule,
+  ViewerTestModule
 } from "./modules";
 
 Vue.use(Vuex);
@@ -22,7 +23,8 @@ export const STORE_MODULES = {
   USER: "USER",
   TAG: "TAG",
   QANDA: "QANDA",
-  TEST: "TEST"
+  TEST: "TEST",
+  VIEWER_TEST: "VIEWER_TEST"
 };
 
 export function createVuexStore(context) {
@@ -40,7 +42,11 @@ export function createVuexStore(context) {
         return state.currentView;
       }
     },
-    plugins: [createPersistedState({ path: STORE_MODULES.AUTH })],
+    plugins: [
+      createPersistedState({
+        paths: [STORE_MODULES.AUTH]
+      })
+    ],
     modules: {
       [STORE_MODULES.AUTH]: AuthModule(context),
       [STORE_MODULES.POST]: PostModule(context),
@@ -49,7 +55,8 @@ export function createVuexStore(context) {
       [STORE_MODULES.USER]: UserModule(context),
       [STORE_MODULES.QANDA]: Q8AModule(context),
       [STORE_MODULES.TAG]: TagModule(context),
-      [STORE_MODULES.TEST]: TestModule(context)
+      [STORE_MODULES.TEST]: TestModule(context),
+      [STORE_MODULES.VIEWER_TEST]: ViewerTestModule(context)
     }
   });
 }

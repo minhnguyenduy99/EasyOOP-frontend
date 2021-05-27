@@ -1,12 +1,19 @@
-export default () => ({
-  name: "UserViewLayout",
+export default ({
+  name = "UserViewLayout",
+  includeHero = true,
+  menuBar = true,
+  footer = true
+} = {}) => ({
+  name,
   components: () => ({
     header: () => import("./user-view.header"),
-    "menu-navbar": () => import("./user-view.menu-navbar"),
-    footer: () => import("./user-view.footer")
+    ...(menuBar && { "menu-navbar": () => import("./user-view.menu-navbar") }),
+    ...(footer && { footer: () => import("./user-view.footer") })
   }),
   layout: () => import("./layout"),
   props: {
-    includeHero: true
+    includeHero,
+    menuBar,
+    footer
   }
 });

@@ -44,7 +44,7 @@
                 v-if="!isAuthenticated"
                 class="navigate-button"
                 type="is-primary-dark"
-                @click="showLoginModal = true"
+                @click="$p_showLoginModal"
                 >Login</b-button
               >
               <user-badge v-else :user="user" />
@@ -53,21 +53,6 @@
         </template>
       </b-navbar>
     </transition>
-    <b-modal v-model="showLoginModal" has-modal-card>
-      <div class="card">
-        <login-form
-          class="card-content"
-          @logined="$on_logined"
-          fail-text="Đăng nhập thất bại"
-          success-text="Đăng nhập thành công"
-        />
-        <b-loading
-          :is-full-page="false"
-          v-model="isLoading"
-          :can-cancel="false"
-        ></b-loading>
-      </div>
-    </b-modal>
   </div>
 </template>
 
@@ -79,14 +64,13 @@ import { ToastNotifier } from "../../utils";
 export default {
   name: "UserViewHeader",
   components: {
-    "login-form": async () => (await import("@/components")).LoginForm,
     "user-badge": () => import("./components/user-badge")
   },
+  inject: ["$p_showLoginModal"],
   data: () => ({
     isScrollTop: true,
     showNavbar: true,
     scrollPosition: 0,
-    showLoginModal: false,
     isLoading: false
   }),
   computed: {
@@ -114,17 +98,7 @@ export default {
   methods: {
     ...mapActions(STORE_MODULES.AUTH, {
       $store_login: "login"
-    }),
-    $on_formSubmitted(result) {
-      const { success } = result;
-      if (!success) {
-        return;
-      }
-      this.showLoginModal = false;
-    },
-    async $on_logined() {
-      this.showLoginModal = false;
-    }
+    })
   }
 };
 </script>

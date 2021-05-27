@@ -2,7 +2,6 @@ export default {
   props: {
     test: {
       title: String,
-      type: Number,
       limited_time: Number,
       default_score_per_sentence: Number,
       sentences: Array
@@ -10,10 +9,13 @@ export default {
   },
   computed: {
     isTimeLimited() {
-      return this?.test?.type === this.TEST_TYPES.LIMITED_TIME;
+      return this?.test?.type === 1;
+    },
+    limitedTimeInMinutes() {
+      return Math.floor(this.test.limited_time / 60);
     },
     numberOfSentences() {
-      return this.test?.sentences?.length;
+      return this.test?.list_sentence_ids?.length;
     },
     totalScore() {
       const sentences = this.test?.sentences;

@@ -1,9 +1,9 @@
 import createPersistedState from "vuex-persistedstate";
 
 export default options => {
-  const { path } = options;
+  const { paths } = options;
   return createPersistedState({
-    paths: [path],
+    paths,
     storage: localStorage
   });
 };

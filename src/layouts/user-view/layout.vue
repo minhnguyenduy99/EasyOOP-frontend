@@ -12,12 +12,12 @@
         <user-view-hero-body />
       </div>
     </section>
-    <section v-else>
+    <!-- <section v-else>
       <div style="height: 20px"></div>
-    </section>
-    <div class="pt-4 ha-vertical-layout-5">
+    </section> -->
+    <div class="py-4 ha-vertical-layout-5">
       <!-- Menu bar  -->
-      <router-view name="menu-navbar" />
+      <router-view v-if="menuBar" name="menu-navbar" />
 
       <!-- Main body  -->
       <section id="main-body-section">
@@ -25,7 +25,11 @@
           <router-view name="default" />
         </div>
       </section>
-      <footer id="user-view-footer" class="hero is-medium is-primary-light">
+      <footer
+        v-if="footer"
+        id="user-view-footer"
+        class="hero is-medium is-primary-light"
+      >
         <div class="hero-body">
           <router-view name="footer" />
         </div>
@@ -39,21 +43,33 @@
         custom-class="fa-spin"
       />
     </b-loading>
+    <b-modal v-model="showModal" has-modal-card>
+      <div class="card">
+        <login-form
+          class="card-content"
+          @logined="$on_logined"
+          fail-text="Đăng nhập thất bại"
+          success-text="Đăng nhập thành công"
+        />
+      </div>
+    </b-modal>
   </div>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import UserViewHeroBody from "./user-view.hero";
 
 export default {
   name: "UserViewLayout",
   components: {
-    UserViewHeroBody
+    UserViewHeroBody,
+    "login-form": () => import("@/components/login-form/login-form")
   },
   provide() {
     return {
-      $p_loadPage: this.loadPage.bind(this)
+      $p_loadPage: this.loadPage.bind(this),
+      $p_showLoginModal: this.showLoginModal.bind(this)
     };
   },
   props: {
@@ -61,15 +77,37 @@ export default {
       type: Boolean,
       required: false,
       default: () => false
-    }
+    },
+    menuBar: Boolean,
+    footer: Boolean
   },
   data: () => ({
-    isLoading: false
+    isLoading: false,
+    showModal: false
   }),
+  computed: {
+    ...mapGetters("AUTH", ["isAuthenticated"])
+  },
   methods: {
     ...mapActions("POST", ["getPostsByTopic"]),
+
     loadPage(loading) {
       this.isLoading = loading;
+    },
+    showLoginModal() {
+      this.showModal = true;
+    },
+
+    $on_formSubmitted(result) {
+      const { success } = result;
+      if (!success) {
+        return;
+      }
+      this.showModal = false;
+    },
+
+    $on_logined() {
+      this.showModal = false;
     }
   }
 };
