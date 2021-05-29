@@ -11,9 +11,15 @@ export default ({
     ...(footer && { footer: () => import("./user-view.footer") })
   }),
   layout: () => import("./layout"),
-  props: {
-    includeHero,
-    menuBar,
-    footer
+  props: route => {
+    console.log(route);
+    const { layout = {} } = route.meta;
+    const { headerTransition = false } = layout;
+    return {
+      includeHero,
+      menuBar,
+      footer,
+      headerTransition
+    };
   }
 });

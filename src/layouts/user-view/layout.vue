@@ -58,6 +58,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { computed } from "@vue/composition-api";
 import UserViewHeroBody from "./user-view.hero";
 
 export default {
@@ -69,7 +70,8 @@ export default {
   provide() {
     return {
       $p_loadPage: this.loadPage.bind(this),
-      $p_showLoginModal: this.showLoginModal.bind(this)
+      $p_showLoginModal: this.showLoginModal.bind(this),
+      headerTransition: computed(() => this.headerTransition)
     };
   },
   props: {
@@ -79,7 +81,11 @@ export default {
       default: () => false
     },
     menuBar: Boolean,
-    footer: Boolean
+    footer: Boolean,
+    headerTransition: {
+      type: Boolean,
+      default: () => false
+    }
   },
   data: () => ({
     isLoading: false,
@@ -114,13 +120,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$navbar-height: 82px;
+
 #user-view-header {
   padding: 0;
-  height: $navbar-height;
-
-  @include tablet {
-    padding: 1rem;
-  }
 }
 
 #main-body-section {

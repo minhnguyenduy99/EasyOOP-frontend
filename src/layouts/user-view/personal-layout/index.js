@@ -27,9 +27,12 @@ export default () => ({
     const currentNavIndex = navigations.findIndex(
       nav => nav.name === route.name
     );
+    const { layout = {} } = route.meta;
+    const { headerTransition } = layout;
     return {
       navigations,
-      currentNavIndex
+      currentNavIndex,
+      headerTransition
     };
   }
 });

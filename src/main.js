@@ -1,4 +1,5 @@
 import Vue from "vue";
+import VueCompositionAPI from "@vue/composition-api";
 import Buefy from "buefy";
 import App from "./App.vue";
 import { createVueRouter } from "./router";
@@ -14,6 +15,7 @@ import mockApiService from "./mocks";
 
 Vue.config.productionTip = false;
 
+Vue.use(VueCompositionAPI);
 Vue.use(Buefy, {
   defaultIconPack: "fas"
 });

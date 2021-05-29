@@ -26,6 +26,7 @@
 
 <script>
 import { mapGetters } from "vuex";
+import { computed } from "@vue/composition-api";
 
 export default {
   name: "PersonAccountLayout",
@@ -34,13 +35,18 @@ export default {
       type: Array,
       default: () => []
     },
-    currentNavIndex: Number
+    currentNavIndex: Number,
+    headerTransition: {
+      type: Boolean,
+      default: () => false
+    }
   },
   provide() {
     return {
       user: this.user,
       navigations: this.navigations,
-      currentNavIndex: () => this.currentNavIndex,
+      headerTransition: computed(() => this.headerTransition),
+      currentNavIndex: computed(() => this.currentNavIndex),
       $p_loadPage: this.loadPage.bind(this),
       $p_showLoginModal: this.showLoginModal.bind(this)
     };

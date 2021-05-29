@@ -7,11 +7,12 @@
       leave-active-class="animate__animated animate__slideOutUp"
     >
       <b-navbar
-        v-show="showNavbar"
+        v-show="_showNavbar"
+        class="navigation-bar"
         fixed-top
         :type="_themeType"
         transparent
-        :shadow="!isScrollTop"
+        :shadow="_showNavbar && scrollPosition > 0"
       >
         <template #brand>
           <b-navbar-item tag="router-link" to="/" class="is-align-self-center">
@@ -25,9 +26,11 @@
           <b-navbar-item tag="div" id="navigation-bar">
             <div class="navigate-button-group">
               <b-button
-                class="navigate-button"
+                :class="{
+                  'navigate-button': true
+                }"
+                :outlined="scrollPosition > 0"
                 type="is-primary-light"
-                :outlined="!isScrollTop"
                 tag="router-link"
                 to="/"
                 >Home</b-button
@@ -35,7 +38,7 @@
               <b-button
                 class="navigate-button"
                 type="is-primary-light"
-                :outlined="!isScrollTop"
+                :outlined="scrollPosition > 0"
                 tag="router-link"
                 to="/"
                 >About</b-button
@@ -59,14 +62,13 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { STORE_MODULES } from "../../store";
-import { ToastNotifier } from "../../utils";
 
 export default {
   name: "UserViewHeader",
   components: {
     "user-badge": () => import("./components/user-badge")
   },
-  inject: ["$p_showLoginModal"],
+  inject: ["$p_showLoginModal", "headerTransition"],
   data: () => ({
     isScrollTop: true,
     showNavbar: true,
@@ -76,37 +78,64 @@ export default {
   computed: {
     ...mapGetters("AUTH", ["isAuthenticated", "user"]),
     _themeType() {
-      return this.isScrollTop ? "is-primary-light" : "is-white";
+      return this.scrollPosition === 0 ? "is-primary-light" : "is-white";
+    },
+    _showNavbar: {
+      get() {
+        return !this.hasTransition || this.showNavbar;
+      },
+      set(val) {
+        this.showNavbar = val;
+      }
+    },
+    hasTransition() {
+      return this.headerTransition.value;
     }
   },
   mounted: function() {
-    window.addEventListener(
-      "scroll",
-      function() {
-        const scrollTop = window.scrollY;
-        // Is scrolling down
-        if (scrollTop > this.scrollPosition) {
-          this.showNavbar = false;
-        } else {
-          this.showNavbar = true;
-          this.isScrollTop = scrollTop <= 70;
-        }
-        this.scrollPosition = scrollTop;
-      }.bind(this)
-    );
+    this.$_injectScrollBehaviour();
+    document.body.classList.add("has-navbar-fixed-top");
   },
+  // beforeDestroy: function() {
+  //   window.removeEventListener("scroll");
+  // },
   methods: {
     ...mapActions(STORE_MODULES.AUTH, {
       $store_login: "login"
-    })
+    }),
+
+    $_injectScrollBehaviour() {
+      window.addEventListener(
+        "scroll",
+        function() {
+          const scrollTop = window.scrollY;
+          // Is scrolling down
+          if (scrollTop > this.scrollPosition) {
+            this.showNavbar = false;
+          } else {
+            this.showNavbar = true;
+            this.isScrollTop = scrollTop <= 70;
+          }
+          this.scrollPosition = scrollTop;
+        }.bind(this)
+      );
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
+$navbar-transition: 500ms;
+$navbar-height: 82px;
+
 #website-icon {
   width: 50px;
   height: 100%;
+}
+
+.navigation-bar {
+  transition-delay: 150ms;
+  transition: $navbar-transition;
 }
 
 .navigate-button {

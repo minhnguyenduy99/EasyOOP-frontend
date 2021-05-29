@@ -4,5 +4,10 @@ export default () => ({
   page: () => import("./page"),
   props: {
     default: route => ({ postId: route.params.post_id })
+  },
+  meta: {
+    layout: {
+      headerTransition: true
+    }
   }
 });

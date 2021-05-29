@@ -6,6 +6,11 @@
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;800&display=swap");
+
+body.has-navbar-fixed-top {
+  padding-top: 80px !important;
+}
+
 #app {
   font-family: "Heebo", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

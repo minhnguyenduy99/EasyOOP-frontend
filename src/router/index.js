@@ -31,7 +31,7 @@ export function createVueRouter(opts) {
       // routes: [...UserViewRoutes, ...AdminRoutes],
       scrollBehavior(to, from, savedPosition) {
         return {
-          selector: "#app",
+          selector: "body",
           behavior: "smooth"
         };
       }

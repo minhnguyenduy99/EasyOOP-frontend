@@ -19,13 +19,13 @@
             :key="nav.id"
             tag="router-link"
             :to="nav.to"
-            :active="index === currentViewIndex"
+            :active="index === currentNavIndex.value"
           >
             <template #label>
               <div
                 :class="{
                   'navigation-item': true,
-                  'is-active': index === currentViewIndex
+                  'is-active': index === currentNavIndex.value
                 }"
               >
                 <b-icon
@@ -70,9 +70,6 @@ export default {
   watch: {
     profile(val) {
       this.$_updateData(val);
-    },
-    appCurrentView(val) {
-      this.currentViewIndex = this.currentNavIndex();
     }
   },
   mounted: function() {
@@ -82,15 +79,10 @@ export default {
     ...mapGetters(["appCurrentView"]),
     ...mapGetters("AUTH", ["profile"])
   },
-  beforeRouteEnter: function(to, from, next) {
-    next(vm => {
-      vm.$root.$store.commit("setCurrentView", to.name);
-    });
-  },
   created: function() {
-    this.currentViewIndex = this.navigations.findIndex(
-      navItem => navItem.name === this.appCurrentView
-    );
+    // this.currentViewIndex = this.navigations.findIndex(
+    //   navItem => navItem.name === this.appCurrentView
+    // );
   },
   methods: {
     ...mapActions("AUTH", ["updateAvatar"]),
