@@ -33,6 +33,8 @@
               outlined
               size="is-small"
               type="is-primary-dark"
+              tag="router-link"
+              :to="{ name: 'PersonalAccountInfo' }"
               >Xem thông tin</b-button
             >
           </div>

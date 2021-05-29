@@ -36,6 +36,9 @@ export default context => {
       updateRole(state, data) {
         state.active_role = data.active_role;
         state.role_id = data.role_id;
+      },
+      updateUserAvatar(state, avatar) {
+        state.user.profile.profile_pic = avatar;
       }
     },
     getters: {
