@@ -4,7 +4,11 @@
       <div
         class="is-flex py-5 px-5 ha-vertical-layout-5 is-flex-direction-column"
       >
-        <image-uploader :src="userAvatar" @image-changed="$on_avatarChanged" />
+        <image-uploader
+          :src="userAvatar"
+          @image-changed="$on_avatarChanged"
+          viewable
+        />
         <div class="is-flex is-justify-content-center">
           <span class="is-size-5 has-text-weight-bold">{{
             profile.display_name

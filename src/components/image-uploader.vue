@@ -11,24 +11,33 @@
     <div class="image-edit">
       <div>
         <div class="image-edit-background"></div>
-        <b-field class="file is-primary">
-          <b-upload
-            v-model="file"
+        <b-upload
+          v-model="file"
+          rounded
+          outlined
+          class="file-label"
+          @input="$on_fileChanged"
+        >
+          <div class="has-background-primary is-rounded p-2">
+            <b-icon
+              class="file-icon"
+              icon="pen"
+              type="is-white"
+              size="is-small"
+            ></b-icon>
+          </div>
+        </b-upload>
+        <slot v-bind="{ open: $_openModal }">
+          <b-button
+            class="is-icon-button"
             rounded
-            outlined
-            class="file-label"
-            @input="$on_fileChanged"
-          >
-            <div class="has-background-primary is-rounded p-2">
-              <b-icon
-                class="file-icon"
-                icon="pen"
-                type="is-white"
-                size="is-small"
-              ></b-icon>
-            </div>
-          </b-upload>
-        </b-field>
+            inverted
+            size="is-small"
+            type="is-primary"
+            :icon-right="viewIcon"
+            @click="$_openModal"
+          />
+        </slot>
       </div>
     </div>
   </div>
@@ -38,7 +47,15 @@
 export default {
   name: "ImageUploader",
   props: {
-    src: String
+    src: String,
+    viewable: {
+      type: Boolean,
+      default: () => false
+    },
+    viewIcon: {
+      type: String,
+      default: () => "eye"
+    }
   },
   data: () => ({
     currentImageSrc: null,
@@ -46,6 +63,11 @@ export default {
   }),
   created: function() {
     this.currentImageSrc = this.src;
+  },
+  watch: {
+    src(val) {
+      this.currentImageSrc = val;
+    }
   },
   methods: {
     $on_fileChanged(file) {
@@ -56,6 +78,19 @@ export default {
       }.bind(this);
 
       fileReader.readAsDataURL(file);
+    },
+    $_openModal() {
+      const h = this.$createElement;
+      const vnode = h("p", { class: "image-viewer" }, [
+        h("img", {
+          attrs: {
+            src: this.currentImageSrc
+          }
+        })
+      ]);
+      this.$buefy.modal.open({
+        content: [vnode]
+      });
     }
   }
 };
@@ -85,11 +120,6 @@ $image-left: 0;
   }
 
   &-displayer {
-    // position: absolute;
-    // top: 0;
-    // left: $image-left;
-    // width: $image-width;
-    // z-index: 0;
     position: relative;
     z-index: -1;
   }
@@ -106,7 +136,9 @@ $image-left: 0;
       top: 0;
       width: $image-width;
       height: 100%;
-      display: flex;
+      display: grid;
+      grid-template-columns: auto auto;
+      column-gap: 0.5rem;
       justify-content: center;
       align-items: center;
     }
@@ -128,5 +160,12 @@ $image-left: 0;
       opacity: 1;
     }
   }
+}
+
+.image-viewer {
+  height: 100%;
+  width: auto;
+  display: flex;
+  justify-content: center;
 }
 </style>

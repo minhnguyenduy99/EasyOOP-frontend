@@ -83,7 +83,7 @@ export default {
   position: sticky;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 30;
 }
 
 .main-container {
