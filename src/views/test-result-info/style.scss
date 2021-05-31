@@ -1,0 +1,18 @@
+.test-field {
+  display: flex;
+  justify-content: space-between;
+
+  &.large {
+    > * {
+      font-size: $size-5;
+    }
+  }
+
+  &-label {
+    color: $grey;
+  }
+
+  &-value {
+    font-weight: bold;
+  }
+}

@@ -4,6 +4,7 @@ import PersonalAccountLayoutConfig from "@/layouts/user-view/personal-layout";
 import HomePageConfig from "@/views/home";
 import PostViewPageConfig from "@/views/post-view";
 import TestDetailPageConfig from "@/views/test-detail";
+import TestResultInfoConfig from "@/views/test-result-info";
 
 import PersonalPageConfigs from "@/views/personal";
 
@@ -22,7 +23,7 @@ export default routerWrapper => {
         menuBar: false,
         footer: false
       }),
-    [TestDetailPageConfig]
+    [TestDetailPageConfig, TestResultInfoConfig]
   );
 
   routerWrapper.addLayout(

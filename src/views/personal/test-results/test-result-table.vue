@@ -39,7 +39,7 @@
               class="p-3"
             >
               <router-link
-                :to="menu.to(row.test_id)"
+                :to="menu.to(row)"
                 class="media is-align-items-center"
               >
                 <b-icon class="media-left" :icon="menu.icon"></b-icon>
@@ -128,20 +128,20 @@ export default {
       {
         icon: "info-circle",
         text: "Xem kết quả",
-        to: testId => ({
-          name: "TestDetailPage",
+        to: result => ({
+          name: "TestResultInfoPage",
           params: {
-            test_id: testId
+            result_id: result.result_id
           }
         })
       },
       {
         icon: "pen-alt",
         text: "Làm lại",
-        to: testId => ({
+        to: result => ({
           name: "TestDetailPage",
           params: {
-            test_id: testId
+            test_id: result.test_id
           }
         })
       }
