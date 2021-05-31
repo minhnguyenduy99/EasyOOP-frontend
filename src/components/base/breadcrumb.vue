@@ -1,15 +1,17 @@
 <template>
   <nav class="breadcrumb">
-    <ul>
+    <ul :class="[ulClass]">
       <li
         v-for="(title, index) in titles"
         :key="title.id"
-        :class="[_active === index ? 'is-active' : '']"
+        :class="[_active === index ? 'is-active' : '', itemClass]"
       >
-        <router-link v-if="title.to" :to="title.to">
-          {{ title.value }}
-        </router-link>
-        <a v-else>{{ title.value }}</a>
+        <slot name="item" v-bind="{ title, active: _active === index }">
+          <router-link v-if="title.to" :to="title.to">
+            {{ title.value }}
+          </router-link>
+          <a v-else>{{ title.value }}</a>
+        </slot>
       </li>
     </ul>
   </nav>
@@ -23,6 +25,14 @@ export default {
       type: Array,
       required: false,
       default: () => []
+    },
+    ulClass: {
+      type: String,
+      default: () => "is-align-items-center"
+    },
+    itemClass: {
+      type: String,
+      default: () => ""
     },
     active: Number
   },
