@@ -94,11 +94,12 @@
       >
         <template v-if="selectedTestId === row.test_id">
           <section
+            v-if="row.verifying_status === 1"
             class="tooltip-section"
             style="margin-top: -4px; margin-bottom: -6px"
           >
             <b-tooltip
-              v-for="(feature, index) in testFeatures"
+              v-for="(feature, index) in availableTestFeatureGroups"
               :key="feature.id"
               :label="feature.tooltip"
               :type="feature.type"
@@ -109,7 +110,28 @@
                 :icon-left="feature.icon"
                 :type="feature.type"
                 :outlined="feature.outlined"
-                @click.stop="testFeatureHandlers[index]"
+                @click.stop="testFeatureHandlers['1'][index]"
+              />
+            </b-tooltip>
+          </section>
+          <section
+            v-else-if="row.verifying_status === 2"
+            class="tooltip-section"
+            style="margin-top: -4px; margin-bottom: -6px"
+          >
+            <b-tooltip
+              v-for="(feature, index) in unavailableTestFeatureGroups"
+              :key="feature.id"
+              :label="feature.tooltip"
+              :type="feature.type"
+            >
+              <b-button
+                class="is-icon-button"
+                size="is-small"
+                :icon-left="feature.icon"
+                :type="feature.type"
+                :outlined="feature.outlined"
+                @click.stop="testFeatureHandlers['2'][index]"
               />
             </b-tooltip>
           </section>
@@ -128,6 +150,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { ToastNotifier } from "@/utils";
 export default {
   name: "ListTestTable",
   props: {
@@ -148,36 +171,21 @@ export default {
         type: "is-primary-light"
       }
     ],
-    TEST_STATUSES: [
-      {},
-      {
+    TEST_STATUSES: {
+      1: {
         icon: "check",
         type: "is-success",
-        title: "Đã duyệt"
+        title: "Có sẵn"
       },
-      {
-        icon: "minus",
+      2: {
         type: "is-danger",
-        title: "Không được duyệt"
-      },
-      {
-        icon: "pause-circle",
-        type: "is-primary-light",
-        title: "Chờ duyệt"
+        title: "Đã xóa"
       }
-    ],
+    },
     itemsPerPage: 10,
     totalCount: 0,
     tests: [],
     selectedTest: null,
-    features: [
-      {
-        icon: "pen",
-        tooltip: "Edit test",
-        type: "is-primary",
-        outlined: true
-      }
-    ],
     page: 1,
     featureHandler: [],
     showModal: false,
@@ -187,34 +195,50 @@ export default {
       sort_by: null,
       sort_order: null
     },
-    testFeatures: [
+    availableTestFeatureGroups: [
       {
         icon: "spell-check",
         tooltip: "Làm thử",
         type: "is-success",
-        outlined: false
+        outlined: false,
+        isLink: true
       },
       {
         icon: "pen",
         tooltip: "Chỉnh sửa",
         type: "is-primary",
-        outlined: false
+        outlined: false,
+        isLink: true
       },
       {
         icon: "trash-alt",
         tooltip: "Xóa",
         type: "is-danger",
-        outlined: false
+        outlined: false,
+        isLink: false
       }
     ],
-    testFeatureHandlers: []
+    unavailableTestFeatureGroups: [
+      {
+        icon: "window-restore",
+        tooltip: "Phục hồi",
+        type: "is-info",
+        outlined: false,
+        status: 0,
+        isLink: false
+      }
+    ],
+    testFeatureHandlers: { 1: [], 2: [] }
   }),
-  created: function() {
-    this.testFeatureHandlers.push(
-      null,
+  mounted: function() {
+    // features for available test
+    this.testFeatureHandlers[1].push(
+      this.$on_navigateTestPage,
       this.$on_editButtonClicked,
       this.$on_deleteButtonClicked
     );
+    // features for unavailable test)
+    this.testFeatureHandlers[2].push(this.$on_restoreTest);
     this.$_loadAsyncData();
   },
   computed: {
@@ -237,7 +261,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("TEST", ["deleteTestById"]),
+    ...mapActions("TEST", ["deleteTestById", "restoreTest"]),
 
     $on_rowClicked(row) {
       this._table.closeDetailRow(row);
@@ -268,6 +292,7 @@ export default {
     },
     async $_loadAsyncData() {
       this.loading = true;
+      console.log(this.searchOptions);
       this.$api_searchTests({
         page: this.page,
         ...this.searchOptions,
@@ -294,6 +319,7 @@ export default {
       );
     },
     $on_editButtonClicked() {
+      console.log("edit");
       this.$router.push({
         name: "EditTest",
         params: { test_id: this.selectedTest.test_id }
@@ -306,6 +332,25 @@ export default {
         if (error) {
           return;
         }
+        ToastNotifier.success(this.$buefy.toast, "Xóa bài test thành công");
+        this.$_loadAsyncData();
+      });
+    },
+    $on_navigateTestPage() {
+      const testId = this.selectedTest.test_id;
+      this.$router.push({
+        name: "TestDetailPage",
+        params: { test_id: testId }
+      });
+    },
+    $on_restoreTest() {
+      const testId = this.selectedTest.test_id;
+      this.restoreTest({ test_id: testId }).then(result => {
+        const { error } = result;
+        if (error) {
+          return;
+        }
+        ToastNotifier.success(this.$buefy.toast, "Phục hồi thành công");
         this.$_loadAsyncData();
       });
     },

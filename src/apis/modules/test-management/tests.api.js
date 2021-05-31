@@ -5,6 +5,7 @@ const endpoints = {
   updateTest: "",
   searchTest: "/search",
   deleteTest: "",
+  restoreTest: "",
   createSentence: "",
   createSentenceInBulk: "",
   updateSentence: "",
@@ -56,6 +57,21 @@ export class TestAPI extends BaseAPI {
     try {
       const response = await this._context.delete(endpoint);
 
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
+  async restoreTest(opts) {
+    const { test_id } = opts;
+    const endpoint = this._addURLParams(
+      endpoints.restoreTest,
+      test_id,
+      "restore"
+    );
+    try {
+      const response = await this._context.put(endpoint);
       return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err?.response);
@@ -213,7 +229,8 @@ export class TestAPI extends BaseAPI {
       getTestById: this.getTestById.bind(this),
       getTotalScoreOfTest: this.getTotalScoreOfTest.bind(this),
       deleteSentenceById: this.deleteSentenceById.bind(this),
-      deleteTestById: this.deleteTestById.bind(this)
+      deleteTestById: this.deleteTestById.bind(this),
+      restoreTest: this.restoreTest.bind(this)
     };
   }
 

@@ -54,20 +54,16 @@ export default {
   data: () => ({
     TEST_STATUSES: [
       {
+        code: null,
+        text: "Chọn tất cả"
+      },
+      {
         code: 1,
-        text: "Đã duyệt"
+        text: "Có sẵn"
       },
       {
         code: 2,
-        text: "Không được duyệt"
-      },
-      {
-        code: 3,
-        text: "Chờ duyệt"
-      },
-      {
-        code: null,
-        text: "Chọn tất cả"
+        text: "Đã xóa"
       }
     ],
     TEST_TYPES: [
