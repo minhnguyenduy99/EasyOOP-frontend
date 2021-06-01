@@ -2,13 +2,14 @@
   <div class="search-post-view card" @click="$on_clicked">
     <div class="card-content">
       <div class="mb-3">
-        <span class="post-view-title has-text-primary has-text-weight-bold">{{
-          post.post_title
-        }}</span>
+        <span
+          class="post-view-title has-text-primary has-text-weight-bold is-size-5"
+          >{{ post.post_title }}</span
+        >
       </div>
       <div class="post-view-info is-flex is-justify-content-space-between">
-        <span class="is-size-7 has-text-grey">{{ post.topic_title }}</span>
-        <span class="is-size-7 has-text-grey">{{ createdDateInStr }}</span>
+        <span class="is-size-6 has-text-grey">{{ post.topic_title }}</span>
+        <span class="is-size-6 has-text-grey">{{ createdDateInStr }}</span>
       </div>
     </div>
   </div>
