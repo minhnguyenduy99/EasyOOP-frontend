@@ -30,11 +30,13 @@ export default {
     "topic-list-item": () =>
       import("@/components/topic-list/topic-list-item.vue")
   },
+  inject: ["$p_loadPage"],
   props: {
     postId: String
   },
   data: () => ({
     post: null,
+    listPosts: [],
     topic: null
   }),
   watch: {
@@ -45,16 +47,34 @@ export default {
         });
         return;
       }
-      this.$_requestPost();
+      this.$_requestData();
+    }
+  },
+  computed: {
+    isCurrentPostInTheSameTopic() {
+      return (
+        this.listPosts.findIndex(post => post.post_id === this.postId) !== -1
+      );
     }
   },
   mounted: function() {
-    this.$_requestPost().then(() => {
-      this.$_getListPostsOfTopic(this.post.topic_id);
-    });
+    this.$_requestData();
   },
   methods: {
     ...mapActions("POST", ["getPostById", "getPostsByTopic"]),
+
+    async $_requestData() {
+      this.$p_loadPage(true);
+      this.$_requestPost().then(() => {
+        if (this.isCurrentPostInTheSameTopic) {
+          this.$p_loadPage(false);
+          return;
+        }
+        this.$_getListPostsOfTopic(this.post.topic_id).then(() => {
+          this.$p_loadPage(false);
+        });
+      });
+    },
     async $_requestPost() {
       return this.getPostById(this.postId).then(result => {
         const { error, data } = result;
@@ -64,13 +84,15 @@ export default {
         this.post = data;
       });
     },
-    $_getListPostsOfTopic(topicId) {
-      this.getPostsByTopic({ topicId }).then(result => {
+    async $_getListPostsOfTopic(topicId) {
+      return this.getPostsByTopic({ topicId }).then(result => {
         const { error, data } = result;
         if (error) {
           return;
         }
         this.topic = data;
+        this.listPosts.length = 0;
+        this.listPosts.push(...data.list_posts);
       });
     },
     $_navigateToPost(postId) {
@@ -108,7 +130,7 @@ export default {
     #list-posts-section {
       display: block;
       position: sticky;
-      top: 50px;
+      top: 100px;
       left: 0;
       height: fit-content;
       flex-basis: 20%;

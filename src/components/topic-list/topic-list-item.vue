@@ -1,6 +1,6 @@
 <template>
   <div class="topic-list-item has-text-left">
-    <h3 class="topic-title mb-2 is-size-5 has-text-grey">
+    <h3 class="topic-title mb-2 is-size-4 has-text-grey">
       {{ topic.topic_title }}
     </h3>
     <div class="topic-post-list">
@@ -52,22 +52,34 @@ export default {
 
 <style scoped lang="scss">
 $topic-item-color: $grey;
+$topic-hover-background-color: rgb(245, 245, 245);
+$topic-title-border-bottom: 2px solid $grey-light;
+$topic-post-list-padding: 1rem 0;
 
 .topic-post-item {
-  transition: 0.1s;
+  transition: 0.05s;
   color: $topic-item-color;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  border-radius: 7px;
 
   &:hover {
-    background: white;
+    background: $topic-hover-background-color;
     color: $primary;
   }
 
   &.is-active {
-    background: $primary;
+    background: $primary-light;
     color: $light;
   }
+}
+
+.topic-post-list {
+  padding: $topic-post-list-padding;
+}
+
+.topic-title {
+  border-bottom: $topic-title-border-bottom;
 }
 </style>
