@@ -5,11 +5,11 @@ import App from "./App.vue";
 import { createVueRouter } from "./router";
 import { createVuexStore } from "./store";
 import createAPIPack from "./apis";
-import { authHeaderInterceptor } from "./apis/interceptors";
 import {
   FormValidatorPlugin,
   ApiServicePlugin,
-  VueMarkdownPlugin
+  VueMarkdownPlugin,
+  AOSPlugin
 } from "./plugins";
 import mockApiService from "./mocks";
 
@@ -19,6 +19,7 @@ Vue.use(VueCompositionAPI);
 Vue.use(Buefy, {
   defaultIconPack: "fas"
 });
+Vue.use(AOSPlugin);
 Vue.use(new FormValidatorPlugin());
 Vue.use(VueMarkdownPlugin);
 Vue.use(ApiServicePlugin, {

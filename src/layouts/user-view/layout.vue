@@ -4,37 +4,33 @@
     <header id="user-view-header">
       <router-view name="header" />
     </header>
-    <section
+    <!-- <section
       class="hero is-primary-light is-fullheight-with-navbar"
       v-if="includeHero"
     >
       <div class="hero-body">
         <user-view-hero-body />
       </div>
-    </section>
+    </section> -->
     <!-- <section v-else>
       <div style="height: 20px"></div>
     </section> -->
-    <div class="py-4 ha-vertical-layout-5">
-      <!-- Menu bar  -->
-      <router-view v-if="menuBar" name="menu-navbar" />
-
-      <!-- Main body  -->
-      <section id="main-body-section">
-        <div id="body-section">
-          <router-view name="default" />
-        </div>
-      </section>
-      <footer
-        v-if="footer"
-        id="user-view-footer"
-        class="hero is-medium is-primary-light"
-      >
-        <div class="hero-body">
-          <router-view name="footer" />
-        </div>
-      </footer>
-    </div>
+    <section
+      :class="{
+        'is-page-responsive': !paddingless
+      }"
+    >
+      <router-view name="default" />
+    </section>
+    <footer
+      v-if="footer"
+      id="user-view-footer"
+      class="hero is-medium is-primary-light"
+    >
+      <div class="hero-body">
+        <router-view name="footer" />
+      </div>
+    </footer>
     <b-loading is-full-page v-model="isLoading" :can-cancel="false">
       <b-icon
         pack="fas"
@@ -64,7 +60,6 @@ import UserViewHeroBody from "./user-view.hero";
 export default {
   name: "UserViewLayout",
   components: {
-    UserViewHeroBody,
     "login-form": () => import("@/components/login-form/login-form")
   },
   provide() {
@@ -80,12 +75,12 @@ export default {
       required: false,
       default: () => false
     },
-    menuBar: Boolean,
     footer: Boolean,
     headerTransition: {
       type: Boolean,
       default: () => false
-    }
+    },
+    paddingless: Boolean
   },
   data: () => ({
     isLoading: false,
@@ -126,14 +121,6 @@ $navbar-height: 82px;
   padding: 0;
 }
 
-#main-body-section {
-  padding: 0.5rem;
-
-  @include tablet {
-    padding: 0 1rem;
-  }
-}
-
 #main-body-layout {
   #navbar-section {
     display: none;
@@ -152,10 +139,14 @@ $navbar-height: 82px;
       height: 90vh;
       overflow-y: auto;
     }
+  }
+}
 
-    #body-section {
-      flex-basis: 78%;
-    }
+#user-view-main-body {
+  padding: 0 $page-padding-horizontal-small;
+
+  @include tablet {
+    padding: 0 $page-padding-horizontal-medium;
   }
 }
 

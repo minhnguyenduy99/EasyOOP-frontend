@@ -1,50 +1,46 @@
 <template>
   <div id="home-page">
-    <div id="latest-posts-section" class="card">
-      <div class="card-header">
-        <div class="card-header-title has-background-primary-light">
-          <span class="is-size-5 has-text-light has-text-weight-bold"
-            >Bài viết mới nhất</span
+    <div class="hero is-primary-light is-fullheight-with-navbar">
+      <div class="hero-body">
+        <div class="container has-text-centered is-4">
+          <p class="is-size-1 py-5">Bắt đầu học OOP nào</p>
+          <b-button
+            icon-right="chevron-down"
+            type="is-primary-light"
+            size="is-medium"
+            inverted
+            class="has-text-weight-bold"
+            @click="$_scrollToFirstStep"
+            >Xem lộ trình học</b-button
           >
-        </div>
-      </div>
-      <div class="card-content p-0">
-        <div>
-          <post-view
-            v-for="post in posts"
-            :key="post.id"
-            :post="post"
-            @click="$_navigateToPostView"
-          />
         </div>
       </div>
     </div>
     <div
-      id="right-section"
-      v-if="topics.length > 0"
-      class="ha-vertical-layout-3"
+      v-for="(step, index) in learningSteps"
+      :key="step.id"
+      class="hero is-fullheight-with-navbar"
+      ref="steps"
     >
-      <div id="topic-panel">
-        <topic-detail
-          v-for="topic in topics"
-          :key="topic.id"
-          :topic="topic"
-          startButtonLabel="Bắt đầu học"
-          empty-text="Chưa có bài học nào"
-        />
-      </div>
-      <div id="common-question-section" class="card">
-        <div class="card-content">
-          <h1 class="has-text-weight-bold is-size-4">CÁC CÂU HỎI THƯỜNG GẶP</h1>
-          <div class="mt-5 ha-vertical-layout-5">
-            <qanda-card
-              v-for="question in questions"
-              :key="question.id"
-              :qanda="question"
-              :open="false"
-            />
-          </div>
-        </div>
+      <div class="hero-body">
+        <learning-step
+          :image="step.image"
+          :title="step.title"
+          :subtitle="step.subtitle"
+          :order="index + 1"
+          style="width: 100%"
+        >
+          <template #action>
+            <div class="mt-6">
+              <b-button
+                type="is-primary"
+                size="is-medium"
+                icon-right="angle-double-right"
+                >Bắt đầu học</b-button
+              >
+            </div>
+          </template>
+        </learning-step>
       </div>
     </div>
   </div>
@@ -53,20 +49,41 @@
 <script>
 import { mapActions } from "vuex";
 export default {
-  components: {
-    "topic-detail": async () => import("./topic-detail/topic-detail"),
-    "qanda-card": async () => (await import("../../components")).QandACard,
-    "post-view": () => import("./post-view")
-  },
   name: "Home",
+  components: {
+    "learning-step": () => import("./learning-step")
+  },
   data: () => ({
     posts: [],
     topics: [],
-    questions: []
+    questions: [],
+    learningSteps: [
+      {
+        image:
+          "https://itviec.com/blog/wp-content/uploads/2020/09/oop-la-gi-fi.jpg",
+        title: "Lorem Ipsuand t",
+        subtitle:
+          "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin"
+      },
+      {
+        image:
+          "https://itviec.com/blog/wp-content/uploads/2020/09/oop-la-gi-fi.jpg",
+        title: "Lorem Ipsum is simply dummy text of the printing and t",
+        subtitle:
+          "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin"
+      },
+      {
+        image:
+          "https://itviec.com/blog/wp-content/uploads/2020/09/oop-la-gi-fi.jpg",
+        title: "Lorem Ipsum is simply dummy text of the printing and t",
+        subtitle:
+          "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin"
+      }
+    ]
   }),
   mounted: function() {
-    this.$_getPosts();
-    this.$_getTopics();
+    // this.$_getPosts();
+    // this.$_getTopics();
   },
   methods: {
     ...mapActions("POST", ["getPosts", "searchTopics"]),
@@ -102,40 +119,62 @@ export default {
           post_id: post.post_id
         }
       });
+    },
+    $_scrollToFirstStep() {
+      const firstStep = this.$refs.steps[0];
+      firstStep.scrollIntoView({
+        behavior: "smooth"
+      });
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-#home-page {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
+// #home-page {
+//   position: relative;
+//   display: flex;
+//   justify-content: space-between;
 
-  #latest-posts-section {
-    flex-basis: 25%;
-    position: sticky;
-    top: 100px;
-    left: 0;
+//   #latest-posts-section {
+//     flex-basis: 25%;
+//     position: sticky;
+//     top: 100px;
+//     left: 0;
+//   }
+
+//   #right-section {
+//     flex-basis: 72%;
+//   }
+// }
+
+.step {
+  &-group {
+    display: block;
+
+    @include tablet {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      column-gap: 1rem;
+    }
   }
 
-  #right-section {
-    flex-basis: 72%;
-  }
-}
+  &-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-#topic-panel {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 1rem 1rem;
-
-  @include tablet {
-    grid-template-columns: 1fr 1fr;
+    @include tablet {
+      flex-direction: row;
+    }
   }
 
-  @include desktop {
-    grid-template-columns: 1fr 1fr 1fr;
+  &-icon {
+    padding: 2rem 0;
+    @include tablet {
+      transform: rotate(-90deg);
+      padding: 0 2rem;
+    }
   }
 }
 </style>

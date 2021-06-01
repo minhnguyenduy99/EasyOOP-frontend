@@ -1,15 +1,12 @@
 .is-page-responsive {
-  padding-left: $page-padding-horizontal-small;
-  padding-right: $page-padding-horizontal-small;
+  padding: 1rem $page-padding-horizontal-small;
   
   @include tablet {
-    padding-left: $page-padding-horizontal-medium;
-    padding-right: $page-padding-horizontal-medium;
+    padding: 1.25rem $page-padding-horizontal-medium;
   }
   
   @include desktop {
-    padding-left: $page-padding-horizontal;
-    padding-right: $page-padding-horizontal;
+    padding: 1.5rem $page-padding-horizontal;
   }
 };
 

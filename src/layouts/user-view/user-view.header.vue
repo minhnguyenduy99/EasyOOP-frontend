@@ -22,6 +22,62 @@
             />
           </b-navbar-item>
         </template>
+        <template #start>
+          <b-navbar-item tag="div">
+            <div class="navigate-button-group">
+              <b-dropdown :triggers="['click']">
+                <template #trigger="{ active }">
+                  <b-button
+                    class="navigate-button"
+                    type="is-primary-light"
+                    :icon-right="active ? 'chevron-up' : 'chevron-down'"
+                  >
+                    <span>
+                      CHỦ ĐỀ
+                    </span>
+                  </b-button>
+                </template>
+                <b-dropdown-item
+                  v-for="topic in listTopics"
+                  :key="topic.id"
+                  paddingless
+                  @click="$_navigateToTopic(topic)"
+                >
+                  <div
+                    class="is-flex is-justify-content-space-between is-align-items-center p-3"
+                  >
+                    <div class="is-flex is-flex-direction-column">
+                      <span
+                        class="is-size-6 has-text-weight-bold has-text-primary"
+                        >{{ topic.topic_title }}</span
+                      >
+                    </div>
+                    <div class="px-3">
+                      <span class="is-size-5 has-text-grey">{{
+                        topic.post_count
+                      }}</span>
+                    </div>
+                  </div>
+                </b-dropdown-item>
+              </b-dropdown>
+              <b-button
+                class="navigate-button link"
+                type="is-primary-light"
+                tag="router-link"
+                :to="{ name: 'Home' }"
+              >
+                BÀI TEST
+              </b-button>
+              <b-button
+                class="navigate-button is-icon-button"
+                size="is-medium"
+                type="is-primary-dark"
+                icon-right="search"
+                @click="showSearchModal = true"
+              />
+            </div>
+          </b-navbar-item>
+        </template>
         <template #end>
           <b-navbar-item tag="div" id="navigation-bar">
             <div class="navigate-button-group">
@@ -56,6 +112,9 @@
         </template>
       </b-navbar>
     </transition>
+    <b-modal v-model="showSearchModal" class="search-modal">
+      <search-modal />
+    </b-modal>
   </div>
 </template>
 
@@ -66,14 +125,22 @@ import { STORE_MODULES } from "../../store";
 export default {
   name: "UserViewHeader",
   components: {
-    "user-badge": () => import("./components/user-badge")
+    "user-badge": () => import("./components/user-badge"),
+    "search-modal": () => import("./components/search-modal")
   },
   inject: ["$p_showLoginModal", "headerTransition"],
+  provide() {
+    return {
+      $toggleSearchModal: this.$_toggleSearchModal.bind(this)
+    };
+  },
   data: () => ({
     isScrollTop: true,
     showNavbar: true,
     scrollPosition: 0,
-    isLoading: false
+    isLoading: false,
+    listTopics: [],
+    showSearchModal: false
   }),
   computed: {
     ...mapGetters("AUTH", ["isAuthenticated", "user"]),
@@ -94,6 +161,7 @@ export default {
   },
   mounted: function() {
     this.$_injectScrollBehaviour();
+    this.$_searchTopics();
     document.body.classList.add("has-navbar-fixed-top");
   },
   // beforeDestroy: function() {
@@ -103,6 +171,29 @@ export default {
     ...mapActions(STORE_MODULES.AUTH, {
       $store_login: "login"
     }),
+    ...mapActions("POST", ["searchTopics"]),
+
+    $_toggleSearchModal(value) {
+      this.showSearchModal = value;
+    },
+
+    $_searchTopics() {
+      this.searchTopics().then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.listTopics.length = 0;
+        this.listTopics.push(...data);
+      });
+    },
+
+    $_navigateToTopic(topic) {
+      this.$router.push({
+        name: "PostView",
+        params: { post_id: topic.first_post_id }
+      });
+    },
 
     $_injectScrollBehaviour() {
       window.addEventListener(
@@ -157,5 +248,11 @@ $navbar-height: 82px;
 
 #navigation-bar {
   padding: 1rem;
+}
+
+.search-modal {
+  padding-top: 4rem;
+  justify-content: flex-start;
+  overflow: hidden;
 }
 </style>
