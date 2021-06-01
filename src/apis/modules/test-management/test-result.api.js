@@ -2,6 +2,7 @@ import { BaseAPI } from "../../base";
 
 const endpoints = {
   createTestResult: "",
+  getTestResultBySession: "/by-session",
   searchTestResults: "/search",
   getTestResultById: "",
   calculateTestResult: "/calculate",
@@ -19,6 +20,20 @@ export class TestResultAPI extends BaseAPI {
         test_id,
         results
       });
+      return this._formatter.getDataFormat(result);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
+  async getTestResultBySession(opts) {
+    const { session_id } = opts;
+    const endpoint = this._addURLParams(
+      endpoints.getTestResultBySession,
+      session_id
+    );
+    try {
+      const result = await this._context.get(endpoint);
       return this._formatter.getDataFormat(result);
     } catch (err) {
       return this._formatter.getErrorFormat(err?.response);
@@ -89,7 +104,8 @@ export class TestResultAPI extends BaseAPI {
       createTestResult: this.createTestResult.bind(this),
       searchTestResults: this.searchTestResults.bind(this),
       getTestResultById: this.getTestResultById.bind(this),
-      getDetailOfTestResult: this.getDetailOfTestResult.bind(this)
+      getDetailOfTestResult: this.getDetailOfTestResult.bind(this),
+      getTestResultBySession: this.getTestResultBySession.bind(this)
     };
   }
 

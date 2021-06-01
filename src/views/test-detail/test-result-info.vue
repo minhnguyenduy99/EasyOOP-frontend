@@ -15,10 +15,19 @@
         </div>
       </div>
       <div class="buttons is-justify-content-space-between">
-        <b-button type="is-primary" @click="$on_saveResultButtonClicked"
-          >Lưu kết quả</b-button
+        <b-button
+          :icon-left="saved ? 'check' : null"
+          type="is-primary"
+          @click="$on_saveResultButtonClicked"
+          >{{ saved ? "Đã lưu" : "Lưu kết quả" }}</b-button
         >
-        <b-button type="is-primary" outlined>Danh sách kết quả</b-button>
+        <b-button
+          type="is-primary"
+          outlined
+          tag="router-link"
+          :to="{ name: 'PersonalTestResults' }"
+          >Danh sách kết quả</b-button
+        >
       </div>
       <hr />
       <sentence-order-panel
@@ -60,7 +69,8 @@ export default {
     selectedOrder: Number
   },
   data: () => ({
-    showLoginModal: false
+    showLoginModal: false,
+    saved: false
   }),
   computed: {
     ...mapGetters("VIEWER_TEST", [
@@ -109,6 +119,11 @@ export default {
         });
       });
     },
+    $on_navigateToResultsPage() {
+      this.$router.push({
+        name: "PersonalTestResults"
+      });
+    },
     $on_saveResultButtonClicked() {
       if (this.isAuthenticated) {
         this.$_saveTestResult();
@@ -132,6 +147,7 @@ export default {
           if (error) {
             return;
           }
+          this.saved = true;
           ToastNotifier.success(this.$buefy.toast, "Lưu kết quả thành công");
         }
       );

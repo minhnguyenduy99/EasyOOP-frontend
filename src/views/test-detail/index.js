@@ -4,7 +4,8 @@ export default () => ({
   page: () => import("./page"),
   props: {
     default: route => ({
-      testId: route.params.test_id
+      testId: route.params.test_id,
+      sessionId: route.query.sid
     })
   }
 });

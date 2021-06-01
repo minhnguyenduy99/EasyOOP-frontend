@@ -54,7 +54,8 @@ export default {
   },
   mixins: [sessionStateProvider(Vue)],
   props: {
-    testId: String
+    testId: String,
+    sessionId: String
   },
   provide() {
     return {
@@ -73,8 +74,20 @@ export default {
     sentences: [],
     selectedOrder: null
   }),
+  created: function() {
+    this.$_updateTest().then(() => {
+      if (!this.sessionId) {
+        return;
+      }
+      this.$_navigatePage(1);
+    });
+  },
   mounted: function() {
-    this.$_updateTest();
+    if (this.sessionId) {
+      this.$on("session-ended", this.$_getTestResultBySession);
+      this.$endSession();
+      return;
+    }
     this.$on("session-ended", this.$on_sessionEnd);
   },
   computed: {
@@ -90,12 +103,12 @@ export default {
     ...mapActions("VIEWER_TEST", [
       "getTestById",
       "viewer_createTestResult",
+      "viewer_getTestResultBySession",
       "navigateToPage"
     ]),
-    ...mapMutations("VIEWER_TEST", ["updateCurrentPage"]),
 
-    $_updateTest() {
-      this.getTestById(this.testId).then(result => {
+    async $_updateTest() {
+      return this.getTestById(this.testId).then(result => {
         const { error, data } = result;
         if (error) {
           this.$router.push({ name: "Home" });
@@ -122,7 +135,6 @@ export default {
       this.$_navigatePage(1);
     },
     $on_sessionEnd() {
-      this.updateCurrentPage(1);
       this.viewer_createTestResult({
         test_id: this.testId,
         results: this.totalAnswers,
@@ -134,7 +146,23 @@ export default {
         }
         const { data: testResult } = data;
         this.testResult = testResult;
+        this.$_navigatePage(1);
       });
+    },
+    $_getTestResultBySession() {
+      this.viewer_getTestResultBySession({ session_id: this.sessionId }).then(
+        result => {
+          const { error, data } = result;
+          if (error) {
+            return;
+          }
+          const { data: testResult } = data;
+          if (testResult.test_id !== this.testId) {
+            this.$router.push({ name: "Home" });
+          }
+          this.testResult = testResult;
+        }
+      );
     }
   }
 };

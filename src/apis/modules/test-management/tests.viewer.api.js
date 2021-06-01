@@ -2,7 +2,8 @@ import { BaseAPI } from "../../base";
 
 const endpoints = {
   getTestById: "",
-  getTestSentences: ""
+  getTestSentences: "",
+  searchTest: "/search"
 };
 
 export class TestViewerAPI extends BaseAPI {
@@ -12,6 +13,34 @@ export class TestViewerAPI extends BaseAPI {
     try {
       const result = await this._context.get(endpoint);
       return this._formatter.getDataFormat(result);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
+  async searchTest(opts) {
+    const {
+      page = 1,
+      verifying_status = null,
+      title = null,
+      sort_order = null,
+      creator_id = null,
+      sort_by = null,
+      type = null
+    } = opts ?? {};
+    try {
+      const response = await this._context.get(endpoints.searchTest, {
+        params: {
+          page,
+          verifying_status,
+          title,
+          sort_order,
+          creator_id,
+          sort_by,
+          type
+        }
+      });
+      return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err?.response);
     }
@@ -39,7 +68,8 @@ export class TestViewerAPI extends BaseAPI {
   getEndpointObject() {
     return {
       getTestById: this.getTestById.bind(this),
-      getTestSentenceByPage: this.getTestSentenceByPage.bind(this)
+      getTestSentenceByPage: this.getTestSentenceByPage.bind(this),
+      searchTest: this.searchTest.bind(this)
     };
   }
 
