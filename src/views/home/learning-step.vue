@@ -73,13 +73,14 @@ export default {
     > img {
       height: 100%;
       width: auto;
+      max-width: 400px;
     }
   }
 
   &-content {
     @include tablet {
       justify-self: flex-end;
-      max-width: 600px;
+      min-width: 500px;
     }
   }
 }
