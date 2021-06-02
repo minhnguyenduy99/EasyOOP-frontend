@@ -40,14 +40,11 @@
       />
     </b-loading>
     <b-modal v-model="showModal" has-modal-card>
-      <div class="card">
-        <login-form
-          class="card-content"
-          @logined="$on_logined"
-          fail-text="Đăng nhập thất bại"
-          success-text="Đăng nhập thành công"
-        />
-      </div>
+      <login-form
+        id="login-form"
+        @logined="$on_logined"
+        :submitHandler="loginWithPassword"
+      />
     </b-modal>
   </div>
 </template>
@@ -55,7 +52,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import { computed } from "@vue/composition-api";
-import UserViewHeroBody from "./user-view.hero";
+import { ToastNotifier } from "@/utils";
 
 export default {
   name: "UserViewLayout",
@@ -91,6 +88,7 @@ export default {
   },
   methods: {
     ...mapActions("POST", ["getPostsByTopic"]),
+    ...mapActions("AUTH", ["loginWithPassword"]),
 
     loadPage(loading) {
       this.isLoading = loading;
@@ -107,8 +105,12 @@ export default {
       this.showModal = false;
     },
 
-    $on_logined() {
-      this.showModal = false;
+    async $on_logined(success) {
+      if (success) {
+        this.showModal = false;
+        ToastNotifier.success(this.$buefy.toast, "Đăng nhập thành công");
+        return;
+      }
     }
   }
 };
@@ -152,5 +154,9 @@ $navbar-height: 82px;
 
 #user-view-footer {
   margin-top: 2rem;
+}
+
+#login-form {
+  width: 400px;
 }
 </style>

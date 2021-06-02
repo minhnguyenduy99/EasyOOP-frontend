@@ -4,6 +4,7 @@ import { HTTP_CODES } from "../../helpers";
 
 const endpoints = {
   loginFacebook: "/facebook/login",
+  loginWithPassword: "/login/local",
   loginFacebookToken: "/facebook/login-with-token",
   loginWithGoogleToken: "/google/login-with-token",
   logout: "/logout",
@@ -21,6 +22,19 @@ export class AuthAPI extends BaseAPI {
         return this._formatter.getDataFormat(response);
       }
       return this._formatter.getErrorFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response ?? err);
+    }
+  }
+
+  async loginWithPassword(data) {
+    const { username, password } = data;
+    try {
+      const response = await this._context.post(endpoints.loginWithPassword, {
+        username,
+        password
+      });
+      return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err?.response ?? err);
     }
@@ -101,6 +115,7 @@ export class AuthAPI extends BaseAPI {
     return {
       loginWithGoogleToken: this.loginWithGoogleToken.bind(this),
       loginWithFacebookToken: this.loginWithFacebookToken.bind(this),
+      loginWithPassword: this.loginWithPassword.bind(this),
       logout: this.logout.bind(this),
       relogin: this.relogin.bind(this)
     };

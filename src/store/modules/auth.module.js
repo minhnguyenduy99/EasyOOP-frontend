@@ -8,7 +8,8 @@ const DEFAULT_STATE = {
   isAuthenticated: false,
   user: null,
   active_role: null,
-  role_id: null
+  role_id: null,
+  access_token: null
 };
 
 export default context => {
@@ -28,14 +29,12 @@ export default context => {
         state.active_role = null;
       },
       updateAuth(state, data) {
+        const { user, access_token } = data;
         state.isAuthenticated = true;
-        state.user = data;
-        state.role_id = data.role_id;
-        state.active_role = data.active_role;
-      },
-      updateRole(state, data) {
-        state.active_role = data.active_role;
-        state.role_id = data.role_id;
+        state.user = user;
+        state.role_id = user.role_id;
+        state.active_role = user.active_role;
+        state.access_token = access_token;
       },
       updateUserAvatar(state, avatar) {
         state.user.profile.profile_pic = avatar;
@@ -49,7 +48,7 @@ export default context => {
         return state.user?.profile;
       },
       isAuthenticated(state) {
-        const result = !!(state.isAuthenticated && state.user.access_token);
+        const result = !!(state.isAuthenticated && state.access_token);
         return result;
       },
       userRoles(state) {
@@ -75,9 +74,8 @@ export default context => {
           commit("reset");
           return { error };
         }
-        const { data: user } = data;
-        commit("updateAuth", user);
-        return { data: user };
+        commit("updateAuth", data);
+        return { data: getters.user };
       },
       async loginWithFacebookToken({ commit }) {
         const { error, data } = await authApi.loginWithFacebookToken();
@@ -85,7 +83,7 @@ export default context => {
           commit("reset");
           return { error };
         }
-        commit("updateAuth", data.data);
+        commit("updateAuth", data);
         return { data };
       },
       async loginWithGoogleToken({ commit }, opts) {
@@ -94,7 +92,16 @@ export default context => {
           commit("reset");
           return { error };
         }
-        commit("updateAuth", data.data);
+        commit("updateAuth", data);
+        return { data };
+      },
+      async loginWithPassword({ commit }, opts) {
+        const { error, data } = await authApi.loginWithPassword(opts);
+        if (error) {
+          commit("reset");
+          return { error };
+        }
+        commit("updateAuth", data);
         return { data };
       },
       async logout({ commit }) {
@@ -111,11 +118,9 @@ export default context => {
         if (error) {
           return { error };
         }
-        commit("updateAuth", data.data);
+        commit("updateAuth", data);
         return { data };
       }
     }
   };
 };
-
-function tenHam(a, b) {}
