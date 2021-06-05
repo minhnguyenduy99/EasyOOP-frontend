@@ -1,6 +1,7 @@
 import { BaseAPIModule } from "../../base";
 import { CreatorPostAPI } from "./creator/creator.post.api";
 import { CreatorVerificationAPI } from "./creator/creator.verification.api";
+import { CreatorTopicAPI } from "./creator/creator.topic.api";
 import { PostAPI } from "./posts.api";
 import { TagAPI } from "./tag.api";
 import { TopicAPI } from "./topic.api";
@@ -15,6 +16,7 @@ export class PostAPIModule extends BaseAPIModule {
     this._useAPI(new TopicAPI(), "topics");
     // creator group
     this._useAPI(new CreatorPostAPI(), "creator/posts", "creator");
+    this._useAPI(new CreatorTopicAPI(), "creator/topics", "creator");
     this._useAPI(
       new CreatorVerificationAPI(),
       "creator/verifications",

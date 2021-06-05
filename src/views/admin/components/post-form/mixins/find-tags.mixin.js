@@ -15,7 +15,8 @@ export default {
           if (error) {
             return;
           }
-          this.filteredTags.push(...data);
+          const { results } = data;
+          this.filteredTags.push(...results);
         });
       });
     }

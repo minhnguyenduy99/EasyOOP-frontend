@@ -1,102 +1,144 @@
 <template>
   <div class="post-form">
-    <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-5">
-      <div id="form-first-row">
+    <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-6">
+      <div class="form-group-container ha-vertical-layout-5">
         <validated-form-element
-          name="post title"
+          class="form-input --title"
+          name="post_title"
           rules="required|minmax:10,200"
           label="Tiêu đề bài viết"
           placeholder="Từ 10 đến 200 ký tự"
+          label-position="inside"
         >
-          <b-input v-model="form.post_title" />
+          <b-input v-model="form.post_title" size="is-large" />
         </validated-form-element>
-        <validated-form-element name="topic" rules="required" label="Chủ đề">
-          <b-select placeholder="Chủ đề" v-model="form.topic_id">
-            <option
-              v-for="topic in topics"
-              :value="topic.topic_id"
-              :key="topic.id"
+        <div class="form-group--column">
+          <validated-form-element
+            name="topic"
+            :rules="{
+              required: true,
+              'topic-available': { topic: selectedTopic }
+            }"
+            label="Chủ đề"
+            class="form-input"
+          >
+            <b-select placeholder="Chủ đề" v-model="selectedTopicIndex">
+              <option
+                v-for="(topic, index) in topics"
+                :value="index"
+                :key="topic.id"
+              >
+                {{ topic.topic_title }}
+              </option>
+            </b-select>
+          </validated-form-element>
+          <validated-form-element
+            name="tag"
+            rules="required"
+            label="Nhãn dán"
+            class="form-input"
+          >
+            <b-taginput
+              icon="tags"
+              :data="filteredTags"
+              v-model="selectedTags"
+              autocomplete
+              type="is-primary-light"
+              @typing="$on_tagInputTyping"
+              field="tag_value"
+              :allow-new="false"
+              :allow-duplicates="false"
+              :before-adding="$taginput_beforeAdding"
+              @add="$on_tagAdded"
+              @removed="$on_tagRemoved"
             >
-              {{ topic.topic_title }}
-            </option>
-          </b-select>
-        </validated-form-element>
-        <validated-form-element name="tag" rules="required" label="Nhãn dán">
-          <b-taginput
-            icon="tag"
-            :data="filteredTags"
-            v-model="form.tags"
-            autocomplete
-            type="is-primary-light"
-            field="tag_value"
-            @typing="$on_tagInputTyping"
-            :create-tag="tag => tag.tag_id"
-            :allow-new="false"
-            :allow-duplicates="false"
-            :before-adding="$taginput_beforeAdding"
-          />
-        </validated-form-element>
-      </div>
-      <div id="form-second-row">
-        <validated-form-element label="Chọn bài viết trước">
-          <b-autocomplete
-            rule="required"
-            v-model="searchPostValue"
-            :data="filteredPostList"
-            field="post_title"
-            placeholder="Nhập tên bài viết"
-            icon="magnify"
-            clearable
-            @select="$on_postSelected"
-            ref="post-selector"
-          >
-            <template #header>
-              <b-button
-                size="is-small"
-                type="is-primary"
-                rounded
-                @click="$on_selectNoPreviousPost"
-                >{{ DEFAULT_POST.post_title }}</b-button
-              >
-            </template>
-            <template #empty>No results found</template>
-          </b-autocomplete>
-        </validated-form-element>
-        <validated-form-element
-          name="thumbnail"
-          rules="required"
-          label="Chọn ảnh đại diện"
-        >
-          <b-upload
-            v-model="form.thumbnail_file"
-            drag-drop
-            @input="$on_SelectedThumbnailChanged"
-          >
-            <section class="section">
-              <div
-                v-if="!form.thumbnail_file"
-                class="content has-text-centered"
-              >
-                <p>
-                  <b-icon icon="upload" size="is-large" />
+              <template #empty>
+                Không tìm thấy nhãn dán
+              </template>
+              <template #default="{ option }">
+                <p class="has-text-grey">
+                  ID:
+                  <span class=" has-text-black has-text-weight-bold">{{
+                    option.tag_id
+                  }}</span>
                 </p>
-                <p>Thả hoặc nhấn vào để tệp ảnh</p>
-              </div>
-              <div
-                v-else
-                class="is-flex is-justify-content-center is-align-items-center"
-              >
-                <b-image id="thumbnail-image-display" :src="thumbnailDataURL" />
-              </div>
-            </section>
-          </b-upload>
-        </validated-form-element>
+                <p class="has-text-primary has-text-weight-bold is-size-6">
+                  {{ option.tag_value }}
+                </p>
+              </template>
+            </b-taginput>
+          </validated-form-element>
+          <validated-form-element label="Chọn bài viết trước">
+            <b-autocomplete
+              rule="required"
+              v-model="searchPostValue"
+              :data="filteredPostList"
+              field="post_title"
+              placeholder="Nhập tên bài viết"
+              icon="book-open"
+              clearable
+              @select="$on_postSelected"
+              :disabled="!isTopicSelected"
+              ref="post-selector"
+            >
+              <template #header>
+                <b-button
+                  size="is-small"
+                  type="is-primary"
+                  @click="$on_selectNoPreviousPost"
+                  >{{ DEFAULT_POST.post_title }}</b-button
+                >
+              </template>
+              <template #footer>
+                <p>
+                  Số lượng bài viết của chủ đề:
+                  <span class="has-text-weight-bold">{{ totalPostCount }}</span>
+                </p>
+              </template>
+              <template #empty>Không tìm thấy bài viết</template>
+            </b-autocomplete>
+          </validated-form-element>
+        </div>
+        <div class="form-group--column">
+          <validated-form-element
+            name="thumbnail"
+            rules="required"
+            label="Chọn ảnh đại diện"
+          >
+            <b-upload
+              v-model="form.thumbnail_file"
+              drag-drop
+              @input="$on_SelectedThumbnailChanged"
+            >
+              <section class="section">
+                <div v-if="!thumbnailDataURL" class="content has-text-centered">
+                  <p>
+                    <b-icon icon="upload" size="is-large" />
+                  </p>
+                  <p>Thả hoặc nhấn vào để tệp ảnh</p>
+                </div>
+                <div
+                  v-else
+                  class="is-flex is-justify-content-center is-align-items-center"
+                >
+                  <b-image
+                    id="thumbnail-image-display"
+                    :src="thumbnailDataURL"
+                  />
+                </div>
+              </section>
+            </b-upload>
+          </validated-form-element>
+        </div>
       </div>
+      <div>
+        <post-template-groups :templates.sync="form.templates" />
+      </div>
+      <hr />
       <validated-form-element name="general">
         <b-input type="hidden" />
       </validated-form-element>
-      <hr class="is-hr" />
-      <slot name="submit" v-bind="{ form, validator }" />
+      <slot name="submit" v-bind="{ form, detailedForm, validator }" />
     </ValidationObserver>
   </div>
 </template>
@@ -110,7 +152,8 @@ export default {
   name: "PostForm",
   components: {
     ValidationObserver,
-    ValidatedFormElement
+    ValidatedFormElement,
+    "post-template-groups": () => import("./post-template-groups")
   },
   mixins: [FindPostsMixin, FindTagsMixin, FindTopicsMixin],
   data: () => ({
@@ -119,19 +162,38 @@ export default {
       topic_id: null,
       thumbnail_file: null,
       tags: [],
-      previous_post_id: null
+      previous_post_id: null,
+      templates: []
     },
+    selectedTags: [],
+    selectedTopicIndex: -1,
     selectedPost: null,
     validator: null,
     thumbnailDataURL: null
   }),
   watch: {
-    "form.topic_id": function() {
-      this.$on_postSelected(this.DEFAULT_POST);
-      this.searchPostValue = "";
+    selectedTopicIndex: function(val, oldVal) {
+      oldVal !== -1 && this.$on_postSelected(this.DEFAULT_POST);
+      this.form.topic_id = this.selectedTopic?.topic_id;
+      oldVal !== -1 && (this.searchPostValue = "");
     },
     selectedPost: function(val) {
       this.form.previous_post_id = val?.post_id;
+    }
+  },
+  computed: {
+    selectedTopic() {
+      return this.topics[this.selectedTopicIndex] ?? {};
+    },
+    isTopicSelected() {
+      return this.selectedTopic && this.selectedTopic?.is_available;
+    },
+    detailedForm() {
+      return {
+        ...this.form,
+        topic_title: this.selectedTopic?.topic_title,
+        tags: this.selectedTags
+      };
     }
   },
   mounted: function() {
@@ -140,7 +202,7 @@ export default {
   },
   methods: {
     $taginput_beforeAdding(tag) {
-      const isAdded = this.form.tags.includes(tag.tag_value);
+      const isAdded = this.form.tags.includes(tag.tag_id);
       return !isAdded;
     },
     $on_postSelected(post) {
@@ -164,46 +226,37 @@ export default {
     },
     $on_tagInputTyping(value) {
       this.$m_findTags(value);
+    },
+    $on_tagAdded(tag) {
+      this.form.tags.push(tag.tag_id);
+    },
+    $on_tagRemoved(tag) {
+      const tagIndex = this.form.tags.findIndex(tagId => tagId === tag.tag_id);
+      this.form.tags.splice(tagIndex, 1);
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-#form-first-row {
-  > * {
-    &:not(:last-child) {
-      margin-bottom: 1rem;
-    }
+.form-group {
+  &-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 2rem;
   }
 
-  @include tablet {
-    display: flex;
-
-    > * {
-      &:not(:last-child) {
-        margin-bottom: 0;
-        margin-right: 1rem;
-      }
-    }
+  &--column {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 1rem;
+    align-content: flex-start;
   }
 }
-#form-second-row {
-  > * {
-    &:first-child {
-      margin-bottom: 1rem;
-    }
-  }
 
-  @include tablet {
-    display: flex;
-
-    > * {
-      &:first-child {
-        margin-bottom: 0;
-        margin-right: 1rem;
-      }
-    }
+.form-input {
+  &.--title {
+    grid-column: 1 / span 2;
   }
 }
 

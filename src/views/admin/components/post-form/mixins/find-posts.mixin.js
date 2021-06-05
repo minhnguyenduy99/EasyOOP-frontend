@@ -9,7 +9,8 @@ export default {
     },
     postSearcher: new FunctionDelayer(),
     filteredPostList: [],
-    searchPostValue: ""
+    searchPostValue: "",
+    totalPostCount: 0
   }),
   watch: {
     searchPostValue(val) {
@@ -36,7 +37,8 @@ export default {
     },
     async $_updatePostList(data) {
       this.filteredPostList.length = 0;
-      const { results } = data;
+      const { results, total_count } = data;
+      this.totalPostCount = total_count;
       this.filteredPostList.push(...results);
     }
   }

@@ -14,6 +14,8 @@ export class CreatorPostAPI extends BaseAPI {
     data.post_type = "series";
     data.content_file = createFile(data.content_file, { type: "text/plain" });
     data.tags = JSON.stringify(data.tags);
+    data.templates = JSON.stringify(data.templates);
+    data.previous_post_id ?? delete data.previous_post_id;
     const formData = createForm(data);
     try {
       const response = await this._context.post(endpoints.createPost, formData);
@@ -61,6 +63,9 @@ export class CreatorPostAPI extends BaseAPI {
     const { postId, data } = options;
     data.post_type = "series";
     data.content_file = createFile(data.content_file, { type: "text/plain" });
+    data.tags = JSON.stringify(data.tags);
+    data.templates = JSON.stringify(data.templates);
+    data.previous_post_id ?? delete data.previous_post_id;
     const formData = createForm(data);
     const endpoint = this._addURLParams(endpoints.updatePost, postId);
     try {

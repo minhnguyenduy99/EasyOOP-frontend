@@ -2,7 +2,7 @@
   <div id="create-post-page">
     <admin-content :title="title" icon="pencil-alt" iconPack="fas">
       <create-post-form class="mb-5">
-        <template #submit="{ form, validator }">
+        <template #submit="{ form, validator, detailedForm }">
           <div id="submit-button-group">
             <b-button
               class="--submit"
@@ -15,7 +15,7 @@
               type="is-primary-light"
               outlined
               icon-left="eye"
-              @click="$on_previewButtonClicked(form)"
+              @click="$on_previewButtonClicked(detailedForm)"
               >Xem trước</b-button
             >
           </div>
@@ -42,13 +42,14 @@ import { mapActions } from "vuex";
 export default {
   name: "CreatePostPage",
   components: {
-    "admin-content": () => import("../components/admin-content/admin-content.vue"),
+    "admin-content": () =>
+      import("../components/admin-content/admin-content.vue"),
     "create-post-form": () => import("./create-post.form"),
     "post-preview": async () => (await import("@/components")).PostPreview
   },
   provide() {
     return {
-      $api_findTopics: this.searchTopics,
+      $api_findTopics: this.creator_getAvailableTopics,
       $api_findPosts: this.getPosts,
       $api_findTags: this.searchPostTags
     };
@@ -64,16 +65,18 @@ export default {
     ...mapActions("POST", [
       "creator_createPost",
       "getPosts",
-      "searchTopics",
+      "creator_getAvailableTopics",
       "searchPostTags"
     ]),
 
-    $on_previewButtonClicked(form) {
+    $on_previewButtonClicked(detailedForm) {
       this.showModal = true;
-      this.post = {
-        ...form,
-        fullContent: this.postContent
-      };
+      detailedForm.fullContent = this.postContent;
+      this.post = detailedForm;
+      // this.post = {
+      //   ...form,
+      //   fullContent: this.postContent
+      // };
     },
     async $on_submitForm(form, validator) {
       if (!this.postContent) {

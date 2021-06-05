@@ -3,7 +3,7 @@
     <admin-content :title="title" icon="pencil-alt" iconPack="fas">
       <breadcrumb v-if="initialPost" :titles="breadcumbInfo" :active="2" />
       <edit-post-form v-if="initialPost" :post="initialPost" class="mb-5">
-        <template #submit="{ form, validator }">
+        <template #submit="{ form, detailedForm, validator }">
           <div id="submit-button-group">
             <b-button
               class="--submit"
@@ -16,7 +16,7 @@
               type="is-primary-light"
               outlined
               icon-left="eye"
-              @click="$on_previewButtonClicked(form)"
+              @click="$on_previewButtonClicked(detailedForm)"
               >Xem trước</b-button
             >
           </div>
@@ -44,7 +44,8 @@ import { FileReadHelper, ToastNotifier } from "../../../utils";
 export default {
   name: "EditPostPage",
   components: {
-    "admin-content": () => import("../components/admin-content/admin-content.vue"),
+    "admin-content": () =>
+      import("../components/admin-content/admin-content.vue"),
     "edit-post-form": () => import("./edit-post.form"),
     "post-preview": () => import("@/components/post-preview/post-preview.vue"),
     breadcrumb: () => import("@/components/base/breadcrumb.vue")
@@ -54,9 +55,9 @@ export default {
   },
   provide() {
     return {
-      $api_findTopics: this.searchTopics,
+      $api_findTopics: this.creator_getAvailableTopics,
       $api_findPosts: this.getPosts,
-      $api_findTags: this.searchTags
+      $api_findTags: this.searchPostTags
     };
   },
   data: () => ({
@@ -115,17 +116,15 @@ export default {
   methods: {
     ...mapActions("POST", [
       "getPostById",
-      "searchTopics",
-      "searchTags",
+      "creator_getAvailableTopics",
+      "searchPostTags",
       "getPosts",
       "creator_updatePost"
     ]),
-    $on_previewButtonClicked(form) {
+    $on_previewButtonClicked(detailedForm) {
       this.showModal = true;
-      this.post = {
-        ...form,
-        fullContent: this.postContent
-      };
+      detailedForm.fullContent = this.postContent;
+      this.post = detailedForm;
     },
     async $on_submitForm(form, validator) {
       if (!this.postContent) {
