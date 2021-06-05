@@ -9,12 +9,14 @@ import {
   FormValidatorPlugin,
   ApiServicePlugin,
   VueMarkdownPlugin,
-  AOSPlugin
+  AOSPlugin,
+  VueAppConfigPlugin
 } from "./plugins";
 import mockApiService from "./mocks";
 
 Vue.config.productionTip = false;
 
+Vue.use(VueAppConfigPlugin);
 Vue.use(VueCompositionAPI);
 Vue.use(Buefy, {
   defaultIconPack: "fas"
