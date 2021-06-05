@@ -10,7 +10,9 @@ export default {
       thumbnail_file_url: String,
       fullContent: String,
       next_post_id: String,
-      previous_post_id: String
+      previous_post_id: String,
+      templates: Array,
+      tags: Array
     }
   },
   computed: {
@@ -18,6 +20,15 @@ export default {
       const time = this.post?.created_date;
       const date = time ? new Date(time) : new Date();
       return date.toLocaleDateString("en-GB");
+    },
+    hasTemplate() {
+      return this.post?.templates?.length > 0;
+    },
+    templates() {
+      return this.post?.templates;
+    },
+    listTagValues() {
+      return this.post?.tags.map(tag => tag.tag_value);
     }
   },
   methods: {

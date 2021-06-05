@@ -16,6 +16,17 @@
                 {{ createdDateInString }}
               </span>
             </div>
+            <div class="post-info-group-item">
+              <span class="post-group--label has-text-grey">Nhãn dán</span>
+              <b-taglist class="mt-2">
+                <b-tag
+                  v-for="tag in listTagValues"
+                  :key="tag.id"
+                  type="is-primary-light"
+                  >{{ tag }}</b-tag
+                >
+              </b-taglist>
+            </div>
           </div>
           <slot v-if="trigger" name="trigger-header" v-bind="{ post }">
             <div class="is-flex is-flex-direction-column">
@@ -47,6 +58,18 @@
         :content="postContent"
         @html-changed="$on_htmlChanged"
       ></post-preview-content>
+      <slot name="template">
+        <div v-if="hasTemplate">
+          <hr />
+          <component
+            v-for="template in templates"
+            :key="template.id"
+            :is="$_getComponentByType(template.type)"
+            :editable="false"
+            :template="template"
+          />
+        </div>
+      </slot>
       <hr />
       <slot v-if="trigger" name="trigger" v-bind="{ post }">
         <div class="is-flex mt-3 is-justify-content-space-between">
@@ -88,7 +111,8 @@ export default {
   mixins: [PostMixin],
   components: {
     "post-preview-content": () => import("./post-preview-content"),
-    "post-preview-index": () => import("./post-preview-index")
+    "post-preview-index": () => import("./post-preview-index"),
+    "test-template": () => import("./post-template/test-template")
   },
   props: {
     indexTitle: String,
@@ -142,6 +166,13 @@ export default {
     },
     $_navigate(postId) {
       this.navigate?.(postId);
+    },
+    $_getComponentByType(type) {
+      switch (type) {
+        case "test":
+          return "test-template";
+      }
+      return null;
     }
   }
 };
