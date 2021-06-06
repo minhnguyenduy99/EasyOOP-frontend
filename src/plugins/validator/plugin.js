@@ -1,16 +1,22 @@
-import VeeValidate, { extend, localize, configure  } from "vee-validate";
+import { extend, localize } from "vee-validate";
 
 import rules from "./extends";
-import locales from "./locales.js";
+import locales from "./locales";
 import custom from "./custom";
 
 export class FormValidatorPlugin {
   constructor() {}
-  install() {
+  install(Vue) {
     const customRules = custom();
     applyRules({ ...rules, ...customRules });
+
+    const { locales: localeConfig, serverLocaler } = locales();
+    localize(localeConfig);
+
+    serverLocaler.setLocale("vi_VN");
     localize("vi_VN");
-    localize(locales());
+
+    Vue.prototype.$serverLocaler = serverLocaler;
   }
 }
 
