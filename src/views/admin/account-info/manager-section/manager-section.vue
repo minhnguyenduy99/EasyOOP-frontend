@@ -31,7 +31,7 @@ export default {
         if (error) {
           return;
         }
-        this.creatorInfo = data.data;
+        this.managerInfo = data.data;
       }
     );
   },

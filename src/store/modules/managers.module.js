@@ -8,7 +8,7 @@ export default context => {
     state: () => {},
     mutations: {},
     actions: mergeActionsWithOptions(roleManagementAPI, {
-      prefix: "creatorRole"
+      prefix: "managerRole"
     })
   };
 };
