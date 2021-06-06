@@ -94,7 +94,7 @@ export default {
         const { error } = result;
         if (error) {
           this.validator.setErrors({
-            general: [error.error]
+            general: [this.$serverLocaler.getMessage(error.errorType)]
           });
           this.$emit("logined", false);
           return;
@@ -106,7 +106,7 @@ export default {
       const { error } = result;
       if (error) {
         this.validator.setErrors({
-          general: [error.error]
+          general: [this.$serverLocaler.getMessage(error.errorType)]
         });
         this.$emit("logined", false);
         return;
