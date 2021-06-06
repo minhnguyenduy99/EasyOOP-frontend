@@ -58,7 +58,11 @@ export default {
   },
   toFileFromObject: (obj, fileName, options = {}) => {
     try {
-      var blob = new Blob([JSON.stringify(obj)], options);
+      let strContent = obj;
+      if (typeof obj === "object") {
+        strContent = JSON.stringify(obj);
+      }
+      let blob = new Blob([strContent], options);
       return new File([blob], fileName);
     } catch (err) {
       console.log(`Create file failed: ${err}`);
