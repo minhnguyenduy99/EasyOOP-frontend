@@ -112,6 +112,15 @@
         </section>
       </div>
     </admin-content>
+    <b-modal v-model="showPostModal" scroll="keep">
+      <div class="card is-page-responsive py-6">
+        <post-preview
+          v-if="detailedPost"
+          :post="detailedPost"
+          :trigger="false"
+        />
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -127,12 +136,14 @@ export default {
       import("./pending-post-detail/pending-post-detail"),
     "verification-info-tab": () =>
       import("./pending-post-detail/verification-info-tab"),
-    "post-search": () => import("./post-search")
+    "post-search": () => import("./post-search"),
+    "post-preview": () => import("@/components/post-preview/post-preview.vue")
   },
   provide() {
     return {
       creator_findVerifications: this.creator_findVerifications,
-      reloadTab: this.$_reloadTab
+      reloadTab: this.$_reloadTab,
+      showPostPreview: this.$_showPostPreview
     };
   },
   data: () => ({
@@ -157,7 +168,9 @@ export default {
     selectedPost: null,
     searchResult: null,
     activeTab: -1,
-    isSearching: false
+    isSearching: false,
+    showPostModal: false,
+    detailedPost: null
   }),
   watch: {
     activeTab(val) {
@@ -244,6 +257,10 @@ export default {
         group: true,
         ...this.searchOptions
       });
+    },
+    $_showPostPreview(post) {
+      this.showPostModal = true;
+      this.detailedPost = post;
     }
   }
 };

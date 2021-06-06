@@ -11,6 +11,7 @@
           post.post_title
         }}</span>
         <b-button
+          v-if="isActive"
           class="is-icon-button"
           icon-right="pen"
           rounded

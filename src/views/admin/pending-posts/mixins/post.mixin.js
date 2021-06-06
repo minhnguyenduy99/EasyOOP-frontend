@@ -9,6 +9,9 @@ export default {
     createdDateInStr() {
       return new Date(this.post?.created_date).toLocaleString("en-US");
     },
+    isActive() {
+      return this.post?.post_status === 0;
+    },
     postStatus() {
       switch (this.post?.post_status) {
         case 0:

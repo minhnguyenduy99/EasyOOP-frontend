@@ -41,7 +41,7 @@
               icon-right="eye"
               size="is-small"
               rounded
-              @click.stop="showPost = true"
+              @click.stop="showPostPreview(detailedPost)"
             />
             <b-button
               v-if="deletable"
@@ -69,16 +69,6 @@
       <span class="is-size-6 has-text-weight-bold has-text-primary">{{
         post.post_title
       }}</span>
-      <!-- <div class="pending-post-detail">
-        <div class="pending-post-field">
-          <span class="pending-post-field--label">Loại bài viết </span>
-          <span class="pending-post-field--value">{{ post.post_type }}</span>
-        </div>
-        <div class="pending-post-field">
-          <span class="pending-post-field--label">Chủ đề </span>
-          <span class="pending-post-field--value">{{ post.topic_title }}</span>
-        </div>
-      </div> -->
     </div>
     <div class="card-footer">
       <span class="is-size-7 is-italic">{{ createdDateInStr }}</span>
@@ -87,11 +77,6 @@
         >{{ postStatus.text }}</span
       >
     </div>
-    <b-modal v-model="showPost" scroll="keep">
-      <div class="card is-page-responsive py-6">
-        <post-preview :post="detailedPost" :trigger="false" />
-      </div>
-    </b-modal>
   </div>
 </template>
 
@@ -102,10 +87,8 @@ import VerificationMixin from "./mixins/verification.mixin";
 
 export default {
   name: "PendingPost",
-  components: {
-    "post-preview": () => import("@/components/post-preview/post-preview.vue")
-  },
   mixins: [VerificationMixin],
+  inject: ["showPostPreview"],
   props: {
     checkMode: {
       type: Boolean,
@@ -123,8 +106,7 @@ export default {
       }
     ],
     actionGroupActive: false,
-    isChecked: false,
-    showPost: false
+    isChecked: false
   }),
   watch: {
     isChecked(val) {

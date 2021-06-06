@@ -34,7 +34,7 @@ export default {
       return this.post.status === POST_STATUSES.PENDING;
     },
     createdDateInStr() {
-      return new Date(this.post?.created_date).toLocaleString("en-US");
+      return new Date(this.post.created_date).toLocaleString("en-US");
     },
     detailedPost() {
       return this.post?.post ?? {};
