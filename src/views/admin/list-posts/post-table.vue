@@ -12,7 +12,7 @@
       :per-page="itemsPerPage"
       :total="totalCount"
       backend-pagination
-      :row-class="(row, index) => 'is-clickable'"
+      :row-class="(row, index) => 'is-clickable row--middle'"
       @page-change="onPageChanged"
       backend-sorting
       @sort="onSort"
@@ -35,7 +35,7 @@
         </router-link>
       </b-table-column>
 
-      <b-table-column label="Chủ đề" width="100" v-slot="{ row }">
+      <b-table-column label="Chủ đề" width="200" v-slot="{ row }">
         {{ row.topic_title }}
       </b-table-column>
 
@@ -114,7 +114,7 @@
       </b-table-column>
       <template #footer>
         <div>
-          <span class="has-text-grey">Total results: </span>
+          <span class="has-text-grey">Số lượng kết quả: </span>
           <span class="has-text-weight-bold">{{ totalCount }}</span>
         </div>
       </template>

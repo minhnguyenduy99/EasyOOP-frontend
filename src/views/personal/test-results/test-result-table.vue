@@ -109,9 +109,16 @@
         </template>
       </b-table-column>
 
+      <template #empty>
+        <empty-state
+          image-src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1622949906/oop-learning-helper/empty_test_rbkyrn.png"
+          text="Bạn chưa làm bài test nào"
+        />
+      </template>
+
       <template #footer>
         <div>
-          <span class="has-text-grey">Total results: </span>
+          <span class="has-text-grey">Số lượng kết quả: </span>
           <span class="has-text-weight-bold">{{ totalCount }}</span>
         </div>
       </template>

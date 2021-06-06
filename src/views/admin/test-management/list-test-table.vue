@@ -137,10 +137,16 @@
           </section>
         </template>
       </b-table-column>
+      <template #empty>
+        <empty-state
+          image-src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1622949906/oop-learning-helper/empty_test_rbkyrn.png"
+          text="Bạn không có bài test nào"
+        />
+      </template>
 
       <template #footer>
         <div>
-          <span class="has-text-grey">Total results: </span>
+          <span class="has-text-grey">Số lượng kết quả: </span>
           <span class="has-text-weight-bold">{{ totalCount }}</span>
         </div>
       </template>
@@ -153,6 +159,9 @@ import { mapActions } from "vuex";
 import { ToastNotifier } from "@/utils";
 export default {
   name: "ListTestTable",
+  components: {
+    "empty-state": () => import("@/components/empty-state.vue")
+  },
   props: {
     searchOptions: Object
   },

@@ -109,6 +109,11 @@
         </section>
       </div>
     </admin-content>
+    <b-modal v-model="showModal" scroll="keep">
+      <div class="card is-page-responsive py-6">
+        <post-preview :post="selectedPost" :trigger="false" />
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -123,7 +128,9 @@ export default {
     "verification-search": () => import("./verification-search"),
     "verification-table": () => import("./verification-table"),
     "post-info": () => import("./verification-detail/post-info"),
-    "verification-info": () => import("./verification-detail/verification-info")
+    "verification-info": () =>
+      import("./verification-detail/verification-info"),
+    "post-preview": async () => (await import("@/components")).PostPreview
   },
   provide() {
     return {
@@ -131,7 +138,8 @@ export default {
       manager_findVerifications: this.manager_findVerifications,
       getPostById: this.getPostById,
       manager_verify: this.manager_verify,
-      manager_unverify: this.manager_unverify
+      manager_unverify: this.manager_unverify,
+      previewSelectedPost: this.$_previewSelectedPost
     };
   },
   data: () => ({
@@ -162,7 +170,8 @@ export default {
     searchOptions: {},
     isSearching: false,
     selectedVerification: null,
-    selectedPost: null
+    selectedPost: null,
+    showModal: false
   }),
   watch: {
     activeTab(val) {
@@ -214,6 +223,9 @@ export default {
           tab.count = info?.count ?? 0;
         });
       });
+    },
+    $_previewSelectedPost() {
+      this.showModal = true;
     }
   }
 };

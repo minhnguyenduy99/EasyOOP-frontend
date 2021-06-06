@@ -60,13 +60,20 @@
           </b-tooltip>
         </section>
       </template>
+      <template #empty>
+        <empty-state
+          image-src="https://lh3.googleusercontent.com/proxy/yKYKn6dnKi2FcR95KzQT8Xl-WkDUcfH2HEPg1sC5v2Zpq6OrEHss7-r6pNGrGfbL0VV_fvdBjO7MGdHByjvaLSe8IkPUJ_DExkNtsKaWROI"
+          text="Chưa có câu hỏi nào"
+        />
+      </template>
       <template #footer>
         <div>
-          <span class="has-text-grey">Total results: </span>
+          <span class="has-text-grey">Số lượng kết quả: </span>
           <span class="has-text-weight-bold">{{ totalCount }}</span>
         </div>
       </template>
     </b-table>
+
     <b-modal v-model="showModal" has-modal-card>
       <edit-question-form
         :question="selectedQuestion"
@@ -81,7 +88,8 @@ import { mapActions } from "vuex";
 export default {
   name: "QandATable",
   components: {
-    "edit-question-form": () => import("./edit-question.form")
+    "edit-question-form": () => import("./edit-question.form"),
+    "empty-state": () => import("@/components/empty-state.vue")
   },
   props: {
     searchOptions: Object

@@ -91,11 +91,6 @@
         </div>
       </template>
     </b-table>
-    <b-modal v-model="showModal" scroll="keep">
-      <div class="card is-page-responsive py-6">
-        <post-preview :post="selectedPost" :trigger="false" />
-      </div>
-    </b-modal>
   </div>
 </template>
 
@@ -105,7 +100,6 @@ import { VERIFICATION_TYPES } from "./consts";
 export default {
   name: "PostTable",
   components: {
-    "post-preview": async () => (await import("@/components")).PostPreview,
     "empty-state": () => import("@/components/empty-state.vue")
   },
   props: {
@@ -124,7 +118,7 @@ export default {
     "manager_findVerifications",
     "manager_verify",
     "manager_unverify",
-    "getPostById"
+    "previewSelectedPost"
   ],
   data: () => ({
     ACTIONS: [
@@ -160,10 +154,8 @@ export default {
       order: -1
     },
     actionHandler: [],
-    showModal: false,
     selectedVerification: null,
-    loading: false,
-    selectedPost: {}
+    loading: false
   }),
   created: function() {
     this.actionHandler.push(
@@ -261,24 +253,26 @@ export default {
       );
     },
     $on_viewButtonClicked() {
-      this.showModal = true;
-      this.getPostById(this.selectedVerification.post_id).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        this.selectedPost = data;
-      });
+      this.previewSelectedPost();
     },
     $on_verifyButtonClicked() {
-      this.manager_verify({
-        verification_id: this.selectedVerificationId
-      }).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
+      this.$buefy.dialog.confirm({
+        title: "Hủy duyệt bài viết",
+        message: "Bạn chắc chắn muốn hủy duyệt bài viết ?",
+        confirmText: "Đồng ý",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          this.manager_verify({
+            verification_id: this.selectedVerificationId
+          }).then(result => {
+            const { error } = result;
+            if (error) {
+              return;
+            }
+            this.$_removeVerificationFromTable(this.selectedVerificationId);
+          });
         }
-        this.$_removeVerificationFromTable(this.selectedVerificationId);
       });
     },
     $on_unverifyButtonClicked() {

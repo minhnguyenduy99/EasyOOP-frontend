@@ -46,7 +46,7 @@
       </b-table-column>
       <template #empty>
         <empty-state
-          image-src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1618931250/oop-learning-helper/post_empty_state_xcrbog.png"
+          image-src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1622949906/oop-learning-helper/empty_user_f0dwfl.png"
           text="Chưa có người viết bài nào"
         />
       </template>
