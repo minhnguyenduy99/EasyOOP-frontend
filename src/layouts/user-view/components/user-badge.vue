@@ -120,6 +120,11 @@ export default {
         icon: "user-tie",
         text: "Đăng nhập với Manager",
         redirect: "Dashboard"
+      },
+      admin: {
+        icon: "users-cog",
+        text: "Đăng nhập với Admin",
+        redirect: "Dashboard"
       }
     },
     open: false

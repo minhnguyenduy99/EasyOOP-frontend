@@ -51,18 +51,18 @@
                 </div>
               </div>
             </b-tab-item>
-            <b-tab-item v-for="role in filteredRoles" :key="role.id">
+            <b-tab-item v-if="activeRoleTab">
               <template #header>
                 <div class="tab-header">
                   <span>
-                    {{ ROLE_MAPPING[role].text }}
+                    {{ activeRoleTab.text }}
                   </span>
                 </div>
               </template>
               <div class="card">
                 <div class="card-content">
-                  <creator-section v-if="role === 'creator'" />
-                  <manager-section v-else-if="role === 'manager'" />
+                  <creator-section v-if="activeRole === 'creator'" />
+                  <manager-section v-else-if="activeRole === 'manager'" />
                 </div>
               </div>
             </b-tab-item>
@@ -102,6 +102,10 @@ export default {
   },
   computed: {
     ...mapGetters("AUTH", ["userRoles", "activeRole"]),
+
+    activeRoleTab() {
+      return this.ROLE_MAPPING[this.activeRole];
+    },
 
     userAvatar() {
       return this.profile?.profile_pic;

@@ -11,7 +11,7 @@ export default () => ({
         icon: "th-large",
         pack: "fas",
         title: "Dashboard",
-        roles: ["creator", "manager"],
+        roles: ["creator", "manager", "admin"],
         to: { name: "Dashboard" }
       },
       {
@@ -43,7 +43,7 @@ export default () => ({
         icon: "question-circle",
         pack: "fas",
         title: "Q&A",
-        roles: ["manager", "creator"],
+        roles: ["manager", "creator", "admin"],
         to: { name: "Q&A" }
       },
       {
@@ -59,8 +59,16 @@ export default () => ({
         icon: "user-edit",
         pack: "fas",
         title: "Quản lí người viết",
-        roles: ["manager"],
+        roles: ["manager", "admin"],
         to: { name: "CreatorManagement" }
+      },
+      {
+        name: "ListManagerPage",
+        icon: "user-cog",
+        pack: "fas",
+        title: "Danh sách quản lí",
+        roles: ["admin"],
+        to: { name: "ListManagerPage" }
       },
       {
         name: "TestManagement",

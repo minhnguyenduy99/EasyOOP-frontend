@@ -100,6 +100,11 @@ export default {
         icon: "user-tie",
         text: "Quản lí",
         redirect: "Dashboard"
+      },
+      admin: {
+        icon: "user-cog",
+        text: "Quản trị",
+        redirect: "Dashboard"
       }
     }
   }),

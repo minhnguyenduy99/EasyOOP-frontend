@@ -5,7 +5,7 @@ export default () => ({
   meta: {
     auth: {
       requires: true,
-      roles: ["viewer", "creator", "manager"]
+      roles: "*"
     }
   }
 });

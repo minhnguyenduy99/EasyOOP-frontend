@@ -9,13 +9,13 @@ export default (router, opts = {}) => {
     return;
   }
   router.beforeEach(async (to, from, next) => {
-    const { requires = false, roles = [], redirectIfNotAuth = "Home" } =
+    const { requires = false, roles = "*", redirectIfNotAuth = "Home" } =
       to.meta.auth ?? {};
-    const { data, error } = await store.dispatch("AUTH/relogin");
     if (!requires) {
       next();
       return;
     }
+    const { data, error } = await store.dispatch("AUTH/relogin");
     if (error) {
       next({ name: redirectIfNotAuth });
       return;
@@ -30,5 +30,5 @@ export default (router, opts = {}) => {
 };
 
 function isRoleAllow(activeRole, roles) {
-  return roles.indexOf(activeRole) > -1;
+  return activeRole && (roles === "*" || roles.indexOf(activeRole) > -1);
 }
