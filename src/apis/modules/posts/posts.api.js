@@ -3,6 +3,7 @@ import { BaseAPI } from "../../base";
 const endpoints = {
   findPosts: "/search",
   findByTopic: "/topic",
+  getPostsGroupedByTopics: "/topics",
   getPostById: ""
 };
 
@@ -22,6 +23,17 @@ export class PostAPI extends BaseAPI {
       const response = await this._context.get(endpoint, {
         params: { search, sort_by, sort_order, topic_id }
       });
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
+  async getPostsGroupedByTopics() {
+    try {
+      const response = await this._context.get(
+        endpoints.getPostsGroupedByTopics
+      );
       return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err);
@@ -53,7 +65,8 @@ export class PostAPI extends BaseAPI {
     return {
       getPosts: this.getPosts.bind(this),
       getPostsByTopic: this.getPostsByTopic.bind(this),
-      getPostById: this.getPostById.bind(this)
+      getPostById: this.getPostById.bind(this),
+      getPostsGroupedByTopics: this.getPostsGroupedByTopics.bind(this)
     };
   }
 

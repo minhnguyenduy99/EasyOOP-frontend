@@ -3,7 +3,8 @@ import { BaseAPI } from "../../base";
 const endpoints = {
   getTestById: "",
   getTestSentences: "",
-  searchTest: "/search"
+  searchTest: "/search",
+  getTestsGroupedByTopic: "/topics"
 };
 
 export class TestViewerAPI extends BaseAPI {
@@ -12,6 +13,15 @@ export class TestViewerAPI extends BaseAPI {
     const endpoint = this._addURLParams(endpoints.getTestById, test_id);
     try {
       const result = await this._context.get(endpoint);
+      return this._formatter.getDataFormat(result);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
+  async getTestsGroupedByTopic(opts) {
+    try {
+      const result = await this._context.get(endpoints.getTestsGroupedByTopic);
       return this._formatter.getDataFormat(result);
     } catch (err) {
       return this._formatter.getErrorFormat(err?.response);
@@ -69,7 +79,8 @@ export class TestViewerAPI extends BaseAPI {
     return {
       getTestById: this.getTestById.bind(this),
       getTestSentenceByPage: this.getTestSentenceByPage.bind(this),
-      searchTest: this.searchTest.bind(this)
+      searchTest: this.searchTest.bind(this),
+      getTestsGroupedByTopic: this.getTestsGroupedByTopic.bind(this)
     };
   }
 
