@@ -25,6 +25,14 @@ export default {
       Authentication: {
         InvalidAuthInfo: "Tên đăng nhập hoặc mật khẩu không chính xác",
         DuplicateInfo: "Tên người dùng hoặc email đã tồn tại"
+      },
+      RoleManagement: {
+        RoleNotFound: "Không tìm thấy người dùng với vị trí này",
+        InvalidUser: "ID của người dùng không hợp lệ",
+        InvalidRoleType: "Giá trị của vai trò không hợp lệ",
+        RoleHasBeenAssigned: "Người dùng đã có vai trò này",
+        UserNotFound: "Không tìm thấy người dùng",
+        ServiceErrors: "Lỗi hệ thống"
       }
     }
   }
