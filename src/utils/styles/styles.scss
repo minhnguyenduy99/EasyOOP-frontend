@@ -155,6 +155,10 @@ a.link-animation {
   }
 }
 
+a:hover {
+  color: unset;
+}
+
 @keyframes linkBackgroundSlideIn {
   from { transform: scaleY(0) }
   to { transform: scaleY(1) }
@@ -196,6 +200,21 @@ a.link-animation {
   }
   .dropdown-trigger {
     width: 100%;
+  }
+
+  &.is-fixed-on-navbar {
+    > .dropdown-menu {
+      position: fixed;
+      top: 72px;
+      left: 0;
+      width: 100%;
+      
+      > .dropdown-content {
+        width: 100%;
+        margin-top: 0;
+        box-sizing: border-box;
+      }
+    }
   }
 }
 
