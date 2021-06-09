@@ -7,6 +7,7 @@
       :to="item => ({ name: 'PostView', params: { post_id: item.post_id } })"
       :items="topic.list_posts"
       field="post_title"
+      @navigate="$toggleDropdown()"
     />
   </div>
 </template>
@@ -19,6 +20,7 @@ export default {
   components: {
     TopicPanel
   },
+  inject: ["$toggleDropdown"],
   data: () => ({
     listTopics: []
   }),

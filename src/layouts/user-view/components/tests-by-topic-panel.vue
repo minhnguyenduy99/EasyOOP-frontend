@@ -9,6 +9,7 @@
       "
       :items="topic.list_tests"
       field="title"
+      @navigate="$toggleDropdown()"
     />
   </div>
 </template>
@@ -21,6 +22,7 @@ export default {
   components: {
     TopicPanel
   },
+  inject: ["$toggleDropdown"],
   data: () => ({
     listTopics: []
   }),

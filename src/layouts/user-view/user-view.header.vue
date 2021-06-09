@@ -25,12 +25,17 @@
         <template #start>
           <b-navbar-item tag="div">
             <div class="navigate-button-group">
-              <b-dropdown :triggers="['hover']" class="is-fixed-on-navbar">
+              <b-dropdown
+                :triggers="['click']"
+                class="is-fixed-on-navbar"
+                ref="dropdown0"
+              >
                 <template #trigger="{ active }">
                   <b-button
                     class="navigate-button"
                     type="is-primary-light"
                     :icon-right="active ? 'chevron-up' : 'chevron-down'"
+                    @click="currentDropdownIndex = 0"
                   >
                     <span>
                       CHỦ ĐỀ
@@ -41,12 +46,17 @@
                   <posts-by-topic-panel />
                 </b-dropdown-item>
               </b-dropdown>
-              <b-dropdown :triggers="['hover']" class="is-fixed-on-navbar">
+              <b-dropdown
+                :triggers="['click']"
+                class="is-fixed-on-navbar"
+                ref="dropdown1"
+              >
                 <template #trigger="{ active }">
                   <b-button
                     class="navigate-button"
                     type="is-primary-light"
                     :icon-right="active ? 'chevron-up' : 'chevron-down'"
+                    @click="currentDropdownIndex = 1"
                   >
                     <span>
                       BÀI TEST
@@ -122,7 +132,8 @@ export default {
   inject: ["$p_showLoginModal", "headerTransition"],
   provide() {
     return {
-      $toggleSearchModal: this.$_toggleSearchModal.bind(this)
+      $toggleSearchModal: this.$_toggleSearchModal.bind(this),
+      $toggleDropdown: this.$_toggleDropdown.bind(this)
     };
   },
   data: () => ({
@@ -131,7 +142,8 @@ export default {
     scrollPosition: 0,
     isLoading: false,
     listTopics: [],
-    showSearchModal: false
+    showSearchModal: false,
+    currentDropdownIndex: -1
   }),
   computed: {
     ...mapGetters("AUTH", ["isAuthenticated", "user"]),
@@ -164,6 +176,19 @@ export default {
 
     $_toggleSearchModal(value) {
       this.showSearchModal = value;
+    },
+
+    $on_itemClicked(index) {
+      this.$refs["navbar-dropdown"][index]?.toggle();
+    },
+
+    $_toggleDropdown() {
+      const [postDropdown, testDropdown] = [
+        this.$refs.dropdown0,
+        this.$refs.dropdown1
+      ];
+      this.currentDropdownIndex === 0 && postDropdown.toggle();
+      this.currentDropdownIndex === 1 && testDropdown.toggle();
     },
 
     $_injectScrollBehaviour() {

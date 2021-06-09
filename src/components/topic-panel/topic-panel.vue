@@ -5,16 +5,18 @@
     </h1>
     <hr class="is-hr" />
     <div class="py-3">
-      <router-link
+      <div
         v-for="item in items"
         :key="item.id"
-        :to="to(item)"
         class="topic-panel-item"
+        @click="$emit('navigate')"
       >
-        <slot name="item" v-bind="{ item }">
-          {{ item[field] }}
-        </slot>
-      </router-link>
+        <router-link :to="to(item)">
+          <slot name="item" v-bind="{ item }">
+            {{ item[field] }}
+          </slot>
+        </router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -39,13 +41,19 @@ export default {
   font-size: $size-6;
   padding: 0.25rem 0.5rem;
   margin-left: -0.5rem;
-  font-weight: bold;
-  display: block;
-  color: black;
+
+  a {
+    display: block;
+    width: 100%;
+    color: black;
+    font-weight: bold;
+  }
 
   &:hover {
     background: $primary-light;
-    color: white;
+    a {
+      color: white;
+    }
   }
 }
 </style>
