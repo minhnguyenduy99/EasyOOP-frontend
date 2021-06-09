@@ -7,6 +7,7 @@ export default {
     formData: {
       title: "",
       type: 2,
+      topic_id: null,
       limited_time: 0,
       default_score_per_sentence: 10
     },

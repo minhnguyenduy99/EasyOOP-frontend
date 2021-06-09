@@ -47,10 +47,14 @@
         </template>
       </b-table-column>
 
-      <b-table-column label="Số lượng" v-slot="{ row }" numeric width="100px">
-        <span class="has-text-weight-bold has-text-primary-dark">{{
-          row.list_sentence_ids.length
-        }}</span>
+      <b-table-column
+        label="Chủ đề"
+        field="topic_id"
+        v-slot="{ row }"
+        sortable
+        width="150px"
+      >
+        <span class="has-text-primary-dark">{{ row.topic.topic_title }}</span>
       </b-table-column>
 
       <b-table-column

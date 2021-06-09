@@ -1,5 +1,5 @@
 <template>
-  <div id="mock-test-search">
+  <div id="mock-test-search" class="ha-vertical-layout-7">
     <div class="input-group--horizontal">
       <b-input
         class="is-flex-grow-1"
@@ -26,23 +26,32 @@
           {{ type.text }}
         </option>
       </b-select>
+      <b-select placeholder="Chủ đề" v-model="searchOptions.topic_id">
+        <option v-for="topic in topics" :key="topic.id" :value="topic.topic_id">
+          {{ topic.topic_title }}
+        </option>
+      </b-select>
     </div>
     <div class="is-flex is-align-items-center buttons">
       <b-button type="is-primary" @click="$on_search">Tìm kiếm</b-button>
-      <b-button
-        class="is-icon-button"
-        type="is-primary"
-        icon-right="sync-alt"
-        size="is-medium"
-        rounded
-        inverted
-        @click="$on_resetSearch"
-      />
+      <b-tooltip label="Reset bộ lọc" type="is-dark">
+        <b-button
+          class="is-icon-button"
+          type="is-primary"
+          icon-right="sync-alt"
+          size="is-medium"
+          rounded
+          inverted
+          @click="$on_resetSearch"
+        />
+      </b-tooltip>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 const DEFAULT_SEARCH_OPTIONS = {
   title: null,
   verifying_status: null,
@@ -80,9 +89,28 @@ export default {
         text: "Chọn tất cả"
       }
     ],
+    topics: [],
     searchOptions: { ...DEFAULT_SEARCH_OPTIONS }
   }),
+  mounted: function() {
+    this.$_requestTopics();
+  },
   methods: {
+    ...mapActions("TEST", ["getAllTopics"]),
+
+    $_requestTopics() {
+      this.getAllTopics().then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.topics.length = 0;
+        this.topics.push(...data, {
+          topic_id: null,
+          topic_title: "Chọn tất cả"
+        });
+      });
+    },
     $on_search() {
       this.$emit("search", this.searchOptions);
     },
@@ -95,16 +123,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-#mock-test-search {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-
-  > *:not(:last-child) {
-    margin-right: 1rem;
-  }
-}
+// #mock-test-search {
+//   > *:not(:last-child) {
+//     margin-right: 1rem;
+//   }
+// }
 
 .input-group {
   &--horizontal {

@@ -24,10 +24,18 @@ export default {
     if (!this.test) {
       return;
     }
-    const { default_score_per_sentence, limited_time, type, title } = this.test;
+    this.$_requestTopics();
+    const {
+      default_score_per_sentence,
+      limited_time,
+      type,
+      title,
+      topic_id
+    } = this.test;
     this.formData = {
       title,
       type,
+      topic_id,
       default_score_per_sentence,
       limited_time
     };

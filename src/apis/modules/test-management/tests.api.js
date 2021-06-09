@@ -11,16 +11,33 @@ const endpoints = {
   updateSentence: "",
   getTestById: "",
   getTestTotalScore: "",
-  deleteSentenceById: "/sentences"
+  deleteSentenceById: "/sentences",
+  getAllTopics: "/topics/all"
 };
 
 export class TestAPI extends BaseAPI {
+  async getAllTopics(opts) {
+    try {
+      const response = await this._context.get(endpoints.getAllTopics);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response);
+    }
+  }
+
   async createTest(opts) {
-    const { title, type, default_score_per_sentence, limited_time } = opts;
+    const {
+      title,
+      type,
+      topic_id,
+      default_score_per_sentence,
+      limited_time
+    } = opts;
     try {
       const response = await this._context.post(endpoints.createTest, {
         title,
         type,
+        topic_id,
         default_score_per_sentence,
         limited_time
       });
@@ -34,13 +51,14 @@ export class TestAPI extends BaseAPI {
   async updateTest(opts) {
     const {
       test_id,
-      data: { title, type, default_score_per_sentence, limited_time }
+      data: { title, type, topic_id, default_score_per_sentence, limited_time }
     } = opts;
     const endpoint = this._addURLParams(endpoints.updateTest, test_id);
     try {
       const response = await this._context.put(endpoint, {
         title,
         type,
+        topic_id,
         default_score_per_sentence,
         limited_time
       });
@@ -83,6 +101,7 @@ export class TestAPI extends BaseAPI {
       page = 1,
       verifying_status = null,
       title = null,
+      topic_id = null,
       sort_order = null,
       creator_id = null,
       sort_by = null,
@@ -94,6 +113,7 @@ export class TestAPI extends BaseAPI {
           page,
           verifying_status,
           title,
+          topic_id,
           sort_order,
           creator_id,
           sort_by,
@@ -219,6 +239,7 @@ export class TestAPI extends BaseAPI {
 
   getEndpointObject() {
     return {
+      getAllTopics: this.getAllTopics.bind(this),
       createTest: this.createTest.bind(this),
       updateTest: this.updateTest.bind(this),
       searchTest: this.searchTest.bind(this),

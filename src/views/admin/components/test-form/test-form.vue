@@ -9,6 +9,28 @@
       >
         <b-input size="is-medium" v-model="formData.title" />
       </validated-form-element>
+      <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between">
+        <validated-form-element name="topic_id" rules="required" label="Chủ đề">
+          <b-select placeholder="Chủ đề" v-model="formData.topic_id">
+            <option
+              v-for="topic in topics"
+              :key="topic.id"
+              :value="topic.topic_id"
+            >
+              {{ topic.topic_title }}
+            </option>
+          </b-select>
+        </validated-form-element>
+        <validated-form-element
+          name="default_score_per_sentence"
+          label="Số điểm mỗi câu"
+        >
+          <b-input
+            v-model.number="formData.default_score_per_sentence"
+            style="width: fit-content"
+          />
+        </validated-form-element>
+      </div>
       <div class="test-form-limited-time">
         <validated-form-element name="type" label="Loại bài test">
           <b-select placeholder="Loại bài test" v-model="formData.type">
@@ -54,12 +76,6 @@
           </validated-form-element>
         </div>
       </div>
-      <validated-form-element
-        name="default_score_per_sentence"
-        label="Số điểm mỗi câu"
-      >
-        <b-input v-model.number="formData.default_score_per_sentence" />
-      </validated-form-element>
     </ValidationObserver>
     <hr />
     <div class="card">
@@ -95,6 +111,7 @@ import { ValidationObserver } from "vee-validate";
 import { ValidatedFormElement } from "@/components";
 import TestFormMixin from "./test-form.mixin";
 import { generateTime } from "@/utils";
+import FindTopicsMixin from "./mixins/findTopics.mixin";
 
 export default {
   name: "TestForm",
@@ -102,7 +119,7 @@ export default {
     ValidationObserver,
     ValidatedFormElement
   },
-  mixins: [TestFormMixin],
+  mixins: [TestFormMixin, FindTopicsMixin],
   props: {
     submitButtonTitle: String,
     sentences: Array,
@@ -150,6 +167,7 @@ export default {
   },
   mounted: function() {
     this.TIME_OPTIONS = generateTime();
+    this.$_requestTopics();
   },
   methods: {
     async $validateForm() {
