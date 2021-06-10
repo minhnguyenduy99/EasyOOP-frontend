@@ -84,7 +84,7 @@
     </div>
     <b-modal v-model="showPost" scroll="keep">
       <div class="card is-page-responsive py-6">
-        <post-preview :post="post" :trigger="false" />
+        <post-preview :contentUrl="post.content_file_url" />
       </div>
     </b-modal>
   </div>
@@ -100,10 +100,10 @@ export default {
   },
   computed: {
     createDateInStr() {
-      return new Date(this.post.created_date).toLocaleDateString("en-US");
+      return new Date(this.post.created_date).toLocaleDateString("en-GB");
     },
     postURL() {
-      return `http://localhost:8080/posts/${this.post.post_id}`;
+      return `${process.env.VUE_APP_HOST}/posts/${this.post.post_id}`;
     },
     isPostActive() {
       return this.post.post_status === 0;

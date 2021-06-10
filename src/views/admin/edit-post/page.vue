@@ -26,7 +26,7 @@
     </admin-content>
     <b-modal v-model="showModal" scroll="keep">
       <div id="preview-container" class="card is-page-responsive py-6">
-        <post-preview :post="post" />
+        <post-preview :useUrl="false" :postContent="postContent" />
       </div>
     </b-modal>
     <b-loading :is-full-page="true" v-model="isLoading" :can-cancel="false">

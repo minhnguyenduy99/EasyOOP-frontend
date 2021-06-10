@@ -9,12 +9,14 @@
       />
     </section>
     <section id="post-view-section">
-      <post-view
+      <post-view-detail
         v-if="post"
         :post="post"
-        index-sticky-top="50px"
+        index-sticky-top="100px"
         index-title="Mục lục"
         empty-text="Không có mục lục"
+        :hasViewIndex="true"
+        indexLevels="h3"
         :navigate="$_navigateToPost"
       />
     </section>
@@ -26,7 +28,8 @@ import { mapActions } from "vuex";
 export default {
   name: "PostViewPage",
   components: {
-    "post-view": () => import("@/components/post-preview/post-preview.vue"),
+    "post-view-detail": () =>
+      import("@/components/post-preview/post-view-detail.vue"),
     "topic-list-item": () =>
       import("@/components/topic-list/topic-list-item.vue")
   },
@@ -118,12 +121,17 @@ export default {
 <style scoped lang="scss">
 #post-detail-page {
   position: relative;
+  padding: 2rem 1rem;
 
   #list-posts-section {
     display: none;
   }
 
   @include tablet {
+    padding: 2rem 1rem;
+  }
+
+  @include desktop {
     display: flex;
     justify-content: space-between;
 
@@ -133,7 +141,7 @@ export default {
       top: 100px;
       left: 0;
       height: fit-content;
-      flex-basis: 20%;
+      max-width: 20%;
     }
 
     #post-view-section {

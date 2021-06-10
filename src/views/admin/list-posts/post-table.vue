@@ -121,7 +121,7 @@
     </b-table>
     <b-modal v-model="showModal" scroll="keep">
       <div class="card is-page-responsive py-6">
-        <post-preview :post="selectedPost" :trigger="false" />
+        <post-preview :useUrl="true" :contentUrl="fileContentUrl" />
       </div>
     </b-modal>
   </div>
@@ -216,6 +216,9 @@ export default {
       set(val) {
         this.$emit("table-search", val);
       }
+    },
+    fileContentUrl() {
+      return this.selectedPost?.content_file_url ?? null;
     }
   },
   watch: {

@@ -7,7 +7,8 @@ export default () => ({
   },
   meta: {
     layout: {
-      headerTransition: true
+      headerTransition: true,
+      paddingless: true
     }
   }
 });

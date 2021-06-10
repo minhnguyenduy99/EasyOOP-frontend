@@ -2,7 +2,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
 
-.default-markdown-body {
+.github-markdown-body {
   --blockquote-border-color: #00A8E8;
   --blockquote-color: rgba(0, 0, 0, 0.6);
   --link-color: #00A8E8;
@@ -10,16 +10,17 @@
   --text-color: #00171F;
   font-size: 16px;
   font-family: 'Montserrat', sans-serif;
+  padding: 16px;
 }
 
 
 /* [a] */
-.default-markdown-body a {
+.github-markdown-body a {
   color: var(--link-color);
   opacity: 0.8;
 }
 
-.default-markdown-body a:hover {
+.github-markdown-body a:hover {
   text-decoration: underline;
   text-decoration-color: var(--link-color);
   color: var(--link-color);
@@ -27,57 +28,57 @@
 }
 
 /* [p] */
-.default-markdown-body p {
+.github-markdown-body p {
   font-size: 1.25em;
   text-align: justify;
 }
 
 /* [img] */
-.default-markdown-body img {
+.github-markdown-body img {
   margin: auto;
 }
 
 /* [heading] */
-.default-markdown-body h1 {
+.github-markdown-body h1 {
   font-size: 2.5em;
   font-weight: 600;
   margin: 0.75em 0;
 }
 
-.default-markdown-body h2 {
+.github-markdown-body h2 {
   font-size: 2em;
   font-weight: 600;
   margin: 0.75em 0;
 }
 
-.default-markdown-body h3 {
+.github-markdown-body h3 {
   font-size: 1.5em;
+  font-weight: 600;
+}
+
+.github-markdown-body h4 {
+  font-size: 1.25em;
   font-weight: 500;
 }
 
-.default-markdown-body h4 {
-  font-size: 1.25em;
-  font-weight: 400;
-}
-
-.default-markdown-body h5 {
+.github-markdown-body h5 {
   font-size: 1em;
   font-weight: 400;
 }
 
-.default-markdown-body h6 {
+.github-markdown-body h6 {
   font-size: 0.75em;
   font-weight: 400;
 }
 
-.default-markdown-body p {
+.github-markdown-body p {
   font-size: 1em;
   font-weight: 400;
   text-align: justify;
   margin: 0.5em 0;
 }
 
-.default-markdown-body ul {
+.github-markdown-body ul {
   list-style-type: disc;
   list-style-position: outside;
   padding-left: 40px;
@@ -86,7 +87,7 @@
 
 /* [blockquote] */
 
-.default-markdown-body blockquote {
+.github-markdown-body blockquote {
   margin: 1.5em 0;
   padding: 0 1.5em;
   color: var(--blockquote-color);
@@ -95,7 +96,7 @@
   width: fit-content;
 }
 
-.default-markdown-body blockquote::before {
+.github-markdown-body blockquote::before {
   position: absolute;
   top: 0;
   left: 0;
@@ -105,7 +106,7 @@
   color: inherit;
 }
 
-.default-markdown-body blockquote::after {
+.github-markdown-body blockquote::after {
   position: absolute;
   top: 0;
   right: 0;
@@ -115,7 +116,7 @@
   color: inherit;
 }
 
-.default-markdown-body blockquote p {
+.github-markdown-body blockquote p {
   color: inherit;
   margin-left: 0.5em;
   width: fit-content;

@@ -1,8 +1,9 @@
 import createDefaultTheme from "./theme";
 
 const install = function(VMdEditor, options = {}) {
-  const { extend, config, codeHighlightExtensionMap } = options;
+  const { extend, config, codeHighlightExtensionMap, Hljs } = options;
   const theme = createDefaultTheme({
+    Hljs,
     baseConfig: config,
     codeHighlightExtensionMap
   });
@@ -10,10 +11,6 @@ const install = function(VMdEditor, options = {}) {
   if (extend) theme.extend(extend);
   VMdEditor.theme(theme);
 };
-
-if (typeof window !== "undefined" && window.VMdEditor) {
-  install(window.VMdEditor);
-}
 
 export default {
   install

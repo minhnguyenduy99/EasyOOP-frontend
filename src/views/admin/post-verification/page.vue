@@ -111,7 +111,11 @@
     </admin-content>
     <b-modal v-model="showModal" scroll="keep">
       <div class="card is-page-responsive py-6">
-        <post-preview :post="selectedPost" :trigger="false" />
+        <post-view-detail
+          v-if="selectedPost"
+          :post="selectedPost"
+          :trigger="false"
+        />
       </div>
     </b-modal>
   </div>
@@ -130,7 +134,8 @@ export default {
     "post-info": () => import("./verification-detail/post-info"),
     "verification-info": () =>
       import("./verification-detail/verification-info"),
-    "post-preview": async () => (await import("@/components")).PostPreview
+    "post-view-detail": () =>
+      import("@/components/post-preview/post-view-detail")
   },
   provide() {
     return {
@@ -176,6 +181,11 @@ export default {
   watch: {
     activeTab(val) {
       this.$_updateTabInfo();
+    }
+  },
+  computed: {
+    selectedContentFileUrl() {
+      return this.selectedPost?.content_file_url ?? null;
     }
   },
   methods: {

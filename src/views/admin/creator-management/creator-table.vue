@@ -57,11 +57,6 @@
         </div>
       </template>
     </b-table>
-    <b-modal v-model="showModal" scroll="keep">
-      <div class="card is-page-responsive py-6">
-        <post-preview :post="selected" :trigger="false" />
-      </div>
-    </b-modal>
   </div>
 </template>
 
@@ -69,7 +64,6 @@
 export default {
   name: "CreatorTable",
   components: {
-    "post-preview": async () => (await import("@/components")).PostPreview,
     "empty-state": () => import("@/components/empty-state.vue")
   },
   props: {
@@ -91,7 +85,6 @@ export default {
       order: -1
     },
     actionHandler: [],
-    showModal: false,
     selectedCreator: null,
     loading: false,
     selected: {}

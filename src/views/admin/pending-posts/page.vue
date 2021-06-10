@@ -116,8 +116,8 @@
       <div class="card is-page-responsive py-6">
         <post-preview
           v-if="detailedPost"
-          :post="detailedPost"
-          :trigger="false"
+          :useUrl="true"
+          :contentUrl="detailedPost.content_file_url"
         />
       </div>
     </b-modal>

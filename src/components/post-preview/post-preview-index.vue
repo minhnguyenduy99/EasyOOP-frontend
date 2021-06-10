@@ -33,6 +33,10 @@ export default {
     emptyText: {
       type: String,
       default: () => "There is no index set up"
+    },
+    anchorClass: {
+      type: String,
+      default: () => "index-anchor"
     }
   },
   data: () => ({
@@ -131,6 +135,7 @@ export default {
       el.style.marginBottom = "8px";
       el.style.display = "block";
       el.style.fontSize = "1rem";
+      el.classList.add(this.anchorClass);
       el.setAttribute(LINE_MARKUP, lineIndex);
       el.addEventListener(
         "click",
@@ -150,10 +155,17 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .post-preview-index {
   padding-left: 1.5rem;
   border-left: 10px solid $primary-light;
-  margin-bottom: -16px;
+}
+
+a.index-anchor {
+  font-size: 1.5rem;
+  &:hover {
+    font-weight: bold;
+    color: $link;
+  }
 }
 </style>

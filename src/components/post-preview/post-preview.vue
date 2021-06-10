@@ -1,260 +1,65 @@
 <template>
   <div class="post-preview">
-    <div class="post-detail">
-      <slot name="header" v-bind="{ post }">
-        <div class="post-header is-flex is-justify-content-space-between">
-          <div class="post-info-group ha-vertical-layout-6">
-            <div class="post-info-group-item">
-              <span class="post-group--label has-text-grey">Chủ đề</span>
-              <span class="post-group--value has-text-weight-bold">
-                {{ post.topic_title }}
-              </span>
-            </div>
-            <div class="post-info-group-item">
-              <span class="post-group--label has-text-grey">Ngày tạo</span>
-              <span class="post-group--value has-text-weight-bold">
-                {{ createdDateInString }}
-              </span>
-            </div>
-            <div class="post-info-group-item">
-              <span class="post-group--label has-text-grey">Nhãn dán</span>
-              <b-taglist class="mt-2">
-                <b-tag
-                  v-for="tag in listTagValues"
-                  :key="tag.id"
-                  type="is-primary-light"
-                  >{{ tag }}</b-tag
-                >
-              </b-taglist>
-            </div>
-          </div>
-          <slot v-if="trigger" name="trigger-header" v-bind="{ post }">
-            <div class="is-flex is-flex-direction-column">
-              <b-button
-                v-if="_hasPreviousPost"
-                class="mb-3"
-                type="is-primary-light"
-                icon-left="chevron-left"
-                @click="$_navigate(post.previous_post_id)"
-                >Bài trước</b-button
-              >
-              <b-button
-                v-if="_hasNextPost"
-                type="is-primary-light"
-                icon-right="chevron-right"
-                @click="$_navigate(post.next_post_id)"
-                >Bài tiếp theo</b-button
-              >
-            </div>
-          </slot>
-        </div>
-      </slot>
-      <hr />
-      <div class="post-title">
-        <span class="is-size-2-tablet is-size-3">{{ post.post_title }}</span>
-      </div>
-      <post-preview-content
-        ref="post-view"
-        :content="postContent"
-        @html-changed="$on_htmlChanged"
-      ></post-preview-content>
-      <slot name="template">
-        <div v-if="hasTemplate">
-          <hr />
-          <component
-            v-for="template in templates"
-            :key="template.id"
-            :is="$_getComponentByType(template.type)"
-            :editable="false"
-            :template="template"
-          />
-        </div>
-      </slot>
-      <hr />
-      <slot v-if="trigger" name="trigger" v-bind="{ post }">
-        <div class="is-flex mt-3 is-justify-content-space-between">
-          <b-button
-            class="trigger-action--previous"
-            v-if="_hasPreviousPost"
-            type="is-primary-light"
-            icon-left="chevron-left"
-            @click="$_navigate(post.previous_post_id)"
-            >Bài trước</b-button
-          >
-          <b-button
-            v-if="_hasNextPost"
-            class="trigger-action--next"
-            type="is-primary-light"
-            icon-right="chevron-right"
-            @click="$_navigate(post.next_post_id)"
-            >Bài tiếp theo</b-button
-          >
-        </div>
-      </slot>
-    </div>
-    <div class="post-preview-index-wrapper" :style="{ top: indexStickyTop }">
-      <post-preview-index
-        :title="indexTitle"
-        @index-clicked="$on_indexClicked"
-        :html="htmlContent"
-        :empty-text="$attrs['empty-text']"
-      />
-    </div>
+    <v-md-preview :text="tempPostContent" ref="previewer" />
   </div>
 </template>
 
 <script>
-import PostMixin from "./post.mixin";
+import { xss } from "@kangc/v-md-editor";
 
 export default {
   name: "PostPreview",
-  mixins: [PostMixin],
-  components: {
-    "post-preview-content": () => import("./post-preview-content"),
-    "post-preview-index": () => import("./post-preview-index"),
-    "test-template": () => import("./post-template/test-template")
-  },
   props: {
-    indexTitle: String,
-    indexStickyTop: {
-      type: String,
-      required: false,
-      default: () => "0"
-    },
-    trigger: {
+    useUrl: {
       type: Boolean,
       default: () => true
     },
-    navigate: {
-      type: Function,
-      required: false
-    }
+    postContent: String,
+    contentUrl: String
   },
   data: () => ({
-    postContent: "",
-    htmlContent: ""
+    tempPostContent: ""
   }),
-  mounted: function() {
-    this.$m_readFileContent().then(content => {
-      this.postContent = content;
-    });
-  },
   watch: {
-    post(val) {
-      if (!val) {
-        return;
-      }
-      this.$m_readFileContent().then(content => {
-        this.postContent = content;
-      });
+    postContent() {
+      this.$_updatePostContent();
+    },
+    contentUrl() {
+      this.$_updatePostContent();
     }
   },
-  computed: {
-    _hasPreviousPost() {
-      return this.post?.previous_post_id;
-    },
-    _hasNextPost() {
-      return this.post?.next_post_id;
-    }
+  mounted: function() {
+    this.$_updatePostContent();
   },
   methods: {
-    $on_indexClicked(lineIndex) {
-      this.$refs["post-view"].scrollToLine(lineIndex);
+    $convertToHtml() {
+      return xss.process(
+        this.$refs["previewer"].themeConfig.markdownParser.render(
+          this.tempPostContent
+        )
+      );
     },
-    $on_htmlChanged(html) {
-      this.htmlContent = html;
-    },
-    $_navigate(postId) {
-      this.navigate?.(postId);
-    },
-    $_getComponentByType(type) {
-      switch (type) {
-        case "test":
-          return "test-template";
+    $_updatePostContent() {
+      if (this.useUrl && this.contentUrl) {
+        this.$_readFileContent();
+        return;
       }
-      return null;
+      this.tempPostContent = this.postContent ?? "";
+      return;
+    },
+    $_readFileContent() {
+      fetch(this.contentUrl)
+        .then(response => response.text())
+        .then(text => {
+          this.tempPostContent = text;
+        });
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-#post-preview-detail {
-  @include tablet {
-    .post-preview-info {
-      &-group {
-        &--group-1 {
-          padding-right: 1.5rem;
-          margin-right: 1.5rem;
-          border-right: 1px solid grey;
-          * {
-            white-space: nowrap;
-          }
-        }
-      }
-    }
-  }
-}
-
 .post-preview {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-
-  .post-preview-index-wrapper {
-    display: none;
-  }
-
-  @include tablet {
-    .post-detail {
-      flex-basis: 70%;
-    }
-
-    .post-preview-index-wrapper {
-      display: block;
-      position: sticky;
-      height: fit-content;
-      top: 0;
-      right: 0;
-      flex-basis: 27%;
-    }
-  }
-
-  @include desktop {
-    .post-detail {
-      flex-basis: 75%;
-    }
-
-    .post-preview-index-wrapper {
-      flex-basis: 22%;
-    }
-  }
-}
-
-.post-info-group {
-  &-item {
-    > span {
-      display: block;
-    }
-  }
-
-  @include tablet {
-    &--label {
-      font-size: $size-6;
-    }
-    &--value {
-      font-size: $size-5;
-    }
-  }
-}
-
-.trigger-action {
-  &--previous {
-    margin-left: 0;
-  }
-
-  &--next {
-    margin-left: auto;
-  }
+  margin: -1rem;
 }
 </style>
