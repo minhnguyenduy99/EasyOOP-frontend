@@ -59,9 +59,6 @@ $topic-post-list-padding: 1rem 0;
 .topic-post-item {
   transition: 0.05s;
   color: $topic-item-color;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
   border-radius: 7px;
 
   &:hover {
