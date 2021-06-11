@@ -195,7 +195,7 @@ export default {
       "manager_getGroupSummary",
       "manager_verify",
       "manager_unverify",
-      "getPostById"
+      "manager_getPostById"
     ]),
 
     $on_search(searchOptions) {
@@ -210,7 +210,12 @@ export default {
         this.selectedPost = null;
         return;
       }
-      this.getPostById(verification.post_id).then(result => {
+      const isVerified =
+        verification.status === this.VERIFICATION_STATUSES.VERIFIED;
+      this.manager_getPostById({
+        post_id: verification.post_id,
+        active: isVerified
+      }).then(result => {
         const { error, data } = result;
         if (error) {
           return;

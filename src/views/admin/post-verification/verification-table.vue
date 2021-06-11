@@ -257,11 +257,11 @@ export default {
     },
     $on_verifyButtonClicked() {
       this.$buefy.dialog.confirm({
-        title: "Hủy duyệt bài viết",
-        message: "Bạn chắc chắn muốn hủy duyệt bài viết ?",
+        title: "Duyệt bài viết",
+        message: "Bạn chắc chắn muốn duyệt bài viết ?",
         confirmText: "Đồng ý",
         cancelText: "Hủy bỏ",
-        type: "is-danger",
+        type: "is-success",
         onConfirm: () => {
           this.manager_verify({
             verification_id: this.selectedVerificationId
@@ -276,14 +276,23 @@ export default {
       });
     },
     $on_unverifyButtonClicked() {
-      this.manager_unverify({
-        verification_id: this.selectedVerificationId
-      }).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
+      this.$buefy.dialog.confirm({
+        title: "Hủy duyệt bài viết",
+        message: "Bạn chắc chắn muốn hủy duyệt bài viết này?",
+        confirmText: "Đồng ý",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          this.manager_unverify({
+            verification_id: this.selectedVerificationId
+          }).then(result => {
+            const { error } = result;
+            if (error) {
+              return;
+            }
+            this.$_removeVerificationFromTable(this.selectedVerificationId);
+          });
         }
-        this.$_removeVerificationFromTable(this.selectedVerificationId);
       });
     },
     $_removeVerificationFromTable(verificationId) {

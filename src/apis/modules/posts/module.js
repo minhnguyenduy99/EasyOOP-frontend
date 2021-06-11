@@ -6,6 +6,7 @@ import { PostAPI } from "./posts.api";
 import { TagAPI } from "./tag.api";
 import { TopicAPI } from "./topic.api";
 import { ManagerVerificationAPI } from "./manager/verification.api";
+import { ManagerPostAPI } from "./manager/posts.api";
 
 export class PostAPIModule extends BaseAPIModule {
   _initModule() {
@@ -28,5 +29,6 @@ export class PostAPIModule extends BaseAPIModule {
       "manage/verifications",
       "manager"
     );
+    this._useAPI(new ManagerPostAPI(), "manage/posts", "manager");
   }
 }
