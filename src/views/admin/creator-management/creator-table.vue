@@ -116,7 +116,6 @@ export default {
   },
   methods: {
     $on_rowClicked(row) {
-      console.log(row);
       if (row.creator_id === this.selectedId) {
         this.selectedCreator = null;
       }

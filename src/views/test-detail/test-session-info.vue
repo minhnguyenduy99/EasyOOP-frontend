@@ -145,7 +145,6 @@ export default {
         icon: "times-circle",
         iconPack: "fa",
         onConfirm: () => {
-          console.log("finish test");
           this.$_finishTest();
         }
       });

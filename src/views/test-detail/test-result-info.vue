@@ -98,7 +98,6 @@ export default {
       this.$_mappingAnswers();
     },
     isAuthenticated(val) {
-      console.log("auth changed");
       if (!val) {
         return;
       }

@@ -89,7 +89,6 @@ export default {
   watch: {
     selectedOrder(val) {
       const index = val - 1 - (this.page - 1) * this.SENTENCES_PER_PAGE;
-      console.log(index);
       this.$_scrollToSentence(index);
     }
   },

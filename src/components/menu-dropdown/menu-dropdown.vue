@@ -71,7 +71,6 @@ export default {
       if (!active || !this.isMenu) {
         return;
       }
-      console.log(this.data);
       this.findMenu(this.data.menu_id).then(result => {
         const { error, data } = result;
         if (error) {

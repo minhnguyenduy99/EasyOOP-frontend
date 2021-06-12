@@ -331,7 +331,6 @@ export default {
     },
     async $_loadAsyncData() {
       this.loading = true;
-      console.log(this.searchOptions);
       this.$api_searchTests({
         page: this.page,
         ...this.searchOptions,

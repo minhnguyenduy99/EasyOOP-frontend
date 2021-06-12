@@ -33,9 +33,6 @@ Vue.use(ApiServicePlugin, {
 const apiPack = createAPIPack({
   baseURL: process.env.VUE_APP_API_ENDPOINT
 });
-
-console.log(apiPack.apis);
-
 // Init vue store
 const vuexStore = createVuexStore({ apiService: apiPack.apis });
 

@@ -53,7 +53,6 @@ export default {
     $_thumbnailFileFromURL(url) {
       FileReadHelper.toBlobFromURL(url).then(blob => {
         const file = new File([blob], "unknown");
-        console.log(file);
         this.form.thumbnail_file = file;
       });
     }

@@ -1,3 +1,5 @@
+const path = require("path");
+
 module.exports = {
   css: {
     loaderOptions: {
@@ -10,5 +12,6 @@ module.exports = {
   },
   devServer: {
     https: false
-  }
+  },
+  outputDir: path.resolve(__dirname, "client")
 };

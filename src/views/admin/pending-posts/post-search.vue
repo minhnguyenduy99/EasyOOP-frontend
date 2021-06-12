@@ -148,7 +148,6 @@ export default {
   methods: {
     $on_applySearch() {
       this.showModal = false;
-      console.log(this.searchOptions);
       this.$nextTick(() => {
         this.$emit("search", { ...this.searchOptions });
       });
