@@ -32,9 +32,11 @@
 
                 <template>
                   <pending-post-section
-                    :search-result="searchResult"
+                    :active="activeTab === 0"
+                    :verificationStatus="TAB_STATUS_MAPS[0].status"
+                    :searchOptions="searchOptions"
                     @selected-changed="$on_selectedPostChanged"
-                    @load="$on_loadMorePosts(0)"
+                    @count-changed="$on_itemCountChanged(0, $event)"
                   />
                 </template>
               </b-tab-item>
@@ -54,12 +56,12 @@
 
                 <template>
                   <pending-post-section
-                    v-if="activeTab === 1"
-                    :search-result="searchResult"
+                    :active="activeTab === 1"
+                    :verificationStatus="TAB_STATUS_MAPS[1].status"
+                    :searchOptions="searchOptions"
                     @selected-changed="$on_selectedPostChanged"
-                    @load="$on_loadMorePosts(1)"
+                    @count-changed="$on_itemCountChanged(1, $event)"
                   />
-                  <div v-else></div>
                 </template>
               </b-tab-item>
 
@@ -76,12 +78,12 @@
 
                 <template>
                   <pending-post-section
-                    v-if="activeTab === 2"
-                    :search-result="searchResult"
+                    :active="activeTab === 2"
+                    :verificationStatus="TAB_STATUS_MAPS[2].status"
+                    :searchOptions="searchOptions"
                     @selected-changed="$on_selectedPostChanged"
-                    @load="$on_loadMorePosts(2)"
+                    @count-changed="$on_itemCountChanged(2, $event)"
                   />
-                  <div v-else></div>
                 </template>
               </b-tab-item>
             </b-tabs>
@@ -96,11 +98,11 @@
               class="is-paddingless"
               type="is-toggle"
             >
-              <b-tab-item label="Bài viết" v-if="activeTab !== 2">
-                <pending-post-detail :post="selectedDetailedPost" />
-              </b-tab-item>
               <b-tab-item label="Duyệt">
                 <verification-info-tab :post="selectedPost" />
+              </b-tab-item>
+              <b-tab-item label="Bài viết" v-if="activeTab !== 2">
+                <pending-post-detail :post="selectedDetailedPost" />
               </b-tab-item>
             </b-tabs>
             <div v-else class="p-3 is-flex is-justify-content-center">
@@ -142,7 +144,6 @@ export default {
   provide() {
     return {
       creator_findVerifications: this.creator_findVerifications,
-      reloadTab: this.$_reloadTab,
       showPostPreview: this.$_showPostPreview
     };
   },
@@ -172,95 +173,53 @@ export default {
     showPostModal: false,
     detailedPost: null
   }),
-  watch: {
-    activeTab(val) {
-      if (val < 0) {
-        return;
-      }
-      this.$_reloadTab();
-    }
+  mounted: function() {
+    this.$_loadVerificationGroupInfo();
   },
   computed: {
     selectedDetailedPost() {
       return this.selectedPost?.post ?? {};
     }
   },
+  watch: {
+    activeTab(val, oldVal) {
+      if (oldVal === -1) {
+        return;
+      }
+      this.selectedPost = null;
+    }
+  },
   methods: {
-    ...mapActions("POST", ["creator_findVerifications"]),
+    ...mapActions("POST", [
+      "creator_findVerifications",
+      "creator_getGroupInfo"
+    ]),
     $on_selectedPostChanged(post) {
       this.selectedPost = post;
     },
     $on_search(searchOptions) {
       this.searchOptions = searchOptions;
-      this.$_updatePendingPosts({
-        status: this.TAB_STATUS_MAPS[this.activeTab].status,
-        ...searchOptions
-      });
     },
-    $_updatePendingPosts(options) {
-      this.creator_findVerifications(options).then(result => {
+    $on_itemCountChanged(tabIndex, count) {
+      this.TAB_STATUS_MAPS[tabIndex].count = count;
+    },
+    $_loadVerificationGroupInfo() {
+      this.creator_getGroupInfo().then(result => {
         const { error, data } = result;
         if (error) {
           return;
         }
-        this.isSearching = false;
-        const { groups, ...searchResult } = data;
-        this.searchResult = searchResult;
-        if (!groups) {
-          return;
-        }
-        this.$_updateTabInfo(groups);
-      });
-    },
-    $_updateTabInfo(groups) {
-      this.TAB_STATUS_MAPS.forEach(tab => {
-        tab.count = groups[tab.status.toString()]?.count ?? 0;
-      });
-    },
-    $on_loadMorePosts(tabIndex) {
-      const search = {
-        ...this.searchOptions,
-        page: this.searchOptions.page + 1,
-        status: this.TAB_STATUS_MAPS[tabIndex].status
-      };
-      this.isSearching = true;
-      this.creator_findVerifications(search).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        this.isSearching = false;
-        const { groups, results, ...searchResult } = data;
-        this.searchResult = {
-          ...searchResult,
-          results: this.searchResult.push(...results)
-        };
-        if (!groups) {
-          return;
-        }
-        this.$_updateTabInfo(groups);
-      });
-      fetch(this.searchResult.next)
-        .then(res => res.json())
-        .then(result => {
-          this.searchResult = {
-            ...result,
-            results: this.searchResult.results.push(...result.results)
-          };
-        });
-    },
-    $_reloadTab() {
-      this.isSearching = true;
-      this.selectedPost = null;
-      this.$_updatePendingPosts({
-        status: this.TAB_STATUS_MAPS[this.activeTab].status,
-        group: true,
-        ...this.searchOptions
+        this.$_updateGroupInfo(data);
       });
     },
     $_showPostPreview(post) {
       this.showPostModal = true;
       this.detailedPost = post;
+    },
+    $_updateGroupInfo(data) {
+      this.TAB_STATUS_MAPS.forEach(tab => {
+        tab.count = data[tab.status]?.count ?? 0;
+      });
     }
   }
 };

@@ -86,7 +86,7 @@
       </template>
       <template v-if="!isTableEmpty" #footer>
         <div>
-          <span class="has-text-grey">Total results: </span>
+          <span class="has-text-grey">Số lượng kết quả: </span>
           <span class="has-text-weight-bold">{{ totalCount }}</span>
         </div>
       </template>
@@ -202,6 +202,7 @@ export default {
       this.selectedVerification = null;
     },
     searchOptions(val) {
+      this.page = 1;
       this.$_loadAsyncData(val);
     }
   },
@@ -225,7 +226,8 @@ export default {
         ...this.searchOptions,
         ...this.sorter,
         status: this.type,
-        page: this.page
+        page: this.page,
+        limit: this.itemsPerPage
       };
       this.selectedApi(search).then(result => {
         const { error, data } = result;

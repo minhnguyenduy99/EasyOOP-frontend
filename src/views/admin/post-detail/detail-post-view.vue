@@ -70,17 +70,36 @@
     <div
       class="post-view-actions py-3 ha-vertical-layout-tablet ha-vertical-layout-7"
     >
+      <b-tooltip v-if="post.is_pending" label="Bài viết này đang chờ duyệt">
+        <b-button
+          type="is-primary"
+          icon-left="pen"
+          tag="router-link"
+          :to="$_getEditPostViewRoute()"
+          :disabled="post.is_pending"
+          >Chỉnh sửa</b-button
+        >
+      </b-tooltip>
       <b-button
+        v-else
         type="is-primary"
         icon-left="pen"
         tag="router-link"
         :to="$_getEditPostViewRoute()"
+        :disabled="post.is_pending"
         >Chỉnh sửa</b-button
       >
+
       <b-button type="is-primary" icon-left="eye" @click="showPost = true"
         >Xem trước</b-button
       >
-      <b-button type="is-danger" outlined icon-left="trash-alt">Xóa</b-button>
+      <b-button
+        type="is-danger"
+        outlined
+        icon-left="trash-alt"
+        @click="$on_deleteButtonClicked"
+        >Xóa</b-button
+      >
     </div>
     <b-modal v-model="showPost" scroll="keep">
       <div class="card is-page-responsive py-6">
@@ -91,10 +110,14 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import { ToastNotifier } from "@/utils";
+
 export default {
   components: {
     "post-preview": () => import("@/components/post-preview/post-preview.vue")
   },
+  inject: ["$p_loadPage"],
   props: {
     post: Object
   },
@@ -123,6 +146,40 @@ export default {
     showPost: false
   }),
   methods: {
+    ...mapActions("POST", ["creator_deletePost"]),
+
+    $on_deleteButtonClicked() {
+      this.$buefy.dialog.confirm({
+        title: "Xóa bài viết",
+        message: "Bạn chắc chắc muốn xóa bài viết ?",
+        confirmText: "Đồng ý",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          setTimeout(
+            function() {
+              this.$p_loadPage(true);
+              this.creator_deletePost(this.post.post_id).then(result => {
+                const { error, data } = result;
+                this.$p_loadPage(false);
+                if (error) {
+                  const message = this.$serverLocaler.getMessage(
+                    error.errorType
+                  );
+                  ToastNotifier.error(this.$buefy.toast, message);
+                  return;
+                }
+                ToastNotifier.success(this.$buefy.toast, "Bài viết được xóa");
+                this.$router.push({
+                  name: "ListPosts"
+                });
+              });
+            }.bind(this),
+            500
+          );
+        }
+      });
+    },
     $_getPostDetailPageURL(postId) {
       return {
         name: "AdminPostDetail",

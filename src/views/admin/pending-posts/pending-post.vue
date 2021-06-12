@@ -44,15 +44,6 @@
               @click.stop="showPostPreview(detailedPost)"
             />
             <b-button
-              v-if="deletable"
-              class="is-icon-button"
-              type="is-danger"
-              icon-right="trash"
-              size="is-small"
-              rounded
-              @click.stop="$on_deleteButtonClicked"
-            />
-            <b-button
               v-if="cancellable"
               class="is-icon-button"
               type="is-danger"
@@ -73,8 +64,13 @@
     <div class="card-footer">
       <span class="is-size-7 is-italic">{{ createdDateInStr }}</span>
       <span
-        :class="['is-size-7', 'has-text-weight-bold', 'mt-2', postStatus.color]"
-        >{{ postStatus.text }}</span
+        :class="[
+          'is-size-7',
+          'has-text-weight-bold',
+          'mt-2',
+          verificationType.color
+        ]"
+        >{{ verificationType.text }}</span
       >
     </div>
   </div>
@@ -147,17 +143,6 @@ export default {
             this.$emit("cancelled", this.post);
           });
         }
-      });
-    },
-    $on_deleteButtonClicked() {
-      this.creator_deleteVerifications({
-        verifications: [this.post.verification_id]
-      }).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        this.$emit("deleted", this.post);
       });
     }
   }

@@ -25,9 +25,11 @@ export default {
   name: "PostDetailPage",
   components: {
     DetailPostView,
-    "admin-content": () => import("../components/admin-content/admin-content.vue"),
+    "admin-content": () =>
+      import("../components/admin-content/admin-content.vue"),
     breadcrumb: () => import("@/components/base/breadcrumb.vue")
   },
+  inject: ["$p_loadPage"],
   props: {
     postId: String
   },
@@ -35,9 +37,12 @@ export default {
     post: null
   }),
   mounted: function() {
+    this.$p_loadPage(true);
     this.getPostById(this.postId).then(result => {
+      this.$p_loadPage(false);
       const { error, data } = result;
       if (error) {
+        this.$router.push({ name: "ListPosts" });
         return;
       }
       this.post = data;

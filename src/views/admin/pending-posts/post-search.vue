@@ -15,6 +15,15 @@
       @click="showModal = true"
       >Bộ lọc</b-button
     >
+    <b-button
+      class="ml-3 is-icon-button"
+      type="is-primary"
+      icon-right="sync-alt"
+      size="is-medium"
+      rounded
+      inverted
+      @click="$on_reloadButtonClicked"
+    />
     <b-modal v-model="showModal">
       <template>
         <div class="card">
@@ -58,7 +67,7 @@
                 </b-select>
                 <b-select
                   v-show="selectedSortOrderOption"
-                  v-model="sortOptions.sort_order"
+                  v-model="searchOptions.sort_order"
                   placeholder="Thứ tự sắp xếp"
                 >
                   <option
@@ -85,12 +94,6 @@
 
 <script>
 import { POST_STATUSES, VERIFICATION_TYPES } from "./consts";
-const DEFAULT_SEARCH_OPTIONS = {
-  search: null,
-  sort_by: "created_date",
-  sort_order: "desc",
-  type: null
-};
 
 export default {
   name: "PostSearch",
@@ -145,8 +148,15 @@ export default {
   methods: {
     $on_applySearch() {
       this.showModal = false;
+      console.log(this.searchOptions);
       this.$nextTick(() => {
-        this.$emit("search", this.searchOptions);
+        this.$emit("search", { ...this.searchOptions });
+      });
+    },
+    $on_reloadButtonClicked() {
+      this.searchOptions = {};
+      this.$nextTick(() => {
+        this.$emit("search", { ...this.searchOptions });
       });
     }
   }
@@ -156,22 +166,15 @@ export default {
 <style scoped lang="scss">
 #pending-post-search {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   width: 100%;
   box-sizing: border-box;
   justify-content: center;
+  align-items: center;
   margin: 0 auto;
-
-  button {
-    width: fit-content;
-  }
 
   @include tablet {
     width: 70%;
-  }
-
-  @include desktop {
-    width: 50%;
   }
 }
 

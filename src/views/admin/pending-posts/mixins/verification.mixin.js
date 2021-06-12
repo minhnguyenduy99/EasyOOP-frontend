@@ -39,6 +39,25 @@ export default {
     detailedPost() {
       return this.post?.post ?? {};
     },
+    verificationType() {
+      switch (this.post.type) {
+        case 1:
+          return {
+            text: "Duyệt tạo",
+            color: "has-text-success"
+          };
+        case 2:
+          return {
+            text: "Duyệt cập nhật",
+            color: "has-text-info"
+          };
+        case 3:
+          return {
+            text: "Duyệt xóa",
+            color: "has-text-danger"
+          };
+      }
+    },
     postStatus() {
       switch (this.detailedPost?.post_status) {
         case 0:

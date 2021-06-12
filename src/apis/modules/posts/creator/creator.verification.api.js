@@ -5,7 +5,8 @@ const endpoints = {
   updateVerification: "",
   cancelVerification: "/cancel",
   findVerifications: "/search",
-  getById: ""
+  getById: "",
+  getGroupInfo: "/summary"
 };
 
 export class CreatorVerificationAPI extends BaseAPI {
@@ -41,6 +42,15 @@ export class CreatorVerificationAPI extends BaseAPI {
     }
   }
 
+  async getGroupInfo() {
+    try {
+      const response = await this._context.get(endpoints.getGroupInfo);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
   async cancelVerification(opts) {
     const { verification_id, data = {} } = opts;
     const endpoint = this._addURLParams(
@@ -68,23 +78,23 @@ export class CreatorVerificationAPI extends BaseAPI {
 
   async findVerifications(options) {
     const {
+      page,
       search = null,
       sort_by = "created_date",
       sort_order = "desc",
       type = null,
       status = null,
-      limit = null,
       group = false
     } = options;
+    const endpoint = this._addURLParams(endpoints.findVerifications, page);
     try {
-      const response = await this._context.get(endpoints.findVerifications, {
+      const response = await this._context.get(endpoint, {
         params: {
           search,
           sort_by,
           sort_order,
           type,
           status,
-          limit,
           group
         }
       });
@@ -100,7 +110,8 @@ export class CreatorVerificationAPI extends BaseAPI {
       updateVerification: this.updateVerification.bind(this),
       cancelVerification: this.cancelVerification.bind(this),
       getVerificationById: this.getVerificationById.bind(this),
-      findVerifications: this.findVerifications.bind(this)
+      findVerifications: this.findVerifications.bind(this),
+      getGroupInfo: this.getGroupInfo.bind(this)
     };
   }
 

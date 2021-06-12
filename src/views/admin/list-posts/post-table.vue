@@ -112,6 +112,12 @@
           </section>
         </template>
       </b-table-column>
+      <template #empty>
+        <empty-state
+          image-src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1618931250/oop-learning-helper/post_empty_state_xcrbog.png"
+          text="Không có bài viết nào"
+        />
+      </template>
       <template #footer>
         <div>
           <span class="has-text-grey">Số lượng kết quả: </span>
@@ -134,7 +140,8 @@ import { POST_STATUSES } from "./consts";
 export default {
   name: "PostTable",
   components: {
-    "post-preview": async () => (await import("@/components")).PostPreview
+    "post-preview": async () => (await import("@/components")).PostPreview,
+    "empty-state": () => import("@/components/empty-state.vue")
   },
   props: {
     filter: {
@@ -159,19 +166,19 @@ export default {
     postFeatures: [
       {
         icon: "eye",
-        tooltip: "Preview",
+        tooltip: "Xem",
         type: "is-primary",
         outlined: true
       },
       {
         icon: "pen",
-        tooltip: "Edit post",
+        tooltip: "Chỉnh sửa",
         type: "is-primary",
         outlined: true
       },
       {
         icon: "trash-alt",
-        tooltip: "Delete post",
+        tooltip: "Xóa bài viết",
         type: "is-danger",
         outlined: false
       }
@@ -296,7 +303,7 @@ export default {
       this.$buefy.dialog.confirm({
         title: "Xóa bài viết",
         message: "Bạn chắc chắc muốn xóa bài viết ?",
-        confirmText: "Agree",
+        confirmText: "Đồng ý",
         cancelText: "Hủy bỏ",
         type: "is-danger",
         onConfirm: () => {
@@ -317,6 +324,7 @@ export default {
                   this.$buefy.toast,
                   "Xóa bài viết thành công"
                 );
+                this.$_loadAsyncData();
               });
             }.bind(this),
             500

@@ -1,28 +1,29 @@
 <template>
   <div id="pending-post-section">
-    <div
-      v-if="!isEmpty"
-      class="pending-posts-layout ha-vertical-layout-6-mobile"
-    >
-      <pending-post
-        v-for="(post, index) in pendingPosts"
-        :key="post.id"
-        :post="post"
-        :selected="index === selectedIndex"
-        :checkMode="isCheckMode"
-        @check="$on_postChecked(index, $event)"
-        @select="$on_postSelected(index, $event)"
-        @deleted="$on_postDeleted"
-        @cancelled="$on_postCancelled"
-      />
-      <div class="my-5 is-flex is-justify-content-center">
-        <b-button
-          v-show="canLoadMore"
-          type="is-primary"
-          outlined
-          @click="$on_loadButtonClicked"
-          >Xem thêm</b-button
+    <div v-if="!isEmpty" class="ha-vertical-layout-6-mobile">
+      <div class="pending-posts-layout">
+        <pending-post
+          v-for="(post, index) in verifications"
+          :key="post.id"
+          :post="post"
+          :selected="index === selectedIndex"
+          @select="$on_postSelected(index, $event)"
+          @cancelled="$on_postCancelled"
+        />
+      </div>
+
+      <div class="my-5">
+        <b-pagination
+          :total="totalCount"
+          v-model="page"
+          :range-before="2"
+          :range-after="1"
+          order="is-centered"
+          :simple="false"
+          :rounded="true"
+          :per-page="DEFAULT_ITEM_COUNT"
         >
+        </b-pagination>
       </div>
     </div>
     <div v-else>
@@ -40,76 +41,97 @@ export default {
     "empty-state": () => import("@/components/empty-state.vue"),
     "pending-post": () => import("./pending-post")
   },
-  inject: ["reloadTab"],
+  inject: ["creator_findVerifications", "$p_loadPage"],
   props: {
-    searchResult: {
+    verificationStatus: Number,
+    searchOptions: {
       type: Object,
       default: () => null
-    }
+    },
+    active: Boolean
   },
   data: () => ({
-    pendingPosts: [],
-    queriedResults: {
-      remain_item_count: 0,
-      total_count: 0
-    },
-    checkedIndex: new Set(),
-    selectedIndex: -1,
-    isCheckMode: false
+    DEFAULT_ITEM_COUNT: 6,
+    verifications: [],
+    page: 1,
+    pageCount: 0,
+    totalCount: 0,
+    selectedIndex: -1
   }),
-  mounted: function() {
-    this.$_updateData(this.searchResult);
-  },
   watch: {
-    searchResult(val) {
+    active(val) {
+      if (!val) {
+        return;
+      }
+      this.$_loadData();
+    },
+    searchOptions() {
       this.selectedIndex = -1;
-      this.$_updateData(val);
+      this.$_reloadData();
+    },
+    page() {
+      this.$_loadData();
     },
     selectedIndex(val) {
-      this.$emit("selected-changed", this.pendingPosts[val]);
+      this.$emit("selected-changed", this.verifications[val]);
     }
   },
   computed: {
-    canLoadMore() {
-      return this.queriedResults.remain_item_count > 0;
-    },
     isEmpty() {
-      return this.searchResult?.results?.length === 0;
+      return this.verifications.length === 0;
     }
   },
   methods: {
-    $on_postChecked(index, checked) {
-      if (checked) {
-        this.checkedIndex.add(index);
-        this.isCheckMode = true;
-        return;
-      }
-      this.checkedIndex.delete(index);
-      if (this.checkedIndex.size > 0) {
-        return;
-      }
-      this.isCheckMode = false;
-    },
     $on_postSelected(index, selected) {
       this.selectedIndex = selected ? index : -1;
     },
     $on_loadButtonClicked() {
-      this.$emit("load");
-    },
-    $on_postDeleted(post) {
-      this.reloadTab();
+      this.$_loadData();
     },
     $on_postCancelled(post) {
-      this.reloadTab();
+      this.$_loadData();
     },
-    $_updateData(searchResult) {
-      if (!searchResult) {
-        return;
-      }
-      this.pendingPosts.length = 0;
-      const { results, ...queriedResults } = searchResult;
-      this.queriedResults = queriedResults;
-      this.pendingPosts.push(...results);
+    $_loadData() {
+      this.$p_loadPage(true);
+      const options = {
+        ...this.searchOptions,
+        page: this.page,
+        status: this.verificationStatus
+      };
+      this.creator_findVerifications(options).then(result => {
+        this.$p_loadPage(false);
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.$_updataTabData(data);
+      });
+    },
+    $_reloadData() {
+      this.$p_loadPage(true);
+      this.page = 1;
+      const options = {
+        ...this.searchOptions,
+        page: this.page,
+        status: this.verificationStatus
+      };
+      this.creator_findVerifications(options).then(result => {
+        this.$p_loadPage(false);
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.$_updataTabData(data);
+      });
+    },
+    $_updataTabData(data) {
+      const { page_count, page, results, total_count } = data;
+      this.verifications.length = 0;
+      this.verifications.push(...results);
+      this.pageCount = page_count;
+      this.page = page;
+      this.totalCount = total_count;
+      this.$emit("count-changed", this.totalCount);
     }
   }
 };
@@ -120,6 +142,7 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, 200px);
   gap: 1rem;
+  justify-content: center;
 
   @include tablet {
     display: grid;
