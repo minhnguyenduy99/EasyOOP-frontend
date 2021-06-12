@@ -87,7 +87,7 @@
 
 /* [blockquote] */
 
-.github-markdown-body blockquote {
+/* .github-markdown-body blockquote {
   margin: 1.5em 0;
   padding: 0 1.5em;
   color: var(--blockquote-color);
@@ -121,5 +121,5 @@
   margin-left: 0.5em;
   width: fit-content;
 }
-
+ */
 
