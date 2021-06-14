@@ -1,11 +1,11 @@
 
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
 .github-markdown-body {
   --blockquote-border-color: #00A8E8;
   --blockquote-color: rgba(0, 0, 0, 0.6);
-  --link-color: #00A8E8;
+  --link-color: #00A8C8;
   --heading-color: rgba(#000, 0.75);
   --text-color: #00171F;
   font-size: 16px;
@@ -17,7 +17,7 @@
 /* [a] */
 .github-markdown-body a {
   color: var(--link-color);
-  opacity: 0.8;
+  font-weight: bold;
 }
 
 .github-markdown-body a:hover {
@@ -25,6 +25,11 @@
   text-decoration-color: var(--link-color);
   color: var(--link-color);
   opacity: 1;
+}
+
+/* strong */
+.github-markdown-body strong {
+  font-weight: 700;
 }
 
 /* [p] */
@@ -73,9 +78,9 @@
 
 .github-markdown-body p {
   font-size: 1em;
-  font-weight: 400;
   text-align: justify;
   margin: 0.5em 0;
+  line-height: 1.75rem;
 }
 
 .github-markdown-body ul {
