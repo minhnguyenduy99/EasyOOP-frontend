@@ -70,10 +70,14 @@ export class TestAPI extends BaseAPI {
   }
 
   async deleteTestById(opts) {
-    const { test_id } = opts;
+    const { test_id, permanently = false } = opts;
     const endpoint = this._addURLParams(endpoints.deleteTest, test_id);
     try {
-      const response = await this._context.delete(endpoint);
+      const response = await this._context.delete(endpoint, {
+        params: {
+          permanently
+        }
+      });
 
       return this._formatter.getDataFormat(response);
     } catch (err) {

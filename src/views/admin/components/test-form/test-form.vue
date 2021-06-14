@@ -23,6 +23,7 @@
         </validated-form-element>
         <validated-form-element
           name="default_score_per_sentence"
+          rules="required|min_value:1"
           label="Số điểm mỗi câu"
         >
           <b-input

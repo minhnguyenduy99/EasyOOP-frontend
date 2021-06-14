@@ -109,6 +109,17 @@
               :type="feature.type"
             >
               <b-button
+                v-if="feature.isLink"
+                class="is-icon-button"
+                size="is-small"
+                :icon-left="feature.icon"
+                tag="router-link"
+                :type="feature.type"
+                :outlined="feature.outlined"
+                :to="feature.to(selectedTest)"
+              />
+              <b-button
+                v-else
                 class="is-icon-button"
                 size="is-small"
                 :icon-left="feature.icon"
@@ -214,14 +225,22 @@ export default {
         tooltip: "Làm thử",
         type: "is-success",
         outlined: false,
-        isLink: true
+        isLink: true,
+        to: test => ({
+          name: "TestDetailPage",
+          params: { test_id: test.test_id }
+        })
       },
       {
         icon: "pen",
         tooltip: "Chỉnh sửa",
         type: "is-primary",
         outlined: false,
-        isLink: true
+        isLink: true,
+        to: test => ({
+          name: "EditTest",
+          params: { test_id: test.test_id }
+        })
       },
       {
         icon: "trash-alt",
@@ -239,19 +258,26 @@ export default {
         outlined: false,
         status: 0,
         isLink: false
+      },
+      {
+        icon: "trash",
+        tooltip: "Xóa vĩnh viễn",
+        type: "is-danger",
+        outlined: false,
+        status: 0,
+        isLink: false
       }
     ],
     testFeatureHandlers: { 1: [], 2: [] }
   }),
   mounted: function() {
     // features for available test
-    this.testFeatureHandlers[1].push(
-      this.$on_navigateTestPage,
-      this.$on_editButtonClicked,
-      this.$on_deleteButtonClicked
-    );
+    this.testFeatureHandlers[1].push(null, null, this.$on_deleteButtonClicked);
     // features for unavailable test)
-    this.testFeatureHandlers[2].push(this.$on_restoreTest);
+    this.testFeatureHandlers[2].push(
+      this.$on_restoreTest,
+      this.$on_deleteTestPermanently
+    );
     this.$_loadAsyncData();
   },
   computed: {
@@ -332,7 +358,6 @@ export default {
       );
     },
     $on_editButtonClicked() {
-      console.log("edit");
       this.$router.push({
         name: "EditTest",
         params: { test_id: this.selectedTest.test_id }
@@ -365,6 +390,27 @@ export default {
         }
         ToastNotifier.success(this.$buefy.toast, "Phục hồi thành công");
         this.$_loadAsyncData();
+      });
+    },
+    $on_deleteTestPermanently() {
+      this.$buefy.dialog.confirm({
+        title: "Xóa bài test",
+        message:
+          "Bạn chắc chắc muốn xóa bài viết ?</br><strong>Bài viết đã xóa sẽ không thể phục hồi</strong>",
+        confirmText: "Đồng ý",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          const { test_id } = this.selectedTest;
+          this.deleteTestById({ test_id, permanently: true }).then(result => {
+            const { error } = result;
+            if (error) {
+              return;
+            }
+            ToastNotifier.success(this.$buefy.toast, "Xóa bài test thành công");
+            this.$_loadAsyncData();
+          });
+        }
       });
     },
     $_resetTableState() {

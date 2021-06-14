@@ -6,7 +6,9 @@ export default {
     ...vi.messages,
     required: "Bắt buộc phải có {_field_}",
     "topic-available": "Chủ đề này có bài viết đang được chờ duyệt",
-    minmax: "Độ dài của {_field_} phải từ {min} đến {max} ký tự"
+    min: "Độ dài của {_field_} phải từ {length} ký tự trở lên",
+    minmax: "Độ dài của {_field_} phải từ {min} đến {max} ký tự",
+    min_value: "Gía trị tối thiểu của {_field_} phải là {min}"
   },
   names: {
     post_title: "tiêu đề",
@@ -18,7 +20,13 @@ export default {
     question: "câu hỏi",
     answer: "câu trả lời",
     username: "tên người dùng",
-    password: "mật khẩu"
+    password: "mật khẩu",
+    // test module
+    topic_id: "chủ đề",
+    title: "tiêu đề",
+    default_score_per_sentence: "điểm số mặc định",
+    option: "lựa chọn",
+    score: "điểm số"
   },
   serverSide: {
     messages: {

@@ -18,6 +18,7 @@
             type="is-primary-light"
             :native-value="index"
             v-model="userAnswer.user_answer"
+            :disabled="userAnswer.user_answer !== index"
           >
             {{ option }}
           </b-radio>
@@ -37,7 +38,6 @@
         <b-radio
           v-for="(option, index) in sentence.options"
           :key="option.id"
-          name="answer"
           type="is-primary-light"
           :native-value="index"
           v-model="answer"

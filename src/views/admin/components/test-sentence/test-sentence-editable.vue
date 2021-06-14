@@ -22,14 +22,16 @@
       }"
     >
       <div v-if="isExpand">
-        <b-field
+        <validated-form-element
           class="m-0"
+          name="question"
+          rules="required|min:10"
           :label="questionLabel"
           label-position="on-border"
           type="is-primary-light"
         >
           <b-input size="is-medium" v-model.lazy="currentSentence.question" />
-        </b-field>
+        </validated-form-element>
         <b-collapse v-model="isExpand" animation="fade">
           <section class="expand-section">
             <div>
@@ -109,6 +111,7 @@
                 >
                 <validated-form-element
                   name="score"
+                  rules="required|min_value:1"
                   class="sentence-inputs--score"
                 >
                   <b-input
