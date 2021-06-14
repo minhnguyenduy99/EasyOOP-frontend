@@ -134,7 +134,6 @@ export default {
       el.style.marginLeft = `${indentation}rem`;
       el.style.marginBottom = "8px";
       el.style.display = "block";
-      el.style.fontSize = "1rem";
       el.classList.add(this.anchorClass);
       el.setAttribute(LINE_MARKUP, lineIndex);
       el.addEventListener(
@@ -162,10 +161,10 @@ export default {
 }
 
 a.index-anchor {
-  font-size: 1.5rem;
+  font-size: 0.85rem;
   &:hover {
-    font-weight: bold;
     color: $link;
+    font-weight: bold;
   }
 }
 </style>

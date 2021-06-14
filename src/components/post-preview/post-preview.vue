@@ -1,6 +1,10 @@
 <template>
   <div class="post-preview">
-    <v-md-preview :text="tempPostContent" ref="previewer" />
+    <v-md-preview
+      :text="tempPostContent"
+      @copy-code-success="$on_copyCodeSuccess"
+      ref="previewer"
+    />
   </div>
 </template>
 
@@ -38,6 +42,13 @@ export default {
           this.tempPostContent
         )
       );
+    },
+    $on_copyCodeSuccess() {
+      this.$buefy.toast.open({
+        message: "Sao chép code",
+        type: "is-info",
+        duration: 2000
+      });
     },
     $_updatePostContent() {
       if (this.useUrl && this.contentUrl) {

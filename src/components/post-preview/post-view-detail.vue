@@ -109,7 +109,6 @@
         @index-clicked="$on_indexClicked"
         :html="htmlContent"
         :empty-text="$attrs['empty-text']"
-        :allowLevels="indexLevels"
       />
     </div>
   </div>

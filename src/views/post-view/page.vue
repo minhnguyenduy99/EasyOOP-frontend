@@ -141,11 +141,11 @@ export default {
       top: 100px;
       left: 0;
       height: fit-content;
-      max-width: 20%;
+      max-width: 17%;
     }
 
     #post-view-section {
-      flex-basis: 77%;
+      flex-basis: 80%;
     }
   }
 }
