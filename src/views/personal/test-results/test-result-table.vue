@@ -130,6 +130,9 @@
 import { mapActions } from "vuex";
 export default {
   name: "PersonalTestResultTable",
+  components: {
+    "empty-state": () => import("@/components/empty-state.vue")
+  },
   data: () => ({
     actionMenus: [
       {
