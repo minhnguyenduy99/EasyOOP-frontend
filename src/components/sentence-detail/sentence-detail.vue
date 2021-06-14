@@ -37,6 +37,7 @@
         <b-radio
           v-for="(option, index) in sentence.options"
           :key="option.id"
+          name="answer"
           type="is-primary-light"
           :native-value="index"
           v-model="answer"

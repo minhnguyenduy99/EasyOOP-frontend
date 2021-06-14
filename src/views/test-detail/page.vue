@@ -103,7 +103,7 @@ export default {
     ...mapActions("VIEWER_TEST", [
       "getTestById",
       "viewer_createTestResult",
-      "viewer_getTestResultBySession",
+      "getTestResultBySessionId",
       "navigateToPage"
     ]),
 
@@ -150,19 +150,17 @@ export default {
       });
     },
     $_getTestResultBySession() {
-      this.viewer_getTestResultBySession({ session_id: this.sessionId }).then(
-        result => {
-          const { error, data } = result;
-          if (error) {
-            return;
-          }
-          const { data: testResult } = data;
-          if (testResult.test_id !== this.testId) {
-            this.$router.push({ name: "Home" });
-          }
-          this.testResult = testResult;
+      this.getTestResultBySessionId(this.sessionId).then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
         }
-      );
+        const { data: testResult } = data;
+        if (testResult.test_id !== this.testId) {
+          this.$router.push({ name: "Home" });
+        }
+        this.testResult = testResult;
+      });
     }
   }
 };

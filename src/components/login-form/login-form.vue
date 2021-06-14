@@ -90,6 +90,10 @@ export default {
   },
   methods: {
     async $on_loginButtonClicked() {
+      const isValid = await this.$refs.validator.validate();
+      if (!isValid) {
+        return;
+      }
       this.submitHandler?.(this.form).then(result => {
         const { error } = result;
         if (error) {

@@ -51,6 +51,24 @@ export default context => {
           answer.answer = results[index].answer;
         });
       },
+      updateAllAnswerGroups(state, results) {
+        for (let i = 0; i < state.numberOfGroups; i++) {
+          const offset = i * state.SENTENCE_PER_GROUP;
+          const rightBound = Math.min(
+            offset + state.SENTENCE_PER_GROUP,
+            results.length
+          );
+          let groupAnswers = state.answerGroups[i].answers;
+          for (let senOrder = offset; senOrder < rightBound; senOrder++) {
+            const { user_answer } = results[senOrder];
+            groupAnswers[senOrder - offset] = {
+              ...groupAnswers[senOrder - offset],
+              user_answer: user_answer,
+              answered: user_answer > -1
+            };
+          }
+        }
+      },
       updatePagination: (state, data) => {
         const { page, page_count } = data;
         state.currentPage = page;
@@ -114,6 +132,18 @@ export default context => {
           return { error };
         }
         commit("initTestResultSession", data);
+        return { data };
+      },
+
+      async getTestResultBySessionId({ commit }, sessionId) {
+        const { error, data } = await testAPI.viewer_getTestResultBySession({
+          session_id: sessionId
+        });
+        if (error) {
+          return { error };
+        }
+        const { data: testResult } = data;
+        commit("updateAllAnswerGroups", testResult.results);
         return { data };
       }
     }
