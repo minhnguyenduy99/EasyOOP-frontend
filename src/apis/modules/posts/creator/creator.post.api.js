@@ -6,7 +6,9 @@ const endpoints = {
   deletePost: "",
   updatePost: "",
   updatePendingPost: "/pending",
-  findPosts: "/search"
+  findPosts: "/search",
+  getLatestPostOfTopic: "/topics",
+  getAllTags: "/tags/all"
 };
 
 export class CreatorPostAPI extends BaseAPI {
@@ -49,10 +51,34 @@ export class CreatorPostAPI extends BaseAPI {
     }
   }
 
+  async getLatestPostOfTopic(options) {
+    const { topicId } = options;
+    const endpoint = this._addURLParams(
+      endpoints.getLatestPostOfTopic,
+      topicId,
+      "latest"
+    );
+    try {
+      const response = await this._context.get(endpoint);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
   async deletePost(postId) {
     const endpoint = this._addURLParams(endpoints.deletePost, postId);
     try {
       const response = await this._context.delete(endpoint);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
+  async getAllTags() {
+    try {
+      const response = await this._context.get(endpoints.getAllTags);
       return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err);
@@ -99,6 +125,8 @@ export class CreatorPostAPI extends BaseAPI {
       createPost: this.createPost.bind(this),
       deletePost: this.deletePost.bind(this),
       findPosts: this.findPosts.bind(this),
+      getLatestPostOfTopic: this.getLatestPostOfTopic.bind(this),
+      getAllTags: this.getAllTags.bind(this),
       updatePost: this.updatePost.bind(this),
       updatePendingPost: this.updatePendingPost.bind(this)
     };

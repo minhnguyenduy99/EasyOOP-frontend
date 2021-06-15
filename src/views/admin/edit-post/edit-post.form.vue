@@ -1,5 +1,5 @@
 <script>
-import { FileReadHelper } from "../../../utils";
+import { FileReadHelper, ToastNotifier } from "../../../utils";
 import PostForm from "../components/post-form/post-form.vue";
 
 export default {
@@ -15,6 +15,17 @@ export default {
     this.$_updateFormData();
   },
   methods: {
+    $on_postSelected(post) {
+      if (post.post_id === this.post.post_id) {
+        ToastNotifier.error(
+          this.$buefy.toast,
+          "Đây là bài viết đang chỉnh sửa"
+        );
+        return;
+      }
+      this.selectedPost = post;
+      this.searchPostValue = post?.post_title;
+    },
     $_updateFormData() {
       const {
         post_title,
