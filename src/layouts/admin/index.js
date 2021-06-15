@@ -11,16 +11,8 @@ export default () => ({
         icon: "th-large",
         pack: "fas",
         title: "Dashboard",
-        roles: ["creator", "manager", "admin"],
+        roles: [],
         to: { name: "Dashboard" }
-      },
-      {
-        name: "CreatePost",
-        icon: "pencil-alt",
-        pack: "fas",
-        title: "Tạo bài viết",
-        roles: ["creator"],
-        to: { name: "CreatePost" }
       },
       {
         name: "ListPosts",
@@ -31,6 +23,14 @@ export default () => ({
         to: { name: "ListPosts" }
       },
       {
+        name: "CreatePost",
+        icon: "pencil-alt",
+        pack: "fas",
+        title: "Tạo bài viết",
+        roles: ["creator"],
+        to: { name: "CreatePost" }
+      },
+      {
         name: "PendingPosts",
         icon: "clipboard-check",
         pack: "fas",
@@ -39,20 +39,20 @@ export default () => ({
         to: { name: "PendingPosts" }
       },
       {
-        name: "Q&A",
-        icon: "question-circle",
-        pack: "fas",
-        title: "Q&A",
-        roles: ["manager", "creator", "admin"],
-        to: { name: "Q&A" }
-      },
-      {
         name: "PostVerification",
         icon: "file-signature",
         pack: "fas",
         title: "Duyệt bài viết",
         roles: ["manager"],
         to: { name: "PostVerification" }
+      },
+      {
+        name: "Q&A",
+        icon: "question-circle",
+        pack: "fas",
+        title: "Q&A",
+        roles: ["manager", "creator", "admin"],
+        to: { name: "Q&A" }
       },
       {
         name: "CreatorManagement",
@@ -75,7 +75,7 @@ export default () => ({
         icon: "spell-check",
         pack: "fas",
         title: "Quản lí bài test",
-        roles: ["creator"],
+        roles: ["creator", "manager"],
         to: { name: "TestManagement" }
       }
     ]

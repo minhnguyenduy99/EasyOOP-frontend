@@ -43,7 +43,11 @@
       <b-dropdown-item separator />
       <b-dropdown-item
         v-if="activeRole !== 'viewer'"
-        @click="$on_navigate('Dashboard')"
+        @click="
+          $on_navigate(
+            activeRole === 'creator' ? 'ListPosts' : 'PostVerification'
+          )
+        "
       >
         <div class="media is-align-items-center">
           <b-icon

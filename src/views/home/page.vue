@@ -37,11 +37,14 @@
                 size="is-medium"
                 icon-right="angle-double-right"
                 tag="router-link"
+                :disabled="!step.first_post_id"
                 :to="{
                   name: 'PostView',
                   params: { post_id: step.first_post_id }
                 }"
-                >Bắt đầu học</b-button
+                >{{
+                  step.first_post_id ? "Bắt đầu học" : "Sắp ra mắt"
+                }}</b-button
               >
             </div>
           </template>
@@ -61,35 +64,12 @@ export default {
   data: () => ({
     posts: [],
     topics: []
-    // topics: [
-    //   {
-    //     image:
-    //       "https://itviec.com/blog/wp-content/uploads/2020/09/oop-la-gi-fi.jpg",
-    //     title: "Lorem Ipsuand t",
-    //     subtitle:
-    //       "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin"
-    //   },
-    //   {
-    //     image:
-    //       "https://itviec.com/blog/wp-content/uploads/2020/09/oop-la-gi-fi.jpg",
-    //     title: "Lorem Ipsum is simply dummy text of the printing and t",
-    //     subtitle:
-    //       "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin"
-    //   },
-    //   {
-    //     image:
-    //       "https://itviec.com/blog/wp-content/uploads/2020/09/oop-la-gi-fi.jpg",
-    //     title: "Lorem Ipsum is simply dummy text of the printing and t",
-    //     subtitle:
-    //       "orem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown prin"
-    //   }
-    // ]
   }),
   mounted: function() {
     this.$_getTopics();
   },
   methods: {
-    ...mapActions("POST", ["getPosts", "searchTopics", "searchTopics"]),
+    ...mapActions("POST", ["getPosts", "getAllTopics"]),
 
     $_navigateToPostView(post) {
       this.$router.push({
@@ -107,7 +87,7 @@ export default {
     },
 
     $_getTopics() {
-      this.searchTopics().then(result => {
+      this.getAllTopics().then(result => {
         const { error, data } = result;
         if (error) {
           return;

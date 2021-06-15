@@ -25,10 +25,22 @@ export default (router, opts = {}) => {
       next();
       return;
     }
-    next({ name: redirectIfNotAuth });
+    next({ name: getDefaultRouteOfRole(active_role) });
   });
 };
 
 function isRoleAllow(activeRole, roles) {
   return activeRole && (roles === "*" || roles.indexOf(activeRole) > -1);
+}
+
+function getDefaultRouteOfRole(role) {
+  switch (role) {
+    case "creator":
+      return "ListPosts";
+    case "manager":
+      return "PostVerification";
+    case "admin":
+      return "ListManagerPage";
+  }
+  return "Home";
 }

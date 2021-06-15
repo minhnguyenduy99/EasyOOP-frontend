@@ -1,7 +1,8 @@
 import { BaseAPI } from "../../base";
 
 const endpoints = {
-  search: "/search"
+  search: "/search",
+  getAllTopics: "/all"
 };
 
 export class TopicAPI extends BaseAPI {
@@ -17,9 +18,19 @@ export class TopicAPI extends BaseAPI {
     }
   }
 
+  async getAllTopics() {
+    try {
+      const response = await this._context.get(endpoints.getAllTopics);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
   getEndpointObject() {
     return {
-      searchTopics: this.searchTopics.bind(this)
+      searchTopics: this.searchTopics.bind(this),
+      getAllTopics: this.getAllTopics.bind(this)
     };
   }
 
