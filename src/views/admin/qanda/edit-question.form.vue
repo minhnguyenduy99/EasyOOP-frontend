@@ -28,19 +28,13 @@
           </template>
         </b-taginput>
       </validated-form-element>
-      <validated-form-element
-        name="question"
-        rules="required|minmax:10,200"
-        label="Câu hỏi"
-        placeholder="Từ 10 đến 200 ký tự"
-      >
+      <validated-form-element name="question" rules="required" label="Câu hỏi">
         <b-input v-model="form.question" />
       </validated-form-element>
       <validated-form-element
         name="answer"
-        rules="required|minmax:10,200"
+        rules="required"
         label="Câu trả lời"
-        placeholder="Từ 10 đến 200 ký tự"
       >
         <b-input type="textarea" v-model="form.answer" />
       </validated-form-element>
