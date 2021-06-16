@@ -157,7 +157,7 @@ export default {
     this.$m_readFileContent().then(content => {
       this.postContent = content;
       this.$nextTick(() => {
-        this.htmlContent = this.$refs.postPreview.$convertToHtml();
+        this.htmlContent = this.$refs.postPreview?.$convertToHtml();
       });
     });
   },
