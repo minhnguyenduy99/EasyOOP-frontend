@@ -85,7 +85,9 @@ export default {
   }
 
   @include desktop {
-    grid-template-columns: repeat(10, 1fr);
+    max-width: 960px;
+    grid-template-columns: repeat(auto-fill, 200px);
+    grid-auto-columns: 20px;
   }
 }
 </style>
