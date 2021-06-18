@@ -89,6 +89,20 @@
   padding-left: 40px;
 }
 
+.github-markdown-body ol {
+  list-style-position: outside;
+  padding-left: 40px;
+}
+
+.github-markdown-body ol li {
+  list-style-position: outside;
+  padding-left: 0.75rem;
+}
+
+
+.github-markdown-body li {
+  line-height: 1.75rem;
+}
 
 /* [blockquote] */
 

@@ -20,9 +20,11 @@ import hljs from "highlight.js/lib/core";
 // languages
 import json from "highlight.js/lib/languages/json";
 import cpp from "highlight.js/lib/languages/cpp";
+import csharp from "highlight.js/lib/languages/csharp";
 
 hljs.registerLanguage("json", json);
 hljs.registerLanguage("cpp", cpp);
+hljs.registerLanguage("csharp", csharp);
 
 export default ({ VueMarkdownEditor, VMdPreview }) => {
   VueMarkdownEditor.use(githubTheme, {
