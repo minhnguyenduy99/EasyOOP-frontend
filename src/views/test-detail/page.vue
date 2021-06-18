@@ -9,11 +9,20 @@
               v-if="isOnProgress"
               :sentences="sentences"
               :selectedOrder="selectedOrder"
+              :sentencesPerGroup="sentencesPerGroup"
+              :currentAnswerGroup="currentAnswerGroup"
+              :currentPage="currentPage"
+              :pageCount="pageCount"
             />
-            <sentence-result-panel
+            <sentence-panel
               v-else-if="isFinished"
               :sentences="sentences"
+              :showAnswer="true"
               :selectedOrder="selectedOrder"
+              :sentencesPerGroup="sentencesPerGroup"
+              :currentAnswerGroup="currentAnswerGroup"
+              :currentPage="currentPage"
+              :pageCount="pageCount"
             />
           </div>
         </div>
@@ -40,7 +49,7 @@
 
 <script>
 import Vue from "vue";
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 import { sessionStateProvider } from "./mixins/session-state.mixin";
 
 export default {
@@ -49,8 +58,7 @@ export default {
     "test-detail": () => import("./test-detail-card"),
     "test-session-info": () => import("./test-session-info"),
     "test-result-info": () => import("./test-result-info"),
-    "sentence-panel": () => import("./sentence-panel"),
-    "sentence-result-panel": () => import("./sentence-result-panel")
+    "sentence-panel": () => import("@/components/sentence-panel/sentence-panel")
   },
   mixins: [sessionStateProvider(Vue)],
   props: {
@@ -68,7 +76,7 @@ export default {
       ON_PROGRESS: 1,
       FINISHED: 2
     },
-    SENTENCES_PER_PAGE: 4,
+    SENTENCES_PER_PAGE: 10,
     test: null,
     testResult: null,
     sentences: [],
@@ -83,12 +91,27 @@ export default {
     });
   },
   mounted: function() {
+    this.$_registerWindowUnloadEvent();
     if (this.sessionId) {
       this.$on("session-ended", this.$_getTestResultBySession);
       this.$endSession();
       return;
     }
     this.$on("session-ended", this.$on_sessionEnd);
+  },
+  beforeDestroy() {
+    this.$_unregisterWindowUnloadEvent();
+  },
+  watch: {
+    testId() {
+      this.state = this.TEST_SESSION_STATES.INIT;
+      this.$_updateTest().then(() => {
+        if (!this.sessionId) {
+          return;
+        }
+        this.$_navigatePage(1);
+      });
+    }
   },
   computed: {
     ...mapGetters("VIEWER_TEST", [
@@ -161,6 +184,23 @@ export default {
         }
         this.testResult = testResult;
       });
+    },
+    $_registerWindowUnloadEvent() {
+      window.addEventListener(
+        "beforeunload",
+        this.$_setupConfirmDialog.bind(this)
+      );
+    },
+    $_unregisterWindowUnloadEvent() {
+      window.removeEventListener("beforeunload", this.$_setupConfirmDialog);
+    },
+    $_setupConfirmDialog(e) {
+      if (this.isOnInit) {
+        return;
+      }
+      e.preventDefault();
+      e.returnValue = "Bạn muốn rời trang này ?";
+      return "Bạn muốn rời trang này ?";
     }
   }
 };

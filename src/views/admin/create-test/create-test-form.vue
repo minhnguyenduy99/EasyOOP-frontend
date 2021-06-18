@@ -40,7 +40,7 @@ export default {
 
     async $_submitSentences(testId, sentences) {
       let currentIndex = 0;
-      const defaultPerJunk = 3;
+      const defaultPerJunk = 10;
       while (currentIndex < sentences.length) {
         const sentenceInJunk = sentences.slice(
           currentIndex,

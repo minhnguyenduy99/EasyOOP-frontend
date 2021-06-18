@@ -92,9 +92,8 @@ export default {
         if (error) {
           return;
         }
-        const { data: testInfo } = data;
-        this.testScore = testInfo.total_score;
-        this.totalCount = testInfo.total_count;
+        this.testScore = data.total_score;
+        this.totalCount = data.sentence_count;
         this.$emit("update:updated", !this.updated);
       });
     },

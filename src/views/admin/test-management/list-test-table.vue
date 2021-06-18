@@ -62,15 +62,15 @@
         centered
         sortable
         width="120px"
-        field="verifying_status"
+        field="available_status"
       >
         <template v-slot="{ row }">
           <b-tag
-            :type="TEST_STATUSES[row.verifying_status].type"
+            :type="TEST_STATUSES[row.available_status].type"
             size="is-small"
           >
             <span class="has-text-weight-bold is-size-7">{{
-              TEST_STATUSES[row.verifying_status].title
+              TEST_STATUSES[row.available_status].title
             }}</span>
           </b-tag>
         </template>
@@ -98,7 +98,7 @@
       >
         <template v-if="selectedTestId === row.test_id">
           <section
-            v-if="row.verifying_status === 1"
+            v-if="row.available_status === 1"
             class="tooltip-section"
             style="margin-top: -4px; margin-bottom: -6px"
           >
@@ -130,7 +130,7 @@
             </b-tooltip>
           </section>
           <section
-            v-else-if="row.verifying_status === 2"
+            v-else-if="row.available_status === 2"
             class="tooltip-section"
             style="margin-top: -4px; margin-bottom: -6px"
           >

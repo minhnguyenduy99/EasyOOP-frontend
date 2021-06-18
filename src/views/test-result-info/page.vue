@@ -20,10 +20,12 @@
         <test-detail :testResult="testResult" />
         <div class="card">
           <div class="card-content">
-            <sentence-result-panel
+            <sentence-panel
               :sentences="sentences"
               :selectedOrder="selectedOrder"
-              :page="page"
+              :showAnswer="true"
+              :sentencesPerGroup="SENTENCES_PER_PAGE"
+              :currentPage="page"
               :pageCount="pageCount"
             />
           </div>
@@ -51,7 +53,7 @@ export default {
     breadcrumb: () => import("@/components/base/breadcrumb"),
     "test-detail": () => import("./test-detail-card"),
     "test-result-info": () => import("./test-result-info"),
-    "sentence-result-panel": () => import("./sentence-result-panel")
+    "sentence-panel": () => import("@/components/sentence-panel/sentence-panel")
   },
   props: {
     resultId: String
@@ -64,7 +66,7 @@ export default {
   },
   data() {
     return {
-      SENTENCES_PER_PAGE: 4,
+      SENTENCES_PER_PAGE: 10,
       testResult: null,
       sentences: [],
       selectedOrder: null,
@@ -83,15 +85,15 @@ export default {
       ]
     };
   },
-  watch: {
-    selectedOrder(val) {
-      const page = Math.ceil(val / this.SENTENCES_PER_PAGE);
-      if (page === this.page) {
-        return;
-      }
-      this.$_navigatePage(page);
-    }
-  },
+  // watch: {
+  //   selectedOrder(val) {
+  //     const page = Math.ceil(val / this.SENTENCES_PER_PAGE);
+  //     if (page === this.page) {
+  //       return;
+  //     }
+  //     this.$_navigatePage(page);
+  //   }
+  // },
   mounted: function() {
     this.$_updateTestResult();
     this.$_navigatePage(1);

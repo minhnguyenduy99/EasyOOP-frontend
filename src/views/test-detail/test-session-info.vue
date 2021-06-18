@@ -8,14 +8,14 @@
         v-if="!isFinished"
         class="is-flex is-flex-direction-column ha-vertical-layout-6"
       >
-        <div class="test-field large">
+        <div class="test-field">
           <span class="test-field-label">Thời gian còn lại</span>
           <span v-if="isTimeLimited" class="test-field-value">{{
             expired ? expiredMessage : formattedDueTime
           }}</span>
           <span class="test-field-value" v-else>Không giới hạn</span>
         </div>
-        <div class="test-field large">
+        <div class="test-field">
           <span class="test-field-label">Số câu còn lại</span>
           <span class="test-field-value">{{ unansweredSentenceCount }}</span>
         </div>
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 import { sessionStateInjector } from "./mixins/session-state.mixin";
 
 export default {

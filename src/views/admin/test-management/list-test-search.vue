@@ -11,7 +11,7 @@
       />
       <b-select
         placeholder="Tình trạng"
-        v-model="searchOptions.verifying_status"
+        v-model="searchOptions.available_status"
       >
         <option
           v-for="status in TEST_STATUSES"
@@ -54,7 +54,7 @@ import { mapActions } from "vuex";
 
 const DEFAULT_SEARCH_OPTIONS = {
   title: null,
-  verifying_status: null,
+  available_status: null,
   type: null
 };
 

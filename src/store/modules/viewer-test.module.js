@@ -6,7 +6,7 @@ export default context => {
   return {
     namespaced: true,
     state: () => ({
-      SENTENCE_PER_GROUP: 4,
+      SENTENCE_PER_GROUP: 10,
       answerGroups: [],
       testId: null,
       numberOfGroups: 0,
@@ -16,10 +16,9 @@ export default context => {
     }),
     mutations: {
       initTestResultSession: (state, test) => {
-        const { test_id, list_sentence_ids } = test;
-        const sentenceCount = list_sentence_ids.length;
+        const { test_id, sentence_count } = test;
         state.numberOfGroups = Math.ceil(
-          sentenceCount / state.SENTENCE_PER_GROUP
+          sentence_count / state.SENTENCE_PER_GROUP
         );
         state.answerGroups.length = 0;
         state.testId = test_id;
@@ -30,11 +29,10 @@ export default context => {
           const offset = i * state.SENTENCE_PER_GROUP;
           const rightBound = Math.min(
             offset + state.SENTENCE_PER_GROUP,
-            list_sentence_ids.length
+            sentence_count
           );
           for (let senOrder = offset; senOrder < rightBound; senOrder++) {
             group.answers.push({
-              sentence_id: list_sentence_ids[senOrder],
               user_answer: -1,
               answered: false
             });
@@ -48,7 +46,9 @@ export default context => {
       updateAnswerGroup(state, results) {
         const answerGroup = state.answerGroups[state.currentPage - 1];
         answerGroup.answers.forEach((answer, index) => {
-          answer.answer = results[index].answer;
+          const { sentence_id, answer: senAnswer } = results[index];
+          answer.sentence_id = sentence_id;
+          answer.answer = senAnswer;
         });
       },
       updateAllAnswerGroups(state, results) {

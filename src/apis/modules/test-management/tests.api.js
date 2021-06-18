@@ -103,7 +103,7 @@ export class TestAPI extends BaseAPI {
   async searchTest(opts) {
     const {
       page = 1,
-      verifying_status = null,
+      available_status = null,
       title = null,
       topic_id = null,
       sort_order = null,
@@ -115,7 +115,7 @@ export class TestAPI extends BaseAPI {
       const response = await this._context.get(endpoints.searchTest, {
         params: {
           page,
-          verifying_status,
+          available_status,
           title,
           topic_id,
           sort_order,

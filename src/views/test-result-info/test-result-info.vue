@@ -5,11 +5,11 @@
     </p>
     <div class="p-3 ha-vertical-layout-6">
       <div class="ha-vertical-layout-6 py-3">
-        <div class="test-field large">
+        <div class="test-field">
           <span class="test-field-label">Số lượng câu đúng </span>
           <span class="test-field-value">{{ correctSentenceText }}</span>
         </div>
-        <div class="test-field large">
+        <div class="test-field">
           <span class="test-field-label">Số điểm đạt được </span>
           <span class="test-field-value">{{ obtainedScoreText }}</span>
         </div>
