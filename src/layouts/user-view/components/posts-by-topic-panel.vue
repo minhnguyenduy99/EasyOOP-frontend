@@ -51,6 +51,9 @@ export default {
   grid-template-columns: 1fr;
   column-gap: 1.5rem;
   row-gap: 1.5rem;
+  height: calc(100vh - 82px);
+  overflow: auto;
+  scroll-behavior: auto;
 
   @include tablet {
     grid-template-columns: repeat(2, 1fr);

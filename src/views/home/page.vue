@@ -1,18 +1,69 @@
 <template>
   <div id="home-page">
-    <div class="hero is-primary-light is-fullheight-with-navbar">
+    <div class="hero is-fullheight-with-navbar">
       <div class="hero-body">
-        <div class="container has-text-centered is-4">
-          <p class="is-size-1 py-5">Bắt đầu học OOP nào</p>
-          <b-button
-            icon-right="chevron-down"
-            type="is-primary-light"
-            size="is-medium"
-            inverted
-            class="has-text-weight-bold"
-            @click="$_scrollToFirstStep"
-            >Xem lộ trình học</b-button
-          >
+        <div class="container columns is-centered">
+          <div class="column">
+            <class-diagram
+              data-aos="fade-right"
+              data-aos-duration="1000"
+              size="is-large"
+              title="Học OOP"
+              typeTitle="GIỚI THIỆU"
+              :hasType="true"
+            >
+              <template #field>
+                <div class="class-body-item">
+                  <p class="class-body-symbol">#</p>
+                  <p class="class-body-text">
+                    Đối_tượng
+                  </p>
+                </div>
+                <div class="class-body-item">
+                  <p class="class-body-symbol">#</p>
+                  <p class="class-body-text">
+                    Bài_học
+                  </p>
+                </div>
+                <div class="class-body-item">
+                  <p class="class-body-symbol">#</p>
+                  <p class="class-body-text">
+                    Chủ_đề
+                  </p>
+                </div>
+              </template>
+              <template #method>
+                <div class="class-body-item">
+                  <p class="class-body-symbol">+</p>
+                  <p
+                    class="class-body-text is-clickable"
+                    @click="$_scrollToFirstStep"
+                  >
+                    Xem_lộ_trình_học()
+                  </p>
+                </div>
+                <div class="class-body-item">
+                  <p class="class-body-symbol">+</p>
+                  <p class="class-body-text is-clickable">
+                    Xem_bài_viết()
+                  </p>
+                </div>
+                <div class="class-body-item">
+                  <p class="class-body-symbol">+</p>
+                  <p class="class-body-text is-clickable">
+                    Làm_trắc_nghiệm()
+                  </p>
+                </div>
+              </template>
+            </class-diagram>
+          </div>
+          <div class="column">
+            <b-image
+              data-aos="fade-left"
+              data-aos-duration="1000"
+              src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1624101709/oop-learning-helper/10-applications-of-object-oriented-programming_ftirco.jpg"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -56,10 +107,13 @@
 
 <script>
 import { mapActions } from "vuex";
+import { ClassDiagram } from "@/components";
+
 export default {
   name: "Home",
   components: {
-    "learning-step": () => import("./learning-step")
+    "learning-step": () => import("./learning-step"),
+    ClassDiagram
   },
   data: () => ({
     posts: [],
