@@ -5,7 +5,10 @@ import { RoleManagementModule } from "./modules/role-management/module";
 import { TagAPIModule } from "./modules/tags/module";
 import { Q8AAPIModule } from "./modules/qanda/module";
 import { TestAPIModule } from "./modules/test-management/module";
-import { authHeaderInterceptor } from "./interceptors";
+import {
+  authHeaderInterceptor,
+  redirectOnErrorInterceptor
+} from "./interceptors";
 
 let apiPack = null;
 
@@ -28,6 +31,10 @@ export default opts => {
 
   // setup interceptors
   apiPack.useInterceptors(authHeaderInterceptor);
+  apiPack.useInterceptors(redirectOnErrorInterceptor, {
+    errorCodes: [401, 403],
+    redirectHandler: () => location.reload()
+  });
 
   return apiPack;
 };

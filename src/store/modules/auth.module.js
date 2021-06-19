@@ -48,8 +48,7 @@ export default context => {
         return state.user?.profile;
       },
       isAuthenticated(state) {
-        const result = !!(state.isAuthenticated && state.access_token);
-        return result;
+        return state.isAuthenticated;
       },
       userRoles(state) {
         return state.user?.roles ?? [];
