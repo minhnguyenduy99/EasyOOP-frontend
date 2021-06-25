@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import { VueRouterWrapper } from "./base";
 import UserViewRoutes from "./user-view.route";
 import AdminRoutes from "./admin.routes";
+import ErrorRoutes from "./errors.routes";
 import { authGuard } from "./guards";
 
 const originalPush = VueRouter.prototype.push;
@@ -42,6 +43,7 @@ export function createVueRouter(opts) {
 
   UserViewRoutes(vueRouter);
   AdminRoutes(vueRouter);
+  ErrorRoutes(vueRouter);
 
   return vueRouter;
 }
