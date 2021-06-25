@@ -1,6 +1,14 @@
 <template>
   <div
-    :class="['modal-form', hasCard ? 'card' : '', rounded ? 'is-rounded' : '']"
+    :class="[
+      'modal-form',
+      hasCard ? 'card' : '',
+      rounded ? 'is-rounded' : '',
+      type
+    ]"
+    :style="{
+      width
+    }"
   >
     <div class="card-header">
       <slot name="header">
@@ -19,6 +27,15 @@
 export default {
   name: "ModalForm",
   props: {
+    width: {
+      type: String,
+      default: () => "100%"
+    },
+    type: {
+      type: String,
+      default: () => "is-primary-light",
+      validator: val => ["is-primary-light"].indexOf(val) !== -1
+    },
     title: String,
     hasCard: {
       type: Boolean,
@@ -36,8 +53,16 @@ export default {
 
 <style scoped lang="scss">
 .modal-form {
+  margin: 0 auto;
   &.is-rounded {
     border-radius: 10px;
+  }
+
+  &.is-primary-light {
+    .card-header-title {
+      background: $primary-light;
+      color: $white;
+    }
   }
 }
 </style>

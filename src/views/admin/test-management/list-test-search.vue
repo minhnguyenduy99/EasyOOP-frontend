@@ -1,6 +1,6 @@
 <template>
   <div id="mock-test-search" class="ha-vertical-layout-7">
-    <div class="input-group--horizontal">
+    <div class="input-group">
       <b-input
         class="is-flex-grow-1"
         placeholder="Tìm kiếm bài test"
@@ -10,6 +10,7 @@
         @keyup.enter.native="$on_search"
       />
       <b-select
+        class="is-fullwidth"
         placeholder="Tình trạng"
         v-model="searchOptions.available_status"
       >
@@ -21,19 +22,29 @@
           {{ status.text }}
         </option>
       </b-select>
-      <b-select placeholder="Loại bài test" v-model="searchOptions.type">
+      <b-select
+        class="is-fullwidth"
+        placeholder="Loại bài test"
+        v-model="searchOptions.type"
+      >
         <option v-for="type in TEST_TYPES" :key="type.id" :value="type.code">
           {{ type.text }}
         </option>
       </b-select>
-      <b-select placeholder="Chủ đề" v-model="searchOptions.topic_id">
+      <b-select
+        class="is-fullwidth"
+        placeholder="Chủ đề"
+        v-model="searchOptions.topic_id"
+      >
         <option v-for="topic in topics" :key="topic.id" :value="topic.topic_id">
           {{ topic.topic_title }}
         </option>
       </b-select>
     </div>
-    <div class="is-flex is-align-items-center buttons">
-      <b-button type="is-primary" @click="$on_search">Tìm kiếm</b-button>
+    <div class="buttons">
+      <b-button class="button--search" type="is-primary" @click="$on_search"
+        >Tìm kiếm</b-button
+      >
       <b-tooltip label="Reset bộ lọc" type="is-dark">
         <b-button
           class="is-icon-button"
@@ -130,10 +141,26 @@ export default {
 // }
 
 .input-group {
-  &--horizontal {
-    display: flex;
+  @extend .ha-vertical-layout-7;
+
+  display: flex;
+  flex-direction: column;
+
+  @include tablet {
+    flex-direction: row;
+
     > *:not(:last-child) {
       margin-right: 1rem;
+    }
+  }
+}
+
+.button {
+  &--search {
+    flex-grow: 1;
+
+    @include tablet {
+      flex-grow: 0;
     }
   }
 }

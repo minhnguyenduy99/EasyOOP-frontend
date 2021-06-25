@@ -1,0 +1,35 @@
+// img
+
+.image.is-coverable {  
+  > img {
+    height: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.control.is-fullwidth {
+  > span.select {
+    width: 100%;
+    > select {
+      width: 100%;
+    }    
+  }
+
+  > input {
+    width: 100%;
+  }
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  @include tablet {
+    flex-direction: row;
+    > *:not(:last-child) {
+      margin-right: 1rem;
+    }
+  }
+}

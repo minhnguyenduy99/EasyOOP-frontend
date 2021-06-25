@@ -3,7 +3,7 @@
     <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-6">
       <div class="form-group-container ha-vertical-layout-5">
         <validated-form-element
-          class="form-input --title"
+          class="form-input --title form-group--title"
           name="post_title"
           rules="required|minmax:10,200"
           label="Tiêu đề bài viết"
@@ -12,7 +12,7 @@
         >
           <b-input v-model="form.post_title" size="is-large" />
         </validated-form-element>
-        <div class="form-group--column">
+        <div class="form-group--input">
           <validated-form-element
             name="topic"
             :rules="{
@@ -22,7 +22,11 @@
             label="Chủ đề"
             class="form-input"
           >
-            <b-select placeholder="Chủ đề" v-model="selectedTopicIndex">
+            <b-select
+              class="is-fullwidth"
+              placeholder="Chủ đề"
+              v-model="selectedTopicIndex"
+            >
               <option
                 v-for="(topic, index) in topics"
                 :value="index"
@@ -141,13 +145,14 @@
             </div>
           </div>
         </div>
-        <div class="form-group--column">
+        <div class="form-group--upload">
           <validated-form-element
             name="thumbnail"
             rules="required"
             label="Chọn ảnh đại diện"
           >
             <b-upload
+              class="is-fullwidth"
               v-model="form.thumbnail_file"
               drag-drop
               @input="$on_SelectedThumbnailChanged"
@@ -317,21 +322,34 @@ export default {
 .form-group {
   &-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: 2rem;
+    grid-template-areas:
+      "title"
+      "input"
+      "upload";
+
+    @include tablet {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas:
+        "title title"
+        "input upload";
+      column-gap: 2rem;
+    }
   }
 
-  &--column {
+  &--title {
+    grid-area: title;
+  }
+
+  &--input {
+    grid-area: input;
     display: grid;
     grid-template-columns: 1fr;
     row-gap: 1rem;
     align-content: flex-start;
   }
-}
 
-.form-input {
-  &.--title {
-    grid-column: 1 / span 2;
+  &--upload {
+    grid-area: upload;
   }
 }
 

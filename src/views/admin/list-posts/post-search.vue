@@ -2,6 +2,7 @@
   <div id="admin-post-search">
     <div id="admin-post-search-group">
       <b-input
+        class="input--search"
         placeholder="Search name or tag"
         type="is-primary"
         icon="search"
@@ -14,7 +15,7 @@
         </option>
       </b-select>
     </div>
-    <div class="mt-3">
+    <div class="mt-5 button-container">
       <b-button type="is-primary is-dark" @click="onSearchButtonClicked"
         >Tìm kiếm</b-button
       >
@@ -72,12 +73,26 @@ export default {
     display: flex;
 
     > .control {
-      width: fit-content;
       &:not(:last-child) {
         margin-bottom: 0;
         margin-right: 1rem;
       }
     }
+  }
+}
+
+.input {
+  &--search {
+    flex-grow: 1;
+  }
+}
+
+.button-container {
+  .button {
+    width: 100%;
+  }
+  @include tablet {
+    width: fit-content;
   }
 }
 </style>

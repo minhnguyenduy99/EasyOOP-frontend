@@ -5,7 +5,7 @@
     </div>
     <section
       :class="['detail-content', detailContentClass, sidebarCard ? 'card' : '']"
-      :style="{ width: sidebarWidth, top: sidebarTop }"
+      :style="{ top: sidebarTop }"
     >
       <div v-if="sidebarCard" class="card-content">
         <slot name="detail-content"></slot>
@@ -22,10 +22,6 @@ export default {
     hideSidebarOnMobile: {
       type: Boolean,
       default: () => true
-    },
-    sidebarWidth: {
-      type: String,
-      default: () => "300px"
     },
     sidebarTop: {
       type: String,
@@ -57,15 +53,21 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+$admin-sidebar-detail-content-width: 300px;
+
 .detail-sidebar {
+  display: grid;
+  row-gap: 1rem;
+
   .detail-content {
+    width: 100%;
     > *:first-child {
       height: 100%;
     }
   }
+
   @include tablet {
-    display: grid;
     grid-template-columns: 1fr auto;
     column-gap: 1rem;
 
@@ -73,6 +75,7 @@ export default {
       display: block;
       position: sticky;
       height: calc(100vh - 5rem);
+      width: $admin-sidebar-detail-content-width;
       overflow: auto;
       right: 0;
     }

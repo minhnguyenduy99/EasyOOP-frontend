@@ -58,11 +58,16 @@ export default {
     totalCount: 0,
     selectedIndex: -1
   }),
+  mounted: function() {
+    this.active && this.$_loadData();
+    this.active && console.log("mounted");
+  },
   watch: {
     active(val) {
       if (!val) {
         return;
       }
+      console.log("changed");
       this.$_loadData();
     },
     searchOptions() {
@@ -140,7 +145,7 @@ export default {
 <style scoped lang="scss">
 .pending-posts-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 200px);
+  grid-template-columns: 1fr 1fr;
   gap: 1rem;
   justify-content: center;
 

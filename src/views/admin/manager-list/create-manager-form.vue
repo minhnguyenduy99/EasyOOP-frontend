@@ -31,7 +31,9 @@
             <template #default="{ option }">
               <div class="media">
                 <div class="media-left">
-                  <img class="search-user-avatar" :src="option.profile_pic" />
+                  <p class="image is-coverable is-64x64 is-rounded">
+                    <img class="is-rounded" :src="option.profile_pic" />
+                  </p>
                 </div>
                 <div class="media-content is-flex is-flex-direction-column">
                   <span class="mb-2 is-size-7">{{ option.user_id }}</span>
@@ -103,7 +105,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("MANAGER", ["managerrRole_assignManager"]),
+    ...mapActions("MANAGER", ["managerRole_assignManager"]),
     ...mapActions("USER", ["user_searchById"]),
 
     async $on_submittedForm() {
@@ -137,6 +139,10 @@ export default {
       });
     },
     $on_userSelected(user) {
+      if (!user) {
+        this.selected = false;
+        return;
+      }
       const { roles } = user;
       if (roles?.indexOf("manager") > -1) {
         this.validator.setErrors({

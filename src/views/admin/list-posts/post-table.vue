@@ -39,17 +39,20 @@
         {{ row.topic_title }}
       </b-table-column>
 
-      <b-table-column label="Nhãn dán" width="200">
+      <b-table-column label="Nhãn dán" width="300">
         <template v-slot="{ row }">
           <b-taglist>
             <b-tag
               class="is-tag"
-              v-for="tag in row.tags"
+              v-for="tag in row.tags.slice(0, 2)"
               :key="tag.id"
               type="is-primary-light"
               size="is-small"
               >{{ tag.tag_value }}</b-tag
             >
+            <b-tag v-if="row.tags.length > 2" type="is-primary-light">
+              ...
+            </b-tag>
           </b-taglist>
         </template>
       </b-table-column>
@@ -64,7 +67,7 @@
         {{ row.created_date.toLocaleDateString("en-GB") }}
       </b-table-column>
 
-      <b-table-column
+      <!-- <b-table-column
         field="post_status"
         label="Tình trạng"
         width="100"
@@ -82,7 +85,7 @@
             }}</span>
           </div>
         </template>
-      </b-table-column>
+      </b-table-column> -->
 
       <b-table-column
         :visible="isRowSelected"

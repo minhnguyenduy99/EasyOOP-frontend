@@ -3,12 +3,9 @@ $button-border-radius: 7px;
 // [Button]
 
 .button {
-  border-radius: 7px;
   transition: $easing;
 
   &.is-small {
-    border-radius: 7px;
-
     &.is-rounded {
       border-radius: 50%;
     }
@@ -24,6 +21,7 @@ $button-border-radius: 7px;
 
 .button.is-icon-button {
   padding: 0;
+  border-radius: 7px;
   &.is-small {
     width: 30px;
     height: 30px;

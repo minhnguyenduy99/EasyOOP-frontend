@@ -83,7 +83,15 @@
         >
           <template #action>
             <div class="mt-6">
-              <b-button
+              <button
+                class="btn-grad"
+                type="is-primary"
+                size="is-medium"
+                :disabled="!step.first_post_id"
+              >
+                {{ step.first_post_id ? "Bắt đầu học" : "Sắp ra mắt" }}
+              </button>
+              <!-- <b-button
                 type="is-primary"
                 size="is-medium"
                 icon-right="angle-double-right"
@@ -96,7 +104,7 @@
                 >{{
                   step.first_post_id ? "Bắt đầu học" : "Sắp ra mắt"
                 }}</b-button
-              >
+              > -->
             </div>
           </template>
         </learning-step>
@@ -200,5 +208,32 @@ export default {
       padding: 0 2rem;
     }
   }
+}
+
+.btn-grad {
+  background-image: linear-gradient(
+    to right,
+    #1fa2ff 0%,
+    #12d0f1 51%,
+    $primary-light 100%
+  );
+}
+
+.btn-grad {
+  padding: 15px 45px;
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.5s;
+  background-size: 200% auto;
+  color: white;
+  box-shadow: 0 0 20px #eee;
+  border-radius: 10px;
+  border: none;
+}
+
+.btn-grad:hover {
+  background-position: right center; /* change the direction of the change here */
+  color: #fff;
+  text-decoration: none;
 }
 </style>

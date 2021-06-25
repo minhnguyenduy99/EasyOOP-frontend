@@ -9,9 +9,15 @@
       >
         <b-input size="is-medium" v-model="formData.title" />
       </validated-form-element>
-      <div class="is-flex is-flex-wrap-wrap is-justify-content-space-between">
+      <div
+        class="input-group is-justify-content-space-between ha-vertical-layout-7"
+      >
         <validated-form-element name="topic_id" rules="required" label="Chủ đề">
-          <b-select placeholder="Chủ đề" v-model="formData.topic_id">
+          <b-select
+            class="is-fullwidth"
+            placeholder="Chủ đề"
+            v-model="formData.topic_id"
+          >
             <option
               v-for="topic in topics"
               :key="topic.id"
@@ -27,14 +33,18 @@
           label="Số điểm mỗi câu"
         >
           <b-input
+            class="is-fullwidth"
             v-model.number="formData.default_score_per_sentence"
-            style="width: fit-content"
           />
         </validated-form-element>
       </div>
-      <div class="test-form-limited-time">
+      <div>
         <validated-form-element name="type" label="Loại bài test">
-          <b-select placeholder="Loại bài test" v-model="formData.type">
+          <b-select
+            class="is-fullwidth"
+            placeholder="Loại bài test"
+            v-model="formData.type"
+          >
             <option
               v-for="type in TEST_TYPES_MAPPING"
               :key="type.id"
@@ -44,13 +54,13 @@
             </option>
           </b-select>
         </validated-form-element>
-        <div v-if="isTimeLimited" class="test-form-limited-time-options">
+        <div v-if="isTimeLimited" class="input-group ha-vertical-layout-7">
           <validated-form-element
             name="limited_hour"
             label="giờ"
             rules="required"
           >
-            <b-select v-model.number="limitedTime.hour">
+            <b-select v-model.number="limitedTime.hour" class="is-fullwidth">
               <option
                 v-for="hour in TIME_OPTIONS.hours"
                 :key="hour"
@@ -65,7 +75,7 @@
             label="phút"
             rules="required"
           >
-            <b-select v-model.number="limitedTime.minute">
+            <b-select v-model.number="limitedTime.minute" class="is-fullwidth">
               <option
                 v-for="minute in TIME_OPTIONS.minutes"
                 :key="minute"
@@ -78,30 +88,25 @@
         </div>
       </div>
     </ValidationObserver>
-    <hr />
     <div class="card">
-      <div class="card-content test-info">
-        <div class="test-info-container">
-          <div class="test-info-group">
-            <h5>Số lượng câu hỏi</h5>
-            <b-tag size="is-medium" type="is-primary-dark">
-              {{ numberOfSentences }}
-            </b-tag>
-            <h5>Số điểm tối đa</h5>
-            <b-tag size="is-medium" type="is-primary-dark">
-              {{ totalScore }}
-            </b-tag>
-          </div>
+      <div class="card-content test-info ha-vertical-layout-6">
+        <div class="test-info-group">
+          <h5>Số lượng câu hỏi</h5>
+          <b-tag size="is-medium" type="is-primary-dark">
+            {{ numberOfSentences }}
+          </b-tag>
+          <h5>Số điểm tối đa</h5>
+          <b-tag size="is-medium" type="is-primary-dark">
+            {{ totalScore }}
+          </b-tag>
         </div>
-        <div>
-          <b-button
-            type="is-primary"
-            class="has-text-weight-bold"
-            @click="$on_submitted"
-            :disabled="!submittable"
-            >{{ submitButtonTitle }}</b-button
-          >
-        </div>
+        <b-button
+          type="is-primary"
+          class="form-button has-text-weight-bold"
+          @click="$on_submitted"
+          :disabled="!submittable"
+          >{{ submitButtonTitle }}</b-button
+        >
       </div>
     </div>
   </div>
@@ -195,14 +200,11 @@ export default {
 <style scoped lang="scss">
 .test-form {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  column-gap: 1rem;
+  row-gap: 1rem;
 
-  hr {
-    margin: 0;
-    width: 1px;
-    height: 100%;
-    background: $grey-light;
+  @include tablet {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1rem;
   }
 }
 
@@ -221,14 +223,9 @@ export default {
 }
 
 .test-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-
   &-group {
     display: grid;
-    grid-template-columns: min(200px) max(70px);
+    grid-template-columns: 1fr 70px;
     row-gap: 1rem;
     align-items: center;
 
@@ -241,6 +238,14 @@ export default {
     .tag {
       font-weight: bold;
     }
+  }
+}
+
+.form-button {
+  width: 100%;
+
+  @include tablet {
+    width: fit-content;
   }
 }
 </style>

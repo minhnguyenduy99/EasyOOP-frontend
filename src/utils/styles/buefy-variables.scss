@@ -53,9 +53,7 @@ $new-tag-colors: (
 $tag-colors: mergeColorMaps($new-tag-colors, $colors);
 
 // input 
-$input-radius: 10px;
 $input-focus-box-shadow-size: 0 0 0 0;
-$input-focus-color: $primary;
 // $input-icon-active-color: $text-invert;
 
 // Menu
@@ -78,4 +76,5 @@ $table-row-active-color: $text;
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 @import "./layouts.scss";
+@import "./custom-style.scss";
 @import "./styles.scss";

@@ -45,8 +45,12 @@
                     v-for="(option, index) in currentOptions"
                     :key="option.id"
                   >
-                    <div class="is-flex py-2" v-if="option.edit">
-                      <validated-form-element rules="required" name="option">
+                    <div class="is-flex" v-if="option.edit">
+                      <validated-form-element
+                        class="is-flex-grow-1"
+                        rules="required"
+                        name="option"
+                      >
                         <b-input
                           v-if="option.edit"
                           class="mr-3"
@@ -61,7 +65,7 @@
                         >{{ saveOptionTitle }}</b-button
                       >
                     </div>
-                    <div v-else class="sentence-option">
+                    <div v-else class="is-flex">
                       <b-radio
                         type="is-primary-light"
                         :native-value="index"
@@ -90,7 +94,7 @@
                 </section>
               </slot>
             </div>
-            <section class="sentence-footer">
+            <section class="sentence-footer ha-vertical-layout-7">
               <slot
                 name="action"
                 v-bind="{ add: $_addOption, remove: $_removeOption }"
@@ -106,7 +110,7 @@
                 </div>
               </slot>
               <div class="sentence-inputs">
-                <b-checkbox class="mr-3" v-model.lazy.number="setScore"
+                <b-checkbox class="mr-5" v-model.lazy.number="setScore"
                   >Set điểm</b-checkbox
                 >
                 <validated-form-element
@@ -289,9 +293,9 @@ export default {
 }
 
 .sentence-option {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  // display: flex;
+  // justify-content: space-between;
+  // align-items: center;
 
   &-action {
     opacity: 0;
@@ -306,18 +310,13 @@ export default {
   }
 }
 
-.sentence-footer {
-  display: flex;
-  align-items: center;
-}
-
 .sentence-inputs {
   margin-left: 1rem;
   display: flex;
   align-items: center;
 
   &--score {
-    width: 100px;
+    width: 200px;
   }
 }
 
