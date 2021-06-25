@@ -120,7 +120,7 @@ export default {
         result => {
           const { error, data } = result;
           if (error) {
-            this.$router.push({ name: "Home" });
+            this.$router.push({ name: "PageNotFound" });
             return;
           }
           this.testResult = data;

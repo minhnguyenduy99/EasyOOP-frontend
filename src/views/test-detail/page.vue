@@ -134,7 +134,7 @@ export default {
       return this.getTestById(this.testId).then(result => {
         const { error, data } = result;
         if (error) {
-          this.$router.push({ name: "Home" });
+          this.$router.push({ name: "PageNotFound" });
           return;
         }
         this.test = data;
@@ -176,6 +176,7 @@ export default {
       this.getTestResultBySessionId(this.sessionId).then(result => {
         const { error, data } = result;
         if (error) {
+          this.$router.push({ name: "PageNotFound" });
           return;
         }
         const { data: testResult } = data;
