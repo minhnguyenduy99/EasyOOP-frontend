@@ -32,7 +32,7 @@ export default opts => {
   // setup interceptors
   apiPack.useInterceptors(authHeaderInterceptor);
   apiPack.useInterceptors(redirectOnErrorInterceptor, {
-    errorCodes: [401, 403],
+    errorCodes: [403],
     redirectHandler: () => location.reload()
   });
 
