@@ -11,22 +11,41 @@
         </b-button>
       </template>
       <div id="common-question-area">
-        <qanda-search @search="$on_search" />
-        <div id="unused-tag-list" class="py-2">
-          <div class="has-text-grey mb-2">Nhãn dán có sẵn</div>
+        <div id="unused-tag-list" class="py-2 ha-vertical-layout-6">
+          <div class="input-group ha-vertical-layout-7">
+            <b-input
+              class="is-flex-grow-1"
+              v-model="tagSearch"
+              @keyup.enter.native="$on_searchTags"
+              icon="tags"
+              placeholder="Tìm kiếm nhãn dán"
+            />
+            <b-button type="is-primary" @click.prevent="$on_searchTags"
+              >Tìm kiếm</b-button
+            >
+          </div>
           <div class="buttons is-flex-grow-0">
             <b-button
               size="is-small"
               type="is-primary-light"
+              class="px-2 py-5 has-text-left"
               outlined
               v-for="tag in unusedTags"
-              :key="tag.tag_id"
+              :key="tag.id"
               @click="$on_tagClicked(tag)"
             >
+              <span class="is-size-7 is-block">{{ tag.tag_id }}</span>
               <span class="has-text-weight-bold">{{ tag.tag_value }}</span>
             </b-button>
+            <b-loading
+              :is-full-page="false"
+              v-model="isLoading"
+              :can-cancel="true"
+            ></b-loading>
           </div>
         </div>
+        <hr class="is-hr" />
+        <qanda-search @search="$on_search" />
         <qanda-table :search-options="searchOptions" class="mt-4" />
       </div>
     </admin-content>
@@ -48,6 +67,7 @@ export default {
     "create-question-form": () => import("./create-question.form"),
     "qanda-search": () => import("./qanda-search")
   },
+  inject: ["$p_loadPage"],
   provide() {
     return {
       $api_findQuestions: this.searchQuestion
@@ -55,10 +75,12 @@ export default {
   },
   data: () => ({
     title: "Danh sách câu hỏi",
+    tagSearch: "",
     showModal: false,
     searchOptions: null,
     unusedTags: [],
-    unusedTagsCount: 0
+    unusedTagsCount: 0,
+    isLoading: false
   }),
   mounted: function() {
     this.getUnusedQuestionTags({}).then(result => {
@@ -72,7 +94,11 @@ export default {
     });
   },
   methods: {
-    ...mapActions("QANDA", ["searchQuestion", "getUnusedQuestionTags"]),
+    ...mapActions("QANDA", [
+      "searchQuestion",
+      "getUnusedQuestionTags",
+      "searchUnusedTags"
+    ]),
 
     $on_search(searchOptions) {
       this.searchOptions = { ...searchOptions };
@@ -88,6 +114,18 @@ export default {
       this.showModal = false;
       this.$nextTick(() => {
         this.searchOptions = null;
+      });
+    },
+    $on_searchTags() {
+      this.$p_loadPage(true);
+      this.searchUnusedTags({ search: this.tagSearch }).then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.$p_loadPage(false);
+        this.unusedTags.length = 0;
+        this.unusedTags = data;
       });
     },
     $on_tagClicked(tag) {

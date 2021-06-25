@@ -6,7 +6,8 @@ const endpoints = {
   searchQuestion: "/search",
   getQuestionByTag: "/tag",
   getQuestionById: "",
-  getUnusedQuestionTags: "/unused-tags"
+  getUnusedQuestionTags: "/unused-tags",
+  searchUnusedTags: "/tags/search"
 };
 
 export class QandAAPI extends BaseAPI {
@@ -17,6 +18,20 @@ export class QandAAPI extends BaseAPI {
         question,
         answer,
         tag_id
+      });
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err?.response ?? err);
+    }
+  }
+
+  async searchUnusedTags(opts) {
+    const { search } = opts;
+    try {
+      const response = await this._context.get(endpoints.searchUnusedTags, {
+        params: {
+          search
+        }
       });
       return this._formatter.getDataFormat(response);
     } catch (err) {
@@ -101,7 +116,8 @@ export class QandAAPI extends BaseAPI {
       getQuestionById: this.getQuestionById.bind(this),
       getUnusedQuestionTags: this.getUnusedQuestionTags.bind(this),
       updateQuestion: this.updateQuestion.bind(this),
-      searchQuestion: this.searchQuestion.bind(this)
+      searchQuestion: this.searchQuestion.bind(this),
+      searchUnusedTags: this.searchUnusedTags.bind(this)
     };
   }
 
