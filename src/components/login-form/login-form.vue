@@ -3,6 +3,7 @@
     title="ĐĂNG NHẬP"
     rounded
     hasCard
+    width="400px"
     header-class="has-background-primary-light has-text-white is-size-5 px-5 py-3"
   >
     <ValidationObserver
@@ -30,14 +31,13 @@
           password-reveal
         />
       </validated-form-element>
-      <validated-form-element name="general">
-        <b-input type="hidden" />
-      </validated-form-element>
+      <validated-form-element name="general"> </validated-form-element>
       <b-button
         type="is-primary"
         native-type="button"
         @click="$on_loginButtonClicked"
-        >Đăng nhập</b-button
+        :loading="submitLoading"
+        >ĐĂNG NHẬP</b-button
       >
     </ValidationObserver>
     <hr />
@@ -81,7 +81,8 @@ export default {
     form: {
       username: "",
       password: ""
-    }
+    },
+    submitLoading: false
   }),
   computed: {
     validator() {
@@ -94,7 +95,9 @@ export default {
       if (!isValid) {
         return;
       }
+      this.submitLoading = true;
       this.submitHandler?.(this.form).then(result => {
+        this.submitLoading = false;
         const { error } = result;
         if (error) {
           this.validator.setErrors({
