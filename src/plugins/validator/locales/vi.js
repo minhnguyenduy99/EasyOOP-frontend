@@ -8,7 +8,8 @@ export default {
     "topic-available": "Chủ đề này có bài viết đang được chờ duyệt",
     min: "Độ dài của {_field_} phải từ {length} ký tự trở lên",
     minmax: "Độ dài của {_field_} phải từ {min} đến {max} ký tự",
-    min_value: "Gía trị tối thiểu của {_field_} phải là {min}"
+    min_value: "Gía trị tối thiểu của {_field_} phải là {min}",
+    "tag-unique": "Nhãn dán có ID này đã tồn tại"
   },
   names: {
     post_title: "tiêu đề",
@@ -26,7 +27,11 @@ export default {
     title: "tiêu đề",
     default_score_per_sentence: "điểm số mặc định",
     option: "lựa chọn",
-    score: "điểm số"
+    score: "điểm số",
+
+    // tag module
+    tag_id: "ID nhãn dán",
+    tag_value: "tiêu đề nhãn dán"
   },
   serverSide: {
     messages: {

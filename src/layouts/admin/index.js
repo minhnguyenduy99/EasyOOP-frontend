@@ -47,6 +47,14 @@ export default () => ({
         to: { name: "PostVerification" }
       },
       {
+        name: "TagManagementPage",
+        icon: "tags",
+        pack: "fas",
+        title: "Quản lí nhãn dán",
+        roles: ["manager", "admin"],
+        to: { name: "TagManagementPage" }
+      },
+      {
         name: "Q&A",
         icon: "question-circle",
         pack: "fas",
@@ -75,7 +83,7 @@ export default () => ({
         icon: "spell-check",
         pack: "fas",
         title: "Quản lí bài test",
-        roles: ["creator", "manager"],
+        roles: ["creator"],
         to: { name: "TestManagement" }
       }
     ]

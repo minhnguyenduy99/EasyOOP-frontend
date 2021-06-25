@@ -1,8 +1,15 @@
-import { required, email, min, min_value } from "vee-validate/dist/rules";
+import {
+  required,
+  email,
+  min,
+  min_value,
+  regex
+} from "vee-validate/dist/rules";
 
 export default {
   required,
   email,
   min,
-  min_value
+  min_value,
+  regex
 };
