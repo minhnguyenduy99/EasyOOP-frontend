@@ -48,13 +48,14 @@
         <validated-form-element name="alias" rules="required" label="Biệt danh">
           <b-input v-model="form.alias" />
         </validated-form-element>
-        <validated-form-element name="general">
-          <b-input type="hidden" />
-        </validated-form-element>
+        <validated-form-element name="general" />
       </div>
+      <hr />
       <b-button
         type="is-primary"
+        native-type="button"
         @click="$on_submittedForm"
+        :loading="submitLoading"
         :disabled="!selected"
       >
         <span class="has-text-weight-bold">Tạo</span>
@@ -84,7 +85,8 @@ export default {
     },
     selected: false,
     searchUser: [],
-    handler: new FunctionDelayer(500)
+    handler: new FunctionDelayer(500),
+    submitLoading: false
   }),
   computed: {
     validator() {
@@ -113,10 +115,12 @@ export default {
       if (!isValid || !this.selected) {
         return;
       }
-      this.managerrRole_assignManager({
+      this.submitLoading = true;
+      this.managerRole_assignManager({
         user_id: this.userId,
         form: this.form
       }).then(result => {
+        this.submitLoading = false;
         const { error } = result;
         if (error) {
           this.validator.setErrors({

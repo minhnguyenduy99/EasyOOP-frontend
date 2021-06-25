@@ -33,6 +33,8 @@
 
 <script>
 import { mapActions } from "vuex";
+import { ToastNotifier } from "@/utils";
+
 export default {
   name: "CreatorManagementPage",
   components: {
@@ -67,6 +69,9 @@ export default {
     },
     $on_managerCreated() {
       this.showFormModal = false;
+      this.$nextTick(() => {
+        ToastNotifier.success(this.$buefy.toast, "Thêm quản lí thành công");
+      });
     },
     $on_managerSelected(manager) {
       if (!manager) {
