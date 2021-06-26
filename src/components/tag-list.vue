@@ -7,18 +7,23 @@
       </div>
     </slot>
     <div v-if="isNotEmpty" class="tag-list__container buttons">
-      <b-button
-        size="is-small"
-        type="is-primary-light"
-        class="px-2 py-5 has-text-left"
-        outlined
-        v-for="tag in tags"
-        :key="tag.id"
-        @click="$emit('tag-clicked', tag)"
-      >
-        <span class="is-size-7 is-block">{{ tag.tag_id }}</span>
-        <span class="has-text-weight-bold">{{ tag.tag_value }}</span>
-      </b-button>
+      <slot name="tags" v-bind="{ tags }">
+        <b-button
+          size="is-small"
+          type="is-primary-light"
+          :class="[displayTagId ? 'px-2 py-5 has-text-left' : '']"
+          outlined
+          :rounded="rounded"
+          v-for="tag in tags"
+          :key="tag.id"
+          @click="$emit('tag-clicked', tag)"
+        >
+          <span v-if="displayTagId" class="is-size-7 is-block">{{
+            tag.tag_id
+          }}</span>
+          <span class="has-text-weight-bold">{{ tag.tag_value }}</span>
+        </b-button>
+      </slot>
     </div>
     <slot v-else name="empty">
       <div class="is-flex is-justify-content-center">
@@ -36,6 +41,10 @@ export default {
       type: Array,
       default: () => []
     },
+    displayTagId: {
+      type: Boolean,
+      default: () => true
+    },
     emptyText: String,
     headerless: {
       type: Boolean,
@@ -46,6 +55,10 @@ export default {
     headerClass: {
       type: String,
       default: () => ""
+    },
+    rounded: {
+      type: Boolean,
+      default: () => false
     }
   },
   computed: {
@@ -55,3 +68,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.tag-list {
+  &__container {
+    > * {
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+</style>
