@@ -22,15 +22,7 @@
     >
       <router-view name="default" />
     </section>
-    <footer
-      v-if="footer"
-      id="user-view-footer"
-      class="hero is-medium is-primary-light"
-    >
-      <div class="hero-body">
-        <router-view name="footer" />
-      </div>
-    </footer>
+    <router-view v-if="footer" name="footer" />
     <b-loading is-full-page v-model="isLoading" :can-cancel="false">
       <b-icon
         pack="fas"
@@ -150,10 +142,6 @@ $navbar-height: 82px;
   @include tablet {
     padding: 0 $page-padding-horizontal-medium;
   }
-}
-
-#user-view-footer {
-  margin-top: 2rem;
 }
 
 #login-form {

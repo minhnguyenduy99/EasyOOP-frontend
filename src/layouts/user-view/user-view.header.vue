@@ -111,7 +111,11 @@
         </template>
       </b-navbar>
     </transition>
-    <b-modal v-model="showSearchModal" class="search-modal">
+    <b-modal
+      v-model="showSearchModal"
+      class="search-modal is-content-stickable"
+      full-screen
+    >
       <search-modal />
     </b-modal>
   </div>
@@ -248,7 +252,5 @@ $navbar-height: 82px;
 
 .search-modal {
   padding-top: 4rem;
-  justify-content: flex-start;
-  overflow: hidden;
 }
 </style>

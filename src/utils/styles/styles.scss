@@ -5,12 +5,6 @@ $button-border-radius: 7px;
 .button {
   transition: $easing;
 
-  &.is-small {
-    &.is-rounded {
-      border-radius: 50%;
-    }
-  }
-
   &.button-tag {
     &.is-small {
       font-size: $size-6;
@@ -243,6 +237,36 @@ a:hover {
 
       &:hover {
         color: black;
+      }
+    }
+  }
+}
+
+.control {
+  &.is-rounded {
+    > label.b-checkbox.checkbox {
+      border-radius: 1000px;
+    }
+  }
+
+  &.is-primary-light {
+    > label.b-checkbox.checkbox {
+      border-color: $primary-light;
+      background: white;
+      color: $primary-light;
+
+      &.is-primary-light {
+        background: $primary-light;
+        color: white;
+      }
+    }
+
+    &.is-outlined {
+      &:hover {
+        > label.b-checkbox.checkbox {
+          background: $primary-light;
+          color: white;
+        }
       }
     }
   }

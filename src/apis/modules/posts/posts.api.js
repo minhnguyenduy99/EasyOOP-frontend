@@ -15,13 +15,28 @@ export class PostAPI extends BaseAPI {
         search = "",
         sort_by = "created_date",
         sort_order = "asc",
-        topic_id = null
+        topic_id = null,
+        tags = [],
+        tagSearchType = null
       }
     } = options;
+    let tagsAsString = tags
+      .reduce((pre, cur) => pre + "," + cur, "")
+      .substring(1);
+
+    console.log(tags);
+
     const endpoint = this._addURLParams(endpoints.findPosts, page);
     try {
       const response = await this._context.get(endpoint, {
-        params: { search, sort_by, sort_order, topic_id }
+        params: {
+          search,
+          sort_by,
+          sort_order,
+          topic_id,
+          tags: tagsAsString,
+          tagSearchType
+        }
       });
       return this._formatter.getDataFormat(response);
     } catch (err) {

@@ -8,9 +8,21 @@
         >
       </div>
       <div class="post-view-info is-flex is-justify-content-space-between">
-        <span class="is-size-6 has-text-grey">{{ post.topic_title }}</span>
+        <div class="is-flex">
+          <span class="is-size-6 has-text-grey">{{ post.topic_title }}</span>
+        </div>
         <span class="is-size-6 has-text-grey">{{ createdDateInStr }}</span>
       </div>
+      <b-taglist class="mt-3">
+        <b-tag
+          v-for="tag in post.tags"
+          :key="tag.id"
+          type="is-primary-light"
+          rounded
+          size="is-small"
+          >{{ tag.tag_value }}</b-tag
+        >
+      </b-taglist>
     </div>
   </div>
 </template>

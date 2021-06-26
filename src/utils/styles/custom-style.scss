@@ -33,3 +33,16 @@
     }
   }
 }
+
+// Modal
+.modal.is-content-stickable {
+  &.is-full-screen {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+
+    > .modal-content {
+      overflow-y: overlay;
+    }
+  }
+}

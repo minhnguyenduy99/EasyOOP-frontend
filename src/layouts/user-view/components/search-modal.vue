@@ -1,41 +1,84 @@
 <template>
   <div class="search-modal-content">
-    <div
-      class="is-flex is-flex-direction-column is-align-self-flex-start is-align-items-stretch"
-    >
-      <b-input
-        class="search-modal-input"
-        type="is-primary"
-        size="is-large"
-        icon-right="search"
-        placeholder="Tìm kiếm bài viết, câu hỏi, ..."
-        v-model="search"
-      />
-      <transition
-        name="search-panel"
-        enter-active-class="animate__animated animate__fadeInUp"
-        leave-active-class="animate__animated animate__fadeOutDown"
+    <div class="columns">
+      <div
+        class="column is-flex is-flex-direction-column is-align-self-flex-start is-align-items-stretch"
       >
-        <div class="search-modal-panel card mt-3" v-show="search !== ''">
-          <div class="search-modal-panel-container card-content">
-            <search-panel panel-title="Bài viết" :items="listPosts">
+        <div class="search-modal__sticky">
+          <b-input
+            class="search-modal-input"
+            type="is-primary"
+            size="is-large"
+            icon-right="search"
+            placeholder="Tìm kiếm bài viết, bài test"
+            v-model="search"
+          />
+        </div>
+
+        <transition
+          name="search-panel"
+          enter-active-class="animate__animated animate__fadeInUp"
+          leave-active-class="animate__animated animate__fadeOutDown"
+        >
+          <div class="ha-vertical-layout-6" v-show="canSearch">
+            <search-panel
+              panel-title="Bài viết"
+              :items="listPosts"
+              emptyText="Không tìm thấy bài viết"
+            >
               <template #item="{ item }">
                 <search-post-view :post="item" @click="$_navigateToPostView" />
               </template>
             </search-panel>
-            <!-- <search-panel panel-title="Q & A" :items="listQuestions">
-              <template #item="{ item }">
-                <qanda-card :qanda="item" :open="false" />
-              </template>
-            </search-panel> -->
-            <search-panel panel-title="Bài test" :items="listTests">
+            <search-panel
+              panel-title="Bài test"
+              :items="listTests"
+              emptyText="Không tìm thấy bài test"
+            >
               <template #item="{ item }">
                 <test-detail :test="item" @click="$_navigateToTestDetail" />
               </template>
             </search-panel>
           </div>
+        </transition>
+      </div>
+      <div class="column">
+        <div id="search-tag-list" class="card">
+          <div class="card-content">
+            <b-field label="Loại tìm kiếm">
+              <b-switch
+                v-model="tagSearchType"
+                :true-value="1"
+                :false-value="0"
+                type="is-primary-light"
+                >{{ TAG_SEARCH_TYPES[tagSearchType] }}</b-switch
+              >
+            </b-field>
+            <hr />
+            <tag-list
+              :tags="tags"
+              headerless
+              emptyText="Không có nhãn nào"
+              :displayTagId="false"
+              :rounded="true"
+            >
+              <template #tags>
+                <b-checkbox-button
+                  v-for="tag in tags"
+                  :key="tag.id"
+                  class="checkbox-tag is-rounded is-primary-light is-outlined"
+                  size="is-small"
+                  type="is-primary-light"
+                  v-model="selectedTags"
+                  :native-value="tag.tag_id"
+                  ref="checkbox-tag"
+                  >{{ tag.tag_value }}</b-checkbox-button
+                >
+              </template>
+            </tag-list>
+          </div>
         </div>
-      </transition>
+      </div>
     </div>
   </div>
 </template>
@@ -50,16 +93,21 @@ export default {
     "search-panel": () => import("./search-panel"),
     // "qanda-card": async () => (await import("@/components")).QandACard,
     "test-detail": () => import("@/components/test-detail/test-detail.vue"),
-    "search-post-view": () => import("./search-post-view")
+    "search-post-view": () => import("./search-post-view"),
+    "tag-list": () => import("@/components/tag-list.vue")
   },
   inject: ["$toggleSearchModal"],
   data: () => ({
+    TAG_SEARCH_TYPES: ["GIAO", "KẾT HỢP"],
     search: "",
     listQuestions: [],
     listPosts: [],
     listTests: [],
+    tags: [],
     handler: new FunctionDelayer(),
-    testHandler: new FunctionDelayer()
+    testHandler: new FunctionDelayer(),
+    selectedTags: [],
+    tagSearchType: 0
   }),
   watch: {
     search(val) {
@@ -68,13 +116,33 @@ export default {
         this.testHandler.reset();
         return;
       }
-      this.handler.execute(() => this.$_updateFilteredPosts(val));
-      this.testHandler.execute(() => this.$_updateListTests(val));
-      this.$_updateFilteredQuestions();
+      this.handler.execute(() => this.$_updateFilteredPosts());
+      this.testHandler.execute(() => this.$_updateListTests());
+    },
+    "selectedTags.length"(val) {
+      if (!this.canSearch) {
+        return;
+      }
+      this.$_updateFilteredPosts();
+    },
+    tagSearchType() {
+      if (!this.canSearch) {
+        return;
+      }
+      this.$_updateFilteredPosts();
+    }
+  },
+  mounted: function() {
+    this.$_requestSearchTags();
+  },
+  computed: {
+    canSearch() {
+      return this.search !== "" || this.selectedTags.length > 0;
     }
   },
   methods: {
     ...mapActions("POST", ["getPosts"]),
+    ...mapActions("TAG", ["searchTag"]),
     ...mapActions("VIEWER_TEST", ["viewer_searchTest"]),
 
     $_navigateToPostView(post) {
@@ -97,10 +165,24 @@ export default {
         });
       });
     },
-    async $_updateFilteredPosts(search) {
+    $_requestSearchTags() {
+      this.searchTag({
+        type: "post"
+      }).then(result => {
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.tags.length = 0;
+        this.tags = data;
+      });
+    },
+    async $_updateFilteredPosts() {
       return this.getPosts({
         searchOptions: {
-          search
+          search: this.search,
+          tags: this.selectedTags,
+          tagSearchType: this.tagSearchType
         }
       }).then(result => {
         const { error, data } = result;
@@ -108,6 +190,7 @@ export default {
           return;
         }
         this.listPosts.length = 0;
+        this.listPosts = [];
         this.listPosts.push(...data.results);
       });
     },
@@ -121,8 +204,8 @@ export default {
         this.listQuestions.push(...data.results);
       });
     },
-    async $_updateListTests(search) {
-      return this.viewer_searchTest({ title: search }).then(result => {
+    async $_updateListTests() {
+      return this.viewer_searchTest({ title: this.search }).then(result => {
         const { error, data } = result;
         if (error) {
           return;
@@ -136,24 +219,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.search-modal-panel-container {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
-
-  @include tablet {
-    grid-template-columns: 1fr 1fr;
-  }
+.search-modal-content {
+  padding: 1rem;
 }
 
-.search-modal {
-  &-input {
-    width: 100%;
-  }
+.search-modal__sticky {
+  border: none;
+  position: sticky;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  top: 1rem;
+  z-index: 4;
+  background: whitesmoke;
+  transform: translateY(-1rem);
+}
 
-  .modal-content {
-    overflow-y: hidden;
-    scroll-behavior: auto;
-  }
+#search-tag-list {
+  position: sticky;
+  top: 1rem;
 }
 </style>
