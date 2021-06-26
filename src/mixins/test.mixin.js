@@ -15,7 +15,7 @@ export default {
       return Math.floor(this.test.limited_time / 60);
     },
     numberOfSentences() {
-      return this.test?.list_sentence_ids?.length;
+      return this.test?.sentence_count;
     },
     totalScore() {
       const sentences = this.test?.sentences;

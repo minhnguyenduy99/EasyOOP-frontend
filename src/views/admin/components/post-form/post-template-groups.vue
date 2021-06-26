@@ -46,8 +46,7 @@
                 <div class="is-flex is-flex-direction-column">
                   <span class="has-text-weight-bold">{{ option.title }}</span>
                   <span class="is-size-7 has-text-grey"
-                    >Số lượng câu hỏi:
-                    {{ option.list_sentence_ids.length }}</span
+                    >Số lượng câu hỏi: {{ option.sentence_count }}</span
                   >
                 </div>
               </template>
@@ -119,7 +118,7 @@ export default {
       const { test_id, title } = selectedTest;
       const templateData = {
         data_title: title,
-        data_link: `${this.$appConfig.HOST}/tests/${test_id}`
+        data_link: `${this.$appConfig.VUE_APP_HOST}/tests/${test_id}`
       };
       this.selectedTestIds.push(test_id);
       addHandler?.(templateData);

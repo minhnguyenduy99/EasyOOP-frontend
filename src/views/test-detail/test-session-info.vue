@@ -101,7 +101,7 @@ export default {
     ]),
 
     numberOfSentences() {
-      return this.test?.list_sentence_ids?.length;
+      return this.test?.sentence_count;
     },
     unansweredSentenceCount() {
       return this.totalAnswers.filter(answer => !answer.answered).length;

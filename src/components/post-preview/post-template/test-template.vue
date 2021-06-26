@@ -1,5 +1,5 @@
 <template>
-  <div class="test-template">
+  <div :class="[editable ? 'test-template-editable' : 'test-template']">
     <div v-if="!editable">
       <h1 class="mb-3 is-size-5 has-text-grey">
         {{ currentTemplate.title }}
@@ -134,14 +134,16 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.test-template {
-  display: flex;
-  flex-wrap: wrap;
+// .test-template {
+//   &-editable {
+//     display: flex;
+//     flex-wrap: wrap;
 
-  > *:not(:last-child) {
-    margin-right: 0.5rem;
-  }
-}
+//     > *:not(:last-child) {
+//       margin-right: 0.5rem;
+//     }
+//   }
+// }
 
 .test-template-edit {
   @include desktop {
