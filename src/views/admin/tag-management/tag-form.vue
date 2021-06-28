@@ -83,7 +83,7 @@
         type="is-primary is-dark"
         class="is-fullwidth"
         :disabled="!form.type"
-        @click="$on_submitForm"
+        @click="$on_createTags"
         >Tạo</b-button
       >
     </ValidationObserver>
@@ -91,8 +91,10 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { ValidationObserver } from "vee-validate";
 import { ValidatedFormElement } from "@/components";
+import { CreateTagsMixin } from "./mixins";
 
 export default {
   name: "TagForm",
@@ -100,6 +102,7 @@ export default {
     ValidationObserver,
     ValidatedFormElement
   },
+  mixins: [CreateTagsMixin({ mapActions })],
   data: () => ({
     TAG_TYPES: ["question", "post"],
     form: {
@@ -123,14 +126,19 @@ export default {
     }
   },
   methods: {
-    $on_submitForm() {
+    $on_createTags() {
       if (this.isListTagsEmpty) {
         this.validator.setErrors({
           general: ["* Danh sách nhãn dán đang trống"]
         });
         return;
       }
-      this.$emit("submit", { success: true, data: this.form });
+      this.$m_createTags(this.form).then(result => {
+        if (result.error) {
+          return;
+        }
+        this.$emit("tags-created", result.data);
+      });
     },
     $_tagExist(tag_id) {
       return this.form.tags.findIndex(tag => tag.tag_id === tag_id) >= 0;

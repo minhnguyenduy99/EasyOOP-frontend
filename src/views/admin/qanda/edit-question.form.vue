@@ -3,6 +3,7 @@
     id="edit-question-form"
     :has-card="true"
     rounded
+    width="500px"
     title="Cập nhật câu hỏi"
     headerClass="has-background-primary-light has-text-white"
   >

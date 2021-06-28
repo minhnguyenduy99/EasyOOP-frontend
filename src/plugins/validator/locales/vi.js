@@ -46,6 +46,10 @@ export default {
         RoleHasBeenAssigned: "Người dùng đã có vai trò này",
         UserNotFound: "Không tìm thấy người dùng",
         ServiceErrors: "Lỗi hệ thống"
+      },
+      Tag: {
+        TagNotFound: "Không tìm thấy ID nhãn dán",
+        DuplicateTagID: "ID nhãn dán đã tồn tại"
       }
     }
   }

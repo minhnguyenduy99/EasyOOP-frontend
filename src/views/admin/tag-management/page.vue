@@ -33,8 +33,10 @@
           headerText="Nhãn dán câu hỏi"
           :tags="questionTags"
           :emptyText="emptyText"
+          :tagButtonType="tag => (tag.used ? 'is-danger' : 'is-primary-light')"
           @tag-clicked="$on_selectTag"
-        />
+        >
+        </tag-list>
         <tag-list
           headerText="Nhãn dán bài học"
           :tags="postTags"
@@ -51,11 +53,15 @@
         title="Tạo nhãn dán"
         headerClass="has-background-primary-light has-text-white"
       >
-        <tag-form @submit="$on_tagFormSubmitted" />
+        <tag-form @tags-created="$on_tagsCreated" />
       </modal-form>
     </b-modal>
     <b-modal v-model="openEditTagForm">
-      <edit-tag-form :tag="selectedTag" @submit="$on_editTagFormSubmit" />
+      <edit-tag-form
+        :tag="selectedTag"
+        @tag-updated="$on_tagUpdated"
+        @tag-deleted="$on_tagDeleted"
+      />
     </b-modal>
   </div>
 </template>
@@ -93,53 +99,37 @@ export default {
     this.$_searchTags();
   },
   methods: {
-    ...mapActions("TAG", [
-      "createTags",
-      "searchTag",
-      "findTagById",
-      "updateTag"
-    ]),
+    ...mapActions("TAG", ["searchTag", "findTagById"]),
 
     $on_selectTag(tag) {
       this.openEditTagForm = true;
       this.selectedTag = tag;
     },
 
-    $on_tagFormSubmitted({ success, data }) {
-      if (!success) {
-        return;
-      }
+    $on_tagsCreated(data) {
       this.openTagForm = false;
-      this.createTags(data).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        const {
-          data: { count, errors }
-        } = data;
-        this.$_searchTags();
-        count > 0 &&
-          this.$_notifyFormSubmitSuccess(
-            `Tạo nhãn dán thành công.</br>Số lượng: <strong>${count}</strong>`
-          );
-        errors.length > 0 && this.$_notifyFormSubmitError(errors);
-      });
+      console.log(data);
+      const {
+        data: { count, errors = [] }
+      } = data;
+      this.$_searchTags();
+      count > 0 &&
+        this.$_notifySuccess(
+          `Tạo nhãn dán thành công.</br>Số lượng: <strong>${count}</strong>`
+        );
+      errors.length > 0 && this.$_notifyFormSubmitError(errors);
     },
 
-    $on_editTagFormSubmit({ success, data }) {
-      if (!success) {
-        return;
-      }
+    $on_tagUpdated() {
       this.openEditTagForm = false;
-      this.updateTag({ tag_id: data.tag_id, tag: data }).then(result => {
-        const { error } = result;
-        if (error) {
-          return;
-        }
-        this.$_notifyFormSubmitSuccess("Cập nhật nhãn dán thành công");
-        this.$_searchTags();
-      });
+      this.$_notifySuccess("Cập nhật nhãn dán thành công");
+      this.$_searchTags();
+    },
+
+    $on_tagDeleted() {
+      this.openEditTagForm = false;
+      this.$_notifySuccess("Xóa nhãn dán thành công");
+      this.$_searchTags();
     },
 
     $_searchTags() {
@@ -168,9 +158,9 @@ export default {
       });
     },
 
-    $_notifyFormSubmitSuccess(message) {
+    $_notifySuccess(message) {
       this.$buefy.notification.open({
-        duration: 1000,
+        duration: 2000,
         message,
         position: "is-bottom-right",
         type: "is-success"
@@ -180,12 +170,22 @@ export default {
     $_notifyFormSubmitError(errors) {
       errors.forEach(error => {
         this.$buefy.notification.open({
-          duration: 1000,
+          duration: 2000,
           message: `Tạo nhãn dán thất bại. </br>ID: ${error.tag_id}`,
           position: "is-bottom-right",
           type: "is-danger",
           hasIcon: true
         });
+      });
+    },
+
+    $_notifyError(errorMsg) {
+      this.$buefy.notification.open({
+        duration: 2000,
+        message: errorMsg,
+        position: "is-bottom-right",
+        type: "is-danger",
+        hasIcon: true
       });
     }
   }

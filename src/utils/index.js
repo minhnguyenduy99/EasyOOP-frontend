@@ -4,3 +4,4 @@ export { ToastNotifier } from "./toast-notifier";
 export { default as FunctionDelayer } from "./function-delayer";
 export * from "./time-generator";
 export * from "./config-reader";
+export * from "./consts";

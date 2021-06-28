@@ -25,7 +25,13 @@
             >
           </div>
           <div class="buttons is-flex-grow-0">
-            <b-button
+            <tag-list
+              headerless
+              :tags="unusedTags"
+              @tag-clicked="$on_tagClicked"
+              emptyText="Không có nhãn dán có sẵn nào"
+            />
+            <!-- <b-button
               size="is-small"
               type="is-primary-light"
               class="px-2 py-5 has-text-left"
@@ -36,7 +42,7 @@
             >
               <span class="is-size-7 is-block">{{ tag.tag_id }}</span>
               <span class="has-text-weight-bold">{{ tag.tag_value }}</span>
-            </b-button>
+            </b-button> -->
             <b-loading
               :is-full-page="false"
               v-model="isLoading"
@@ -44,7 +50,7 @@
             ></b-loading>
           </div>
         </div>
-        <hr class="is-hr" />
+        <hr />
         <qanda-search @search="$on_search" />
         <qanda-table :search-options="searchOptions" class="mt-4" />
       </div>
@@ -61,6 +67,7 @@ import { ToastNotifier } from "@/utils";
 export default {
   name: "CommonQuestionPage",
   components: {
+    "tag-list": () => import("@/components/tag-list.vue"),
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
     "qanda-table": () => import("./qanda-table"),
@@ -118,14 +125,14 @@ export default {
     },
     $on_searchTags() {
       this.$p_loadPage(true);
-      this.searchUnusedTags({ search: this.tagSearch }).then(result => {
+      this.getUnusedQuestionTags({ search: this.tagSearch }).then(result => {
         const { error, data } = result;
         if (error) {
           return;
         }
         this.$p_loadPage(false);
         this.unusedTags.length = 0;
-        this.unusedTags = data;
+        this.unusedTags = data.results;
       });
     },
     $on_tagClicked(tag) {
@@ -135,7 +142,7 @@ export default {
       textArea.select();
       document.execCommand("copy");
       document.body.removeChild(textArea);
-      ToastNotifier.success(this.$buefy.toast, "Sao chép nội dung tag");
+      ToastNotifier.success(this.$buefy.toast, "Sao chép nội dung nhãn");
     }
   }
 };

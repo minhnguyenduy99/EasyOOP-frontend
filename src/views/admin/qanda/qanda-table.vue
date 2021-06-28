@@ -7,8 +7,10 @@
       pagination-rounded
       :selected.sync="selectedQuestion"
       detailed
+      anima
       detail-key="id"
-      :show-detail-icon="true"
+      :has-detailed-visible="row => false"
+      :show-detail-icon="false"
       :loading="loading"
       pagination-size="is-small"
       :per-page="itemsPerPage"
@@ -25,11 +27,11 @@
         </template>
       </b-table-column>
 
-      <b-table-column label="Câu hỏi" width="300" v-slot="{ row }">
+      <b-table-column label="Câu hỏi" v-slot="{ row }">
         {{ row.question }}
       </b-table-column>
 
-      <b-table-column label="Nhãn dán" width="300">
+      <b-table-column label="Nhãn dán" width="200">
         <template v-slot="{ row }">
           <b-tag v-if="row.tag_id" type="is-primary-light">
             <span class="has-text-weight-bold">{{ row.tag_value }}</span>
@@ -46,11 +48,13 @@
         <section class="tooltip-section">
           <b-tooltip
             v-for="(feature, index) in features"
+            position="is-left"
             :key="feature.id"
             :label="feature.tooltip"
             :type="feature.type"
           >
             <b-button
+              class="is-icon-button"
               size="is-small"
               :icon-left="feature.icon"
               :type="feature.type"
@@ -61,10 +65,7 @@
         </section>
       </template>
       <template #empty>
-        <empty-state
-          image-src="https://lh3.googleusercontent.com/proxy/yKYKn6dnKi2FcR95KzQT8Xl-WkDUcfH2HEPg1sC5v2Zpq6OrEHss7-r6pNGrGfbL0VV_fvdBjO7MGdHByjvaLSe8IkPUJ_DExkNtsKaWROI"
-          text="Chưa có câu hỏi nào"
-        />
+        <empty-state image-src="#" text="Chưa có câu hỏi nào" />
       </template>
       <template #footer>
         <div>
@@ -103,7 +104,7 @@ export default {
     features: [
       {
         icon: "pen",
-        tooltip: "Edit post",
+        tooltip: "Chỉnh sửa câu hỏi",
         type: "is-primary",
         outlined: true
       }

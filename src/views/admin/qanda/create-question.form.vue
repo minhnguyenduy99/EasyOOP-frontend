@@ -1,6 +1,7 @@
 <template>
   <modal-form
     id="create-question-form"
+    width="500px"
     :has-card="true"
     rounded
     title="Tạo câu hỏi"
