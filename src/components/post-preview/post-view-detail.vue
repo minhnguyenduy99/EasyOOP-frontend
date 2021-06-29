@@ -33,14 +33,16 @@
               <b-button
                 v-if="_hasPreviousPost"
                 class="mb-3"
-                type="is-primary-light"
+                rounded
+                type="is-primary"
                 icon-left="chevron-left"
                 @click="$_navigate(post.previous_post_id)"
                 >Bài trước</b-button
               >
               <b-button
                 v-if="_hasNextPost"
-                type="is-primary-light"
+                type="is-primary"
+                rounded
                 icon-right="chevron-right"
                 @click="$_navigate(post.next_post_id)"
                 >Bài tiếp theo</b-button
@@ -82,7 +84,8 @@
           <b-button
             class="trigger-action--previous"
             v-if="_hasPreviousPost"
-            type="is-primary-light"
+            type="is-primary"
+            rounded
             icon-left="chevron-left"
             @click="$_navigate(post.previous_post_id)"
             >Bài trước</b-button
@@ -90,7 +93,8 @@
           <b-button
             v-if="_hasNextPost"
             class="trigger-action--next"
-            type="is-primary-light"
+            rounded
+            type="is-primary"
             icon-right="chevron-right"
             @click="$_navigate(post.next_post_id)"
             >Bài tiếp theo</b-button

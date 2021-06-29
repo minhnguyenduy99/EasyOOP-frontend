@@ -19,6 +19,7 @@
         </div>
       </div>
     </admin-content>
+    <backtop type="is-primary-light" />
   </div>
 </template>
 
@@ -26,6 +27,7 @@
 export default {
   name: "TestManagementPage",
   components: {
+    backtop: () => import("@/components/backtop"),
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
     "sentence-panel": () =>

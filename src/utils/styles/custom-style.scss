@@ -46,3 +46,14 @@
     }
   }
 }
+
+.navbar-item.has-dropdown {
+  &.is-navbar-fullwidth {
+    > .navbar-dropdown {
+      position: fixed;
+      top: calc(#{$navbar-height} + 0.25rem);
+      left: 0;
+      height: 100%;
+    }
+  }
+}

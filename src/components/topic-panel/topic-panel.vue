@@ -75,7 +75,7 @@ hr {
   &-title {
     border-radius: $topic-panel-border-radius $topic-panel-border-radius 0 0;
     color: $white;
-    background: $primary-light;
+    background: $primary;
     padding: 0.75rem;
     text-align: center;
   }

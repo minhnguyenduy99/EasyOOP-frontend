@@ -5,14 +5,14 @@
 </template>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@200;400;600;700;800&display=swap");
 
-body.has-navbar-fixed-top {
-  padding-top: 80px !important;
+input:placeholder-shown {
+  font-style: italic;
 }
 
 #app {
-  font-family: "Heebo", Helvetica, Arial, sans-serif;
+  font-family: "Montserrat", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

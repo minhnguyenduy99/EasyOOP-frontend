@@ -1,12 +1,14 @@
-$primary: #007EA7;
-$primary-light: #00A8E8;
-$primary-dark: #003459;
+$primary: #4eb2fe;
+$primary-light: #5cf2ff;
+$primary-dark: #124570;
 $danger: #F32013;
 $text: #00171F;
 $easing: 0.08s ease-out;
 
 $facebook: #1877f2;
 $google: #db4437;
+
+$weight-extra-bold: 800;
 
 
 @import "~bulma/sass/utilities/_all.sass";
@@ -24,6 +26,7 @@ $navbar-padding-horizontal: $page-padding-horizontal;
 $navbar-box-shadow-size: 0px 7px 29px 0px;
 $navbar-box-shadow-color: rgba(100, 100, 111, 0.2);
 $navbar-item-active-color: transparent;
+$navbar-item-img-max-height: 3.125rem;
 $navbar-z: 29;
 $sidebar-width: 300px;
 $navbar-dropdown-offset: 10px;
@@ -33,12 +36,13 @@ $navbar-dropdown-offset: 10px;
 $hero-body-padding: 4rem 6rem;
 $hero-body-padding-medium: 1.5rem 3rem;
 $hero-body-padding-small: 1.5rem 0.75rem;
+$hero-body-padding-large: 3rem 10rem;
 
 // button
 $button-padding-vertical: 12px;
 $button-padding-horizontal: 20px;
 $new-button-colors: (
-  "primary-light": ($primary-light, $white),
+  "primary-light": ($primary-light, $dark),
   "primary-dark": ($primary-dark, $white),
   "facebook": ($facebook, $white),
   "google": ($google, $white)
@@ -48,7 +52,8 @@ $button-colors: mergeColorMaps($new-button-colors, $colors);
 // tag
 $tag-radius: 10px;
 $new-tag-colors: (
-  "primary-light": ($primary-light, $white)
+  "primary-light": ($primary-light, $dark),
+  "primary-dark": ($primary-dark, $white)
 );
 $tag-colors: mergeColorMaps($new-tag-colors, $colors);
 
@@ -62,7 +67,7 @@ $menu-item-color: rgba(0, 0, 0, 0.7);
 $menu-item-hover-background-color: rgb(235, 235, 235);
 $menu-item-hover-color: $text;
 $menu-item-active-color: $text-invert;
-$menu-item-active-background-color: $primary-light;
+$menu-item-active-background-color: $primary;
 
 // Drodown
 $dropdown-menu-min-width: 10rem;
@@ -75,6 +80,7 @@ $table-row-active-color: $text;
 
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
+@import "./utils.scss";
 @import "./layouts.scss";
 @import "./custom-style.scss";
 @import "./styles.scss";

@@ -7,7 +7,7 @@
       </div>
       <div class="admin-header-content--icon">
         <b-icon
-          type="is-primary-light"
+          type="is-primary-dark"
           :pack="iconPack"
           :icon="icon"
           size="is-large"

@@ -10,7 +10,7 @@
           <span class="has-text-weight-bold">{{ numberOfSentences }}</span>
         </div>
         <div class="test-detail-group">
-          <b-icon icon="hourglass-start" type="is-primary-light" />
+          <b-icon icon="hourglass-start" type="is-primary" />
           <span class="has-text-weight-bold">{{
             isTimeLimited ? limitedTimeInMinutes + " phút" : "Không giới hạn"
           }}</span>
@@ -41,12 +41,11 @@ $test-detail-hover-box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 3px 3px;
   padding: 0;
 
   &:hover {
-    border-left: 3px solid $primary-light;
+    border-left: 3px solid $primary;
     box-shadow: $test-detail-hover-box-shadow;
   }
 
   &-title {
-    color: $primary;
     font-weight: bold;
     font-size: $size-5;
   }

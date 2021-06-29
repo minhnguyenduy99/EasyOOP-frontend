@@ -4,14 +4,12 @@
       class="is-flex-grow-1 is-fullwidth"
       placeholder="Tìm kiếm câu hỏi"
       type="is-primary"
-      size="is-medium"
       icon="search"
       v-model="searchOptions.value"
       @keyup.enter.native="$on_search"
     />
     <b-checkbox
       class="is-fullwidth"
-      size="is-medium"
       v-model="searchOptions.hasTag"
       false-value="0"
       true-value="1"
@@ -19,18 +17,13 @@
       >Đã có tag</b-checkbox
     >
     <div class="is-flex">
-      <b-button
-        class="is-flex-grow-1"
-        type="is-primary"
-        @click="$on_search"
-        size="is-medium"
+      <b-button class="is-flex-grow-1" type="is-primary" @click="$on_search"
         >Tìm kiếm</b-button
       >
       <b-button
         class="ml-3 is-icon-button"
         type="is-primary"
         icon-right="sync-alt"
-        size="is-medium"
         rounded
         inverted
         @click="$on_resetSearch"

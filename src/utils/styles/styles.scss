@@ -249,14 +249,14 @@ a:hover {
     }
   }
 
-  &.is-primary-light {
+  &.is-primary-dark {
     > label.b-checkbox.checkbox {
-      border-color: $primary-light;
+      border-color: $primary-dark;
       background: white;
-      color: $primary-light;
+      color: $primary-dark;
 
-      &.is-primary-light {
-        background: $primary-light;
+      &.is-primary-dark {
+        background: $primary-dark;
         color: white;
       }
     }
@@ -264,7 +264,7 @@ a:hover {
     &.is-outlined {
       &:hover {
         > label.b-checkbox.checkbox {
-          background: $primary-light;
+          background: $primary-dark;
           color: white;
         }
       }

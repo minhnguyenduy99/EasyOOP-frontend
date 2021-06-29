@@ -47,7 +47,7 @@ export default {
     },
     tagButtonType: {
       type: Function,
-      default: tag => "is-primary-light"
+      default: tag => "is-primary-dark"
     },
     emptyText: String,
     headerless: {

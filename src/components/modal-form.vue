@@ -10,9 +10,15 @@
       width
     }"
   >
-    <div class="card-header">
+    <div class="card-header has-text-centered is-size-5">
       <slot name="header">
-        <div :class="['card-header-title', headerClass]">
+        <div
+          :class="[
+            'card-header-title',
+            'is-justify-content-center',
+            headerClass
+          ]"
+        >
           <span>{{ title }}</span>
         </div>
       </slot>
@@ -60,8 +66,14 @@ export default {
 
   &.is-primary-light {
     .card-header-title {
-      background: $primary-light;
+      background: linear-gradient(
+        125deg,
+        rgba(78, 178, 254, 1) 0%,
+        rgba(92, 242, 255, 1) 100%
+      );
       color: $white;
+      text-align: center;
+      text-transform: uppercase;
     }
   }
 }

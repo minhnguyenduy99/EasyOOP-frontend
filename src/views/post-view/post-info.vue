@@ -25,7 +25,7 @@
               <b-tag
                 v-for="tag in post.tags"
                 :key="tag.id"
-                type="is-primary-light"
+                type="is-primary-dark"
                 >{{ tag.tag_value }}</b-tag
               >
             </b-taglist>

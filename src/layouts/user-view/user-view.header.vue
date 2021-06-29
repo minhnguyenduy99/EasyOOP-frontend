@@ -10,20 +10,21 @@
         v-show="_showNavbar"
         class="navigation-bar"
         fixed-top
-        :type="_themeType"
-        transparent
-        :shadow="_showNavbar && scrollPosition > 0"
+        type="is-primary-dark"
+        :shadow="false"
       >
         <template #brand>
-          <b-navbar-item tag="router-link" to="/" class="is-align-self-center">
-            <b-image
+          <b-navbar-item tag="router-link" to="/" class="px-3">
+            <img
               id="website-icon"
-              src="https://cdn4.iconfinder.com/data/icons/technology-83/1000/object_programming_development_oriented_developer_object-oriented_programming_software-512.png"
+              src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1624886684/oop-learning-helper/logo_lkpsia.png"
+              width="36"
+              height="36"
             />
           </b-navbar-item>
         </template>
-        <template #start>
-          <b-navbar-item tag="div">
+        <template #start class="is-align-items-center">
+          <!-- <b-navbar-item tag="div">
             <div class="navigate-button-group">
               <b-dropdown
                 :triggers="['click']"
@@ -68,17 +69,37 @@
                 </b-dropdown-item>
               </b-dropdown>
               <b-button
-                class="navigate-button is-icon-button"
-                size="is-medium"
+                class="navigate-button"
+                rounded
                 type="is-primary-dark"
                 icon-right="search"
                 @click="showSearchModal = true"
               />
             </div>
+          </b-navbar-item> -->
+          <b-navbar-dropdown boxed class="is-navbar-fullwidth">
+            <template #label>
+              <p class="has-text-weight-bold">CHỦ ĐỀ</p>
+            </template>
+            <posts-by-topic-panel />
+          </b-navbar-dropdown>
+          <b-navbar-dropdown boxed class="is-navbar-fullwidth">
+            <template #label>
+              <p class="has-text-weight-bold">BÀI TEST</p>
+            </template>
+            <tests-by-topic-panel />
+          </b-navbar-dropdown>
+          <b-navbar-item tag="div">
+            <b-button
+              rounded
+              type="is-primary"
+              icon-right="search"
+              @click="showSearchModal = true"
+            />
           </b-navbar-item>
         </template>
         <template #end>
-          <b-navbar-item tag="div" id="navigation-bar">
+          <!-- <b-navbar-item tag="div" id="navigation-bar">
             <div class="navigate-button-group">
               <b-button
                 :class="{
@@ -104,6 +125,25 @@
                 type="is-primary-dark"
                 @click="$p_showLoginModal"
                 >Login</b-button
+              >
+              <user-badge v-else :user="user" />
+            </div>
+          </b-navbar-item> -->
+          <b-navbar-item tag="div">
+            <div class="is-flex">
+              <b-button
+                class="has-text-weight-bold"
+                type="is-primary-dark"
+                tag="router-link"
+                to="/"
+                >VỀ CHÚNG TÔI</b-button
+              >
+              <b-button
+                v-if="!isAuthenticated"
+                type="is-primary"
+                class="has-text-weight-bold"
+                @click="$p_showLoginModal"
+                >ĐĂNG NHẬP</b-button
               >
               <user-badge v-else :user="user" />
             </div>
@@ -151,9 +191,6 @@ export default {
   }),
   computed: {
     ...mapGetters("AUTH", ["isAuthenticated", "user"]),
-    _themeType() {
-      return this.scrollPosition === 0 ? "is-primary-light" : "is-white";
-    },
     _showNavbar: {
       get() {
         return !this.hasTransition || this.showNavbar;
@@ -217,12 +254,7 @@ export default {
 
 <style scoped lang="scss">
 $navbar-transition: 500ms;
-$navbar-height: 82px;
-
-#website-icon {
-  width: 50px;
-  height: 100%;
-}
+$navbar-height: 56px;
 
 .navigation-bar {
   transition-delay: 150ms;
@@ -230,10 +262,8 @@ $navbar-height: 82px;
 }
 
 .navigate-button {
-  border: none;
   font-weight: bold;
-  display: block;
-  height: 100%;
+  border: none;
 
   &-group {
     display: flex;

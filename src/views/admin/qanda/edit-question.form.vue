@@ -5,7 +5,6 @@
     rounded
     width="500px"
     title="Cập nhật câu hỏi"
-    headerClass="has-background-primary-light has-text-white"
   >
     <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-5">
       <validated-form-element name="tags" rules="required" label="Nhãn dán">
@@ -15,7 +14,7 @@
           :data="filteredTags"
           v-model="chosenTags"
           autocomplete
-          type="is-primary-light"
+          type="is-primary-dark"
           field="tag_id"
           @typing="$on_tagInputTyping"
           :create-tag="tag => tag.tag_id"
@@ -44,7 +43,7 @@
         type="is-primary is-dark"
         @click="$on_submitButtonClicked"
         class="is-fullwidth"
-        >Cập nhật</b-button
+        >CẬP NHẬT</b-button
       >
     </ValidationObserver>
   </modal-form>

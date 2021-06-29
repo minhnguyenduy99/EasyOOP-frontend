@@ -26,12 +26,14 @@
     />
     <b-modal v-model="showModal">
       <template>
-        <div class="card">
-          <div class="card-header has-background-primary-light">
-            <div class="card-header-title">
-              <span class="is-size-5 has-text-light">Lọc nâng cao</span>
-            </div>
-          </div>
+        <modal-form
+          class="edit-tag-form"
+          width="450px"
+          :has-card="true"
+          rounded
+          title="LỌC NÂNG CAO"
+          type="is-primary-light"
+        >
           <div id="advanced-search-container" class="card-content">
             <div class="search-group">
               <div class="search-group-header">
@@ -81,12 +83,19 @@
               </div>
             </div>
           </div>
-          <div class="card-footer p-5">
+          <hr />
+          <div class="is-flex is-justify-content-center">
             <b-button type="is-primary" outlined @click="$on_applySearch"
               >Áp dụng</b-button
             >
           </div>
-        </div>
+        </modal-form>
+        <!-- <div class="card">
+          <div class="card-header has-background-primary-light">
+            <div class="card-header-title">
+              <span class="is-size-5 has-text-light">Lọc nâng cao</span>
+            </div>
+          </div> -->
       </template>
     </b-modal>
   </div>
@@ -97,6 +106,9 @@ import { POST_STATUSES, VERIFICATION_TYPES } from "./consts";
 
 export default {
   name: "VerificationSearch",
+  components: {
+    "modal-form": () => import("@/components/modal-form.vue")
+  },
   data: () => ({
     DEFAULT_SEARCH_OPTIONS: {
       search: null,

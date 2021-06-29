@@ -4,7 +4,7 @@
       item.post_title
     }}</span>
     <b-taglist>
-      <b-tag v-for="tag in item.tags" :key="tag.id" type="is-primary-light">{{
+      <b-tag v-for="tag in item.tags" :key="tag.id" type="is-primary-dark">{{
         tag
       }}</b-tag>
     </b-taglist>
@@ -29,7 +29,7 @@ export default {
 .post-panel-item {
   &:hover {
     > span {
-      color: $primary;
+      color: $primary-dark;
     }
   }
 }

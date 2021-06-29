@@ -15,7 +15,7 @@
           :data="filteredTags"
           v-model="chosenTags"
           autocomplete
-          type="is-primary-light"
+          type="is-primary-dark"
           field="tag_id"
           @typing="$on_tagInputTyping"
           :create-tag="tag => tag.tag_id"
@@ -44,7 +44,7 @@
         type="is-primary is-dark"
         @click="$on_submitButtonClicked"
         class="is-fullwidth"
-        >Tạo</b-button
+        >TẠO</b-button
       >
     </ValidationObserver>
   </modal-form>

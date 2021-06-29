@@ -41,12 +41,14 @@
             v-if="!lastPage"
             type="is-primary-light"
             class="has-text-weight-bold"
+            :loading="isLoadingSentences"
             @click="$on_loadButtonClicked"
             >Tải thêm</b-button
           >
         </div>
       </div>
     </admin-content>
+    <backtop type="is-primary-light" outlined />
   </div>
 </template>
 
@@ -56,6 +58,7 @@ import { ToastNotifier } from "../../../utils";
 export default {
   name: "TestManagementPage",
   components: {
+    backtop: () => import("@/components/backtop"),
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
     "test-sentence-editable": () =>
@@ -72,7 +75,8 @@ export default {
     test: null,
     page: 1,
     lastPage: false,
-    updated: false
+    updated: false,
+    isLoadingSentences: false
   }),
   mounted: function() {
     this.$_getTestById();
@@ -133,11 +137,13 @@ export default {
     },
 
     $_getTestById() {
+      this.isLoadingSentences = true;
       this.getTestById({
         test_id: this.testId,
         page: this.page,
         includeTest: this.page === 1
       }).then(result => {
+        this.isLoadingSentences = false;
         const { error, data } = result;
         if (error) {
           return;

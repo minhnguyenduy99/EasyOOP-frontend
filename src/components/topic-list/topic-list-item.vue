@@ -67,7 +67,7 @@ $topic-post-list-padding: 1rem 0;
   }
 
   &.is-active {
-    background: $primary-light;
+    background: $primary;
     color: $light;
   }
 }

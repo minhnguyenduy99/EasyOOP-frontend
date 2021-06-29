@@ -1,76 +1,10 @@
 <template>
   <div id="home-page">
-    <div class="hero is-fullheight-with-navbar">
-      <div class="hero-body">
-        <div class="container columns is-centered">
-          <div class="column">
-            <class-diagram
-              data-aos="fade-right"
-              data-aos-duration="1000"
-              size="is-large"
-              title="Học OOP"
-              typeTitle="GIỚI THIỆU"
-              :hasType="true"
-            >
-              <template #field>
-                <div class="class-body-item">
-                  <p class="class-body-symbol">#</p>
-                  <p class="class-body-text">
-                    Đối_tượng
-                  </p>
-                </div>
-                <div class="class-body-item">
-                  <p class="class-body-symbol">#</p>
-                  <p class="class-body-text">
-                    Bài_học
-                  </p>
-                </div>
-                <div class="class-body-item">
-                  <p class="class-body-symbol">#</p>
-                  <p class="class-body-text">
-                    Chủ_đề
-                  </p>
-                </div>
-              </template>
-              <template #method>
-                <div class="class-body-item">
-                  <p class="class-body-symbol">+</p>
-                  <p
-                    class="class-body-text is-clickable"
-                    @click="$_scrollToFirstStep"
-                  >
-                    Xem_lộ_trình_học()
-                  </p>
-                </div>
-                <div class="class-body-item">
-                  <p class="class-body-symbol">+</p>
-                  <p class="class-body-text is-clickable">
-                    Xem_bài_viết()
-                  </p>
-                </div>
-                <div class="class-body-item">
-                  <p class="class-body-symbol">+</p>
-                  <p class="class-body-text is-clickable">
-                    Làm_trắc_nghiệm()
-                  </p>
-                </div>
-              </template>
-            </class-diagram>
-          </div>
-          <div class="column">
-            <b-image
-              data-aos="fade-left"
-              data-aos-duration="1000"
-              src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1624101709/oop-learning-helper/10-applications-of-object-oriented-programming_ftirco.jpg"
-            />
-          </div>
-        </div>
-      </div>
-    </div>
+    <home-hero />
     <div
       v-for="(step, index) in topics"
       :key="step.id"
-      class="hero is-fullheight-with-navbar"
+      :class="['step-' + index, 'hero is-fullheight-with-navbar is-large']"
       ref="steps"
     >
       <div class="hero-body">
@@ -78,33 +12,48 @@
           :image="step.thumbnail_url"
           :title="step.topic_title"
           :subtitle="step.topic_description"
-          :order="index + 1"
+          :order="index"
+          :reverse="index % 2 === 1"
           style="width: 100%"
         >
-          <template #action>
-            <div class="mt-6">
-              <button
+          <template #trigger>
+            <div
+              :class="[
+                'mt-4 is-flex',
+                index % 2 === 1 ? 'is-justify-content-flex-end' : ''
+              ]"
+            >
+              <!-- <button
                 class="btn-grad"
                 type="is-primary"
                 size="is-medium"
                 :disabled="!step.first_post_id"
+                @click="
+                  $router.push({
+                    name: 'PostView',
+                    params: { post_id: step.first_post_id }
+                  })
+                "
               >
                 {{ step.first_post_id ? "Bắt đầu học" : "Sắp ra mắt" }}
-              </button>
-              <!-- <b-button
+              </button> -->
+              <button
+                class="btn-grad has-text-weight-bold is-rounded"
+                rounded
                 type="is-primary"
                 size="is-medium"
                 icon-right="angle-double-right"
                 tag="router-link"
                 :disabled="!step.first_post_id"
-                :to="{
-                  name: 'PostView',
-                  params: { post_id: step.first_post_id }
-                }"
-                >{{
-                  step.first_post_id ? "Bắt đầu học" : "Sắp ra mắt"
-                }}</b-button
-              > -->
+                @click="
+                  $router.push({
+                    name: 'PostView',
+                    params: { post_id: step.first_post_id }
+                  })
+                "
+              >
+                {{ step.first_post_id ? "Bắt đầu học" : "Sắp ra mắt" }}
+              </button>
             </div>
           </template>
         </learning-step>
@@ -121,6 +70,7 @@ export default {
   name: "Home",
   components: {
     "learning-step": () => import("./learning-step"),
+    "home-hero": () => import("./home-hero.vue"),
     ClassDiagram
   },
   data: () => ({
@@ -213,13 +163,11 @@ export default {
 .btn-grad {
   background-image: linear-gradient(
     to right,
-    #1fa2ff 0%,
+    $primary 0%,
     #12d0f1 51%,
     $primary-light 100%
   );
-}
-
-.btn-grad {
+  height: auto;
   padding: 15px 45px;
   text-align: center;
   text-transform: uppercase;
@@ -227,8 +175,10 @@ export default {
   background-size: 200% auto;
   color: white;
   box-shadow: 0 0 20px #eee;
-  border-radius: 10px;
+  border-radius: 1000px;
   border: none;
+  cursor: pointer;
+  font-size: 20px;
 }
 
 .btn-grad:hover {

@@ -157,7 +157,7 @@ export default {
 <style lang="scss">
 .post-preview-index {
   padding-left: 1.5rem;
-  border-left: 10px solid $primary-light;
+  border-left: 10px solid $primary;
 }
 
 a.index-anchor {

@@ -3,6 +3,7 @@
     id="create-creator-form"
     title="Tạo tác giả"
     :has-card="true"
+    width="400px"
     headerClass="has-background-primary-light has-text-white"
   >
     <ValidationObserver
@@ -52,7 +53,7 @@
         @click="$on_submittedForm"
         :disabled="!selected"
       >
-        <span class="has-text-weight-bold">Tạo</span>
+        <span class="has-text-weight-bold">TẠO</span>
       </b-button>
     </ValidationObserver>
   </modal-form>

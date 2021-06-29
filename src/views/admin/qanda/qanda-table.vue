@@ -33,7 +33,7 @@
 
       <b-table-column label="Nhãn dán" width="200">
         <template v-slot="{ row }">
-          <b-tag v-if="row.tag_id" type="is-primary-light">
+          <b-tag v-if="row.tag_id" type="is-primary-dark">
             <span class="has-text-weight-bold">{{ row.tag_value }}</span>
           </b-tag>
           <span class="has-text-grey" v-else>Chưa có nhãn</span>

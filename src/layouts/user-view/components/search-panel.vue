@@ -6,13 +6,13 @@
           <span class="is-size-4">{{ panelTitle }}</span>
           <hr class="is-hr" />
         </div> -->
-        <div class="card-header is-primary-light" role="button">
+        <div class="card-header is-primary" role="button">
           <p class="card-header-title">
             {{ panelTitle }}
           </p>
           <a class="card-header-icon">
             <b-icon
-              type="is-primary-light"
+              type="is-primary"
               :icon="tabOpen ? 'chevron-down' : 'chevron-left'"
             >
             </b-icon>

@@ -33,7 +33,7 @@
           headerText="Nhãn dán câu hỏi"
           :tags="questionTags"
           :emptyText="emptyText"
-          :tagButtonType="tag => (tag.used ? 'is-danger' : 'is-primary-light')"
+          :tagButtonType="tag => (tag.used ? 'is-danger' : 'is-primary-dark')"
           @tag-clicked="$on_selectTag"
         >
         </tag-list>

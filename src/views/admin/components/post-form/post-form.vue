@@ -187,12 +187,7 @@
       </validated-form-element>
       <slot name="submit" v-bind="{ form, detailedForm, validator }" />
     </ValidationObserver>
-    <list-tags-modal
-      v-model="openTagModal"
-      :tags="listTags"
-      field="tag_value"
-      @apply="$on_applyTags"
-    />
+    <list-tags-modal v-model="openTagModal" @apply="$on_applyTags" />
   </div>
 </template>
 

@@ -4,15 +4,15 @@
       <template #trigger>
         <b-button
           :selected="open"
-          type="is-primary-light"
-          class="is-badge-button px-4"
+          type="is-primary"
+          class="user-badge__trigger is-badge-button p-0"
           size="is-medium"
         >
-          <span class="is-size-6 has-text-weight-bold">{{
+          <span class="is-size-6 has-text-weight-bold ml-3">{{
             user.profile.last_name
           }}</span>
           <b-image
-            class="badge-avatar"
+            class="badge-avatar is-coverable"
             :src="user.profile.profile_pic"
             rounded
             ratio="1by1"
@@ -22,7 +22,10 @@
       <b-dropdown-item custom class="user-badge-profile">
         <div class="media">
           <div class="media-left">
-            <img class="badge-avatar-detail" :src="user.profile.profile_pic" />
+            <img
+              class="badge-avatar-detail is-coverable"
+              :src="user.profile.profile_pic"
+            />
           </div>
           <div class="media-content">
             <div class="is-size-5 has-text-weight-bold">
@@ -31,6 +34,7 @@
             <b-button
               class="mt-2"
               outlined
+              rounded
               size="is-small"
               type="is-primary-dark"
               tag="router-link"
@@ -172,6 +176,7 @@ export default {
 
 <style scoped lang="scss">
 .user-badge {
+  border-radius: 1000px;
   // &-avatar {
   //   border-radius: 50%;
   //   border: 2px solid transparent;
@@ -179,6 +184,11 @@ export default {
   //   width: calc(48px - 4px);
   //   height: 100%;
   // }
+
+  &__trigger {
+    border-radius: 1000px;
+    height: fit-content;
+  }
 
   &-trigger {
     width: fit-content;
@@ -197,7 +207,6 @@ export default {
 
   &-avatar {
     max-height: fit-content !important;
-    width: 100%;
     width: 60px;
     height: auto;
     border-radius: 50%;
@@ -214,6 +223,7 @@ export default {
   width: 72px;
   height: 72px;
   border-radius: 50%;
+  object-fit: cover;
   max-height: 100% !important;
 }
 </style>

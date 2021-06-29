@@ -17,10 +17,9 @@
           ]"
         >
           <b-button
-            type="is-primary"
+            type="is-primary-dark"
             outlined
             :icon-right="reduce ? 'chevron-right' : 'times'"
-            size="is-small"
             @click="reduce = !reduce"
           ></b-button>
         </div>
@@ -46,12 +45,23 @@
               :active="index === currentViewIndex"
             >
               <template #label>
-                <b-icon
-                  :icon="item.icon"
-                  size="is-medium"
-                  :pack="item.pack"
-                ></b-icon>
-                <span class="--title is-size-6 ml-5">{{ item.title }}</span>
+                <div class="is-flex is-align-items-center">
+                  <b-icon
+                    :icon="item.icon"
+                    size="is-medium"
+                    :type="index !== currentViewIndex ? 'is-primary-dark' : ''"
+                    :pack="item.pack"
+                  ></b-icon>
+                  <span
+                    :class="[
+                      '--title',
+                      'is-size-6',
+                      'ml-5',
+                      index === currentViewIndex ? 'has-text-weight-bold' : ''
+                    ]"
+                    >{{ item.title }}</span
+                  >
+                </div>
               </template>
             </b-menu-item>
           </b-menu-list>
@@ -125,7 +135,6 @@ $sidebar-width-reduce: 80px;
 
       ul.menu-list {
         li {
-          margin-left: -0.5em;
           span.--title {
             display: none;
           }

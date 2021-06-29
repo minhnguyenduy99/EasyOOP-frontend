@@ -1,25 +1,52 @@
 <template>
   <b-modal
-    class="list-tags-modal"
+    class="tags-modal"
     v-bind="$attrs"
     v-on="$listeners"
     v-model="_open"
     has-modal-card
   >
     <div class="card">
-      <div class="card-content">
-        <div class="tag-button-container">
-          <b-checkbox-button
-            class="has-text-weight-bold"
-            v-for="tag in tags"
-            :key="tag.id"
-            v-model="selectedTags"
-            :native-value="tag"
-            rounded
-            type="is-primary-light"
+      <div class="tags-modal__content card-content">
+        <div>
+          <tag-list
+            :tags="tags"
+            emptyText="Không có nhãn nào"
+            :displayTagId="false"
+            :rounded="true"
+            searchable
           >
-            <span>{{ tag[field] }}</span>
-          </b-checkbox-button>
+            <template #header>
+              <div class="tag-list__header">
+                <div
+                  class="is-flex is-justify-content-space-between is-align-items-flex-end mb-3"
+                >
+                  <p class="is-size-5">Danh sách nhãn</p>
+                  <b-input
+                    v-model="searchTagValue"
+                    placeholder="Tìm kiếm nhãn dán"
+                    icon-right="search"
+                    @keyup.enter.native="$on_searchTags"
+                  />
+                </div>
+                <hr class="is-hr" />
+              </div>
+            </template>
+            <template #tags>
+              <b-checkbox-button
+                v-for="tag in tags"
+                :key="tag.id"
+                class="checkbox-tag is-rounded is-primary-light is-outlined"
+                size="is-small"
+                type="is-primary-light"
+                v-model="selectedTags"
+                :native-value="tag"
+                ref="checkbox-tag"
+                >{{ tag.tag_value }}</b-checkbox-button
+              >
+            </template>
+          </tag-list>
+          <b-loading v-model="isSearching" :is-full-page="false" />
         </div>
         <hr />
         <div class="is-flex is-justify-content-flex-end">
@@ -36,30 +63,29 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   name: "ListTagsModal",
+  components: {
+    "tag-list": () => import("@/components/tag-list.vue")
+  },
   props: {
     open: {
       type: Boolean,
       default: () => false
-    },
-    tags: {
-      type: Array,
-      default: () => []
-    },
-    field: String
+    }
   },
   model: {
     prop: "open",
     event: "opened"
   },
   data: () => ({
-    tagStates: [],
-    selectedTags: []
+    tags: [],
+    selectedTags: [],
+    searchTagValue: "",
+    isSearching: false
   }),
-  mounted: function() {
-    this.tagStates = Array(this.tags.length).fill(false);
-  },
   computed: {
     _open: {
       get() {
@@ -69,25 +95,34 @@ export default {
         this.$emit("opened", val);
       }
     }
+  },
+  mounted: function() {
+    this.$on_searchTags();
+  },
+  methods: {
+    ...mapActions("POST", ["searchPostTags"]),
+    $on_searchTags() {
+      this.isSearching = true;
+      this.searchPostTags(this.searchTagValue).then(result => {
+        this.isSearching = false;
+        const { error, data } = result;
+        if (error) {
+          return;
+        }
+        this.tags.length = 0;
+        this.tags = data;
+      });
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.tag-button-container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: 0.5rem;
-  row-gap: 0.5rem;
-
-  @include tablet {
-    grid-template-columns: repeat(6, 1fr);
-  }
-
-  @include desktop {
-    max-width: 960px;
-    grid-template-columns: repeat(auto-fill, 200px);
-    grid-auto-columns: 20px;
+.tags-modal {
+  &__content {
+    @include desktop {
+      width: 960px;
+    }
   }
 }
 </style>

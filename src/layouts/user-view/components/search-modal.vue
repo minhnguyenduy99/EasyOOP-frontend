@@ -50,9 +50,12 @@
                 v-model="tagSearchType"
                 :true-value="1"
                 :false-value="0"
-                type="is-primary-light"
-                >{{ TAG_SEARCH_TYPES[tagSearchType] }}</b-switch
+                type="is-primary"
               >
+                <span class="has-text-weight-bold">{{
+                  TAG_SEARCH_TYPES[tagSearchType]
+                }}</span>
+              </b-switch>
             </b-field>
             <hr />
             <tag-list
@@ -66,9 +69,9 @@
                 <b-checkbox-button
                   v-for="tag in tags"
                   :key="tag.id"
-                  class="checkbox-tag is-rounded is-primary-light is-outlined"
+                  class="checkbox-tag is-rounded is-primary-dark is-outlined"
                   size="is-small"
-                  type="is-primary-light"
+                  type="is-primary-dark"
                   v-model="selectedTags"
                   :native-value="tag.tag_id"
                   ref="checkbox-tag"

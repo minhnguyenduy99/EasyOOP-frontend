@@ -35,7 +35,7 @@
 
       <b-table-column label="Loại duyệt" width="200" v-slot="{ row }">
         <template>
-          <b-tag size="is-small" type="is-primary-light">
+          <b-tag size="is-small" type="is-primary-dark">
             {{ VERIFICATION_TYPES[row.type].text }}
           </b-tag>
         </template>
@@ -68,7 +68,9 @@
               :type="action.type"
             >
               <b-button
+                class="is-icon-button"
                 size="is-small"
+                rounded
                 :icon-left="action.icon"
                 :type="action.type"
                 :outlined="action.outlined"

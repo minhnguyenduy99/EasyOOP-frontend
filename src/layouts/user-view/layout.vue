@@ -109,7 +109,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-$navbar-height: 82px;
+$navbar-height: 56px;
 
 #user-view-header {
   padding: 0;
