@@ -4,9 +4,10 @@
       <div class="test-detail-info">
         <div class="ha-vertical-layout-7">
           <div class="test-field">
-            <span class="is-size-4 has-text-weight-medium">{{
-              testResult.title
-            }}</span>
+            <span
+              class="is-size-4 has-text-weight-bold has-text-primary-dark"
+              >{{ testResult.title }}</span
+            >
           </div>
         </div>
         <hr />

@@ -1,17 +1,19 @@
 <template>
   <div id="post-detail-page">
-    <div v-if="post" class="hero is-fullheight-with-navbar">
-      <div class="hero-body is-relative">
-        <div class="hero-background__container">
-          <div class="hero-background__overlay"></div>
-          <div class="hero-background__image">
-            <img :src="post.thumbnail_file_url" />
-          </div>
-        </div>
-        <div class="hero-background__content">
-          <post-info :post="post" />
+    <div v-if="post" class="hero is-halfheight">
+      <div class="hero-body is-relative px-0">
+        <div class="container">
+          <post-info :post="post" :topicThumbnailImage="topic.thumbnail_url" />
         </div>
       </div>
+    </div>
+    <div v-if="post" class="has-text-centered py-5">
+      <p class="has-text-primary is-italic has-text-weight-bold is-size-4">
+        Bài số {{ currentPostIndex }}
+      </p>
+      <p class="is-size-1 has-text-weight-extra-bold is-uppercase">
+        {{ post.post_title }}
+      </p>
     </div>
     <div class="post-main-body">
       <section id="list-posts-section">
@@ -77,6 +79,12 @@ export default {
     isCurrentPostInTheSameTopic() {
       return (
         this.listPosts.findIndex(post => post.post_id === this.postId) !== -1
+      );
+    },
+    currentPostIndex() {
+      return (
+        this.listPosts.findIndex(post => post.post_id === this.post?.post_id) +
+        1
       );
     }
   },

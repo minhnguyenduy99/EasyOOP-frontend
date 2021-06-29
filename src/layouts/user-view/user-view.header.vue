@@ -24,59 +24,6 @@
           </b-navbar-item>
         </template>
         <template #start class="is-align-items-center">
-          <!-- <b-navbar-item tag="div">
-            <div class="navigate-button-group">
-              <b-dropdown
-                :triggers="['click']"
-                class="is-fixed-on-navbar"
-                ref="dropdown0"
-              >
-                <template #trigger="{ active }">
-                  <b-button
-                    class="navigate-button"
-                    type="is-primary-light"
-                    :icon-right="active ? 'chevron-up' : 'chevron-down'"
-                    @click="currentDropdownIndex = 0"
-                  >
-                    <span>
-                      CHỦ ĐỀ
-                    </span>
-                  </b-button>
-                </template>
-                <b-dropdown-item paddingless custom>
-                  <posts-by-topic-panel />
-                </b-dropdown-item>
-              </b-dropdown>
-              <b-dropdown
-                :triggers="['click']"
-                class="is-fixed-on-navbar"
-                ref="dropdown1"
-              >
-                <template #trigger="{ active }">
-                  <b-button
-                    class="navigate-button"
-                    type="is-primary-light"
-                    :icon-right="active ? 'chevron-up' : 'chevron-down'"
-                    @click="currentDropdownIndex = 1"
-                  >
-                    <span>
-                      BÀI TEST
-                    </span>
-                  </b-button>
-                </template>
-                <b-dropdown-item paddingless custom>
-                  <tests-by-topic-panel />
-                </b-dropdown-item>
-              </b-dropdown>
-              <b-button
-                class="navigate-button"
-                rounded
-                type="is-primary-dark"
-                icon-right="search"
-                @click="showSearchModal = true"
-              />
-            </div>
-          </b-navbar-item> -->
           <b-navbar-dropdown boxed class="is-navbar-fullwidth">
             <template #label>
               <p class="has-text-weight-bold">CHỦ ĐỀ</p>
@@ -99,45 +46,8 @@
           </b-navbar-item>
         </template>
         <template #end>
-          <!-- <b-navbar-item tag="div" id="navigation-bar">
-            <div class="navigate-button-group">
-              <b-button
-                :class="{
-                  'navigate-button': true
-                }"
-                :outlined="scrollPosition > 0"
-                type="is-primary-light"
-                tag="router-link"
-                to="/"
-                >Home</b-button
-              >
-              <b-button
-                class="navigate-button"
-                type="is-primary-light"
-                :outlined="scrollPosition > 0"
-                tag="router-link"
-                to="/"
-                >About</b-button
-              >
-              <b-button
-                v-if="!isAuthenticated"
-                class="navigate-button"
-                type="is-primary-dark"
-                @click="$p_showLoginModal"
-                >Login</b-button
-              >
-              <user-badge v-else :user="user" />
-            </div>
-          </b-navbar-item> -->
           <b-navbar-item tag="div">
             <div class="is-flex">
-              <b-button
-                class="has-text-weight-bold"
-                type="is-primary-dark"
-                tag="router-link"
-                to="/"
-                >VỀ CHÚNG TÔI</b-button
-              >
               <b-button
                 v-if="!isAuthenticated"
                 type="is-primary"

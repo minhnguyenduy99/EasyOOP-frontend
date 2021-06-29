@@ -48,7 +48,7 @@
                 :data="filteredTags"
                 v-model="selectedTags"
                 autocomplete
-                type="is-primary-light"
+                type="is-primary-dark"
                 @typing="$on_tagInputTyping"
                 field="tag_value"
                 :allow-new="false"

@@ -26,7 +26,71 @@
     />
     <b-modal v-model="showModal">
       <template>
-        <div class="card">
+        <modal-form
+          class="edit-tag-form"
+          width="450px"
+          :has-card="true"
+          rounded
+          title="LỌC NÂNG CAO"
+          type="is-primary-light"
+        >
+          <div id="advanced-search-container" class="card-content">
+            <div class="search-group">
+              <div class="search-group-header">
+                <span class="search-group-header-title">Bộ lọc</span>
+                <b-icon type="is-primary" icon="filter"></b-icon>
+              </div>
+              <div class="search-group-content">
+                <b-select v-model="searchOptions.type">
+                  <option
+                    v-for="type in verificationTypes"
+                    :value="type.value"
+                    :key="type.id"
+                  >
+                    {{ type.text }}
+                  </option>
+                </b-select>
+              </div>
+            </div>
+            <div class="search-group">
+              <div class="search-group-header">
+                <span class="search-group-header-title">Sắp xếp</span>
+                <b-icon type="is-primary" icon="sort"></b-icon>
+              </div>
+              <div class="search-group-content">
+                <b-select placeholder="Sắp xếp" v-model="searchOptions.sort_by">
+                  <option
+                    v-for="sort in sortOptions"
+                    :value="sort.value"
+                    :key="sort.id"
+                  >
+                    {{ sort.text }}
+                  </option>
+                </b-select>
+                <b-select
+                  v-show="selectedSortOrderOption"
+                  v-model="sortOptions.sort_order"
+                  placeholder="Thứ tự sắp xếp"
+                >
+                  <option
+                    v-for="order in selectedSortOrderOption"
+                    :value="order.value"
+                    :key="order.id"
+                  >
+                    {{ order.text }}
+                  </option>
+                </b-select>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="is-flex is-justify-content-center">
+            <b-button type="is-primary" outlined @click="$on_applySearch"
+              >Áp dụng</b-button
+            >
+          </div>
+        </modal-form>
+        <!-- <div class="card">
           <div class="card-header has-background-primary-light">
             <div class="card-header-title">
               <span class="is-size-5 has-text-light">Lọc nâng cao</span>
@@ -86,7 +150,7 @@
               >Áp dụng</b-button
             >
           </div>
-        </div>
+        </div> -->
       </template>
     </b-modal>
   </div>
@@ -97,6 +161,9 @@ import { POST_STATUSES, VERIFICATION_TYPES } from "./consts";
 
 export default {
   name: "PostSearch",
+  components: {
+    "modal-form": () => import("@/components/modal-form")
+  },
   data: () => ({
     DEFAULT_SEARCH_OPTIONS: {
       search: null,

@@ -24,6 +24,7 @@
               <b-button
                 outlined
                 class="has-text-weight-bold"
+                rounded
                 size="is-small"
                 icon-pack="fas"
                 type="is-primary"

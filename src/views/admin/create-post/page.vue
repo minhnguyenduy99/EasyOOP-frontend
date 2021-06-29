@@ -6,13 +6,13 @@
           <div id="submit-button-group">
             <b-button
               class="--submit"
-              type="is-primary is-dark"
+              type="is-primary"
               @click="$on_submitForm(form, validator)"
               >Tạo mới</b-button
             >
             <b-button
               class="--preview"
-              type="is-primary-light"
+              type="is-primary-dark"
               outlined
               icon-left="eye"
               @click="$on_previewButtonClicked(detailedForm)"

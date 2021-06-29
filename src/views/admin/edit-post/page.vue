@@ -13,7 +13,7 @@
             >
             <b-button
               class="--preview"
-              type="is-primary-light"
+              type="is-primary-dark"
               outlined
               icon-left="eye"
               @click="$on_previewButtonClicked(detailedForm)"

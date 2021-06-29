@@ -1,6 +1,6 @@
 <template>
   <div class="panel is-primary-light test-result-info">
-    <p class="panel-heading">
+    <p class="panel-heading has-text-centered">
       KẾT QUẢ
     </p>
     <div class="p-3 ha-vertical-layout-6">

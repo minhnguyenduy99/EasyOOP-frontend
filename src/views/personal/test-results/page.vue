@@ -1,6 +1,6 @@
 <template>
   <div id="personal-test-result-page" class="panel is-primary-light">
-    <p class="panel-heading">Kết quả bài test</p>
+    <p class="panel-heading is-uppercase">Kết quả bài test</p>
     <div class="panel-block">
       <div class="panel-container">
         <test-result-table />

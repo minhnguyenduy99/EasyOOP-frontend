@@ -46,11 +46,11 @@
               class="is-tag"
               v-for="tag in row.tags.slice(0, 2)"
               :key="tag.id"
-              type="is-primary-light"
+              type="is-primary-dark"
               size="is-small"
               >{{ tag.tag_value }}</b-tag
             >
-            <b-tag v-if="row.tags.length > 2" type="is-primary-light">
+            <b-tag v-if="row.tags.length > 2" type="is-primary-dark">
               ...
             </b-tag>
           </b-taglist>

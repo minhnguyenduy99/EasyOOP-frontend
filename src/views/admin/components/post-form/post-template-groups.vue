@@ -4,13 +4,13 @@
       <div class="ha-vertical-layout-7">
         <h1 class="is-size-5 has-text-grey">Thêm template</h1>
         <div class="template-options-switch-group">
-          <b-switch v-model="showTestTemplate" type="is-primary-light">
+          <b-switch v-model="showTestTemplate" type="is-primary">
             <span
               :class="{
                 'has-text-weight-bold': showTestTemplate,
-                'has-text-primary-light': showTestTemplate
+                'has-text-primary': showTestTemplate
               }"
-              >Test template</span
+              >Template của bài test</span
             >
           </b-switch>
         </div>

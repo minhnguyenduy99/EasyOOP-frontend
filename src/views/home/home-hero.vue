@@ -34,6 +34,7 @@
             size="is-medium"
             rounded
             class="home__hero__button--about"
+            @click="$_scrollToBottom"
             >VỀ CHÚNG TÔI</b-button
           >
         </div>
@@ -52,14 +53,28 @@
   </div>
 </template>
 
+<script>
+export default {
+  methods: {
+    $_scrollToBottom() {
+      window.scroll({
+        top: document.body.scrollHeight,
+        left: 0,
+        behavior: "smooth"
+      });
+    }
+  }
+};
+</script>
+
 <style scoped lang="scss">
 .home__hero {
   &__container {
     text-align: center;
-    background: linear-gradient(
-      125deg,
-      rgba(78, 178, 254, 1) 0%,
-      rgba(92, 242, 255, 1) 100%
+    background-image: linear-gradient(
+      to right,
+      $primary 0%,
+      $primary-light 100%
     );
 
     @include tablet {

@@ -1,6 +1,6 @@
 <template>
   <div class="panel is-primary-light">
-    <p class="panel-heading">
+    <p class="panel-heading has-text-centered">
       THÔNG TIN BÀI TEST
     </p>
     <div class="p-5 ha-vertical-layout-5">

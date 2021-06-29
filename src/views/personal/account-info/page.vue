@@ -1,6 +1,6 @@
 <template>
-  <div id="personal-account-info-page" class="panel is-primary">
-    <p class="panel-heading">Thông tin tài khoản</p>
+  <div id="personal-account-info-page" class="panel is-primary-light">
+    <p class="panel-heading is-uppercase">Thông tin tài khoản</p>
     <div class="panel-block">
       <div class="p-3 ha-vertical-layout-4">
         <profile-info-group

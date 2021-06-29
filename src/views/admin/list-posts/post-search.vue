@@ -3,7 +3,7 @@
     <div id="admin-post-search-group">
       <b-input
         class="input--search"
-        placeholder="Search name or tag"
+        placeholder="Tìm kiếm bài viết theo tên hoặc nhãn dán"
         type="is-primary"
         icon="search"
         v-model="searchOptions.search"

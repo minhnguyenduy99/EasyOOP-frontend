@@ -21,7 +21,9 @@
                 <div
                   class="is-flex is-justify-content-space-between is-align-items-flex-end mb-3"
                 >
-                  <p class="is-size-5">Danh sách nhãn</p>
+                  <p class="is-size-5 is-uppercase has-text-weight-bold">
+                    Danh sách nhãn
+                  </p>
                   <b-input
                     v-model="searchTagValue"
                     placeholder="Tìm kiếm nhãn dán"
@@ -36,9 +38,9 @@
               <b-checkbox-button
                 v-for="tag in tags"
                 :key="tag.id"
-                class="checkbox-tag is-rounded is-primary-light is-outlined"
+                class="checkbox-tag is-rounded is-primary-dark is-outlined"
                 size="is-small"
-                type="is-primary-light"
+                type="is-primary-dark"
                 v-model="selectedTags"
                 :native-value="tag"
                 ref="checkbox-tag"

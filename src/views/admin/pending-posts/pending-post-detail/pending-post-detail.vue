@@ -16,7 +16,7 @@
           icon-right="pen"
           rounded
           outlined
-          type="is-primary-light"
+          type="is-primary"
           size="is-small"
           tag="router-link"
           :to="{ name: 'EditPost', params: { post_id: post.post_id } }"
