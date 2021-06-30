@@ -109,6 +109,7 @@
                 :icon-left="feature.icon"
                 :type="feature.type"
                 :outlined="feature.outlined"
+                rounded
                 @click.stop="postFeatureHandler[index]"
               />
             </b-tooltip>

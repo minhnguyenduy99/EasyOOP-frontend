@@ -47,14 +47,14 @@
                   <div v-for="social in contributor.profiles" :key="social.id">
                     <b-tooltip
                       position="is-bottom"
-                      type="is-primary"
+                      type="is-primary-dark"
                       v-if="social.iconType === 'tooltip'"
                       :label="social.value"
                     >
                       <b-icon
                         :icon="social.icon"
+                        :class="[social.type]"
                         :pack="social.iconPack"
-                        type="is-primary"
                         size="is-medium"
                       />
                     </b-tooltip>
@@ -62,7 +62,7 @@
                       <b-icon
                         :icon="social.icon"
                         :pack="social.iconPack"
-                        type="is-light"
+                        :class="[social.type]"
                         size="is-medium"
                       />
                     </a>
@@ -89,21 +89,21 @@ export default {
             iconType: "link",
             icon: "github",
             iconPack: "fab",
-            type: "is-github",
+            type: "has-text-white",
             to: "https://github.com/minhnguyenduy99"
           },
           {
             iconType: "link",
             icon: "facebook",
             iconPack: "fab",
-            type: "is-facebook",
+            type: "has-text-facebook",
             to: "https://www.facebook.com/minhnd.mei"
           },
           {
             iconType: "tooltip",
             icon: "google",
             iconPack: "fab",
-            type: "is-google",
+            type: "has-text-google",
             value: "minhnguyenduy99@gmail.com"
           }
         ]
@@ -115,18 +115,21 @@ export default {
             iconType: "link",
             icon: "github",
             iconPack: "fab",
+            type: "has-text-white",
             to: "https://github.com/LichND"
           },
           {
             iconType: "link",
             icon: "facebook",
             iconPack: "fab",
+            type: "has-text-facebook",
             to: "#"
           },
           {
             iconType: "tooltip",
             icon: "google",
             iconPack: "fab",
+            type: "has-text-google",
             value: "test@gmail.com"
           }
         ]
@@ -137,6 +140,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+$github: #333;
+
 #user-view-footer-content {
   width: 100%;
   height: 100%;
@@ -173,5 +178,17 @@ export default {
     width: 80px;
     height: auto;
   }
+}
+
+.has-text-facebook {
+  color: $facebook;
+}
+
+.has-text-google {
+  color: $google;
+}
+
+.has-text-github {
+  color: $github;
 }
 </style>

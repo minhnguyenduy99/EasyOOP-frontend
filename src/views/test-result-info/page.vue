@@ -166,6 +166,6 @@ export default {
 
 #sticky-test-info {
   position: sticky;
-  top: 100px;
+  top: 80px;
 }
 </style>

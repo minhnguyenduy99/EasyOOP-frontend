@@ -7,7 +7,7 @@
       :to="item => ({ name: 'PostView', params: { post_id: item.post_id } })"
       :items="topic.list_posts"
       field="post_title"
-      @navigate="$toggleDropdown()"
+      @navigate="$emit('item-clicked')"
     />
   </div>
 </template>

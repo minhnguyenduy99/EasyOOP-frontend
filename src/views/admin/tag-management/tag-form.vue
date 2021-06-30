@@ -84,7 +84,7 @@
         class="is-fullwidth"
         :disabled="!form.type"
         @click="$on_createTags"
-        >Tạo</b-button
+        >TẠO</b-button
       >
     </ValidationObserver>
   </div>

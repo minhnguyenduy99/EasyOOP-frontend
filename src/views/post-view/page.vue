@@ -1,6 +1,6 @@
 <template>
   <div id="post-detail-page">
-    <div v-if="post" class="hero is-halfheight">
+    <div v-if="post && topic" class="hero is-halfheight">
       <div class="hero-body is-relative px-0">
         <div class="container">
           <post-info :post="post" :topicThumbnailImage="topic.thumbnail_url" />
@@ -170,8 +170,9 @@ $hero-offset: 100px;
   }
 
   @include desktop {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    column-gap: 1.5rem;
 
     #list-posts-section {
       display: block;
@@ -179,11 +180,6 @@ $hero-offset: 100px;
       top: 100px;
       left: 0;
       height: fit-content;
-      max-width: 17%;
-    }
-
-    #post-view-section {
-      max-width: 80%;
     }
   }
 }

@@ -24,17 +24,29 @@
           </b-navbar-item>
         </template>
         <template #start class="is-align-items-center">
-          <b-navbar-dropdown boxed class="is-navbar-fullwidth">
+          <b-navbar-dropdown
+            hoverable
+            collapsible
+            boxed
+            class="is-navbar-fullwidth"
+            ref="post-dropdown"
+          >
             <template #label>
               <p class="has-text-weight-bold">CHỦ ĐỀ</p>
             </template>
-            <posts-by-topic-panel />
+            <posts-by-topic-panel @item-clicked="$onItemClicked" />
           </b-navbar-dropdown>
-          <b-navbar-dropdown boxed class="is-navbar-fullwidth">
+          <b-navbar-dropdown
+            hoverable
+            collapsible
+            boxed
+            class="is-navbar-fullwidth"
+            ref="test-dropdown"
+          >
             <template #label>
               <p class="has-text-weight-bold">BÀI TEST</p>
             </template>
-            <tests-by-topic-panel />
+            <tests-by-topic-panel @item-clicked="$onItemClicked" />
           </b-navbar-dropdown>
           <b-navbar-item tag="div">
             <b-button
@@ -97,7 +109,7 @@ export default {
     isLoading: false,
     listTopics: [],
     showSearchModal: false,
-    currentDropdownIndex: -1
+    dropdownActives: [false, false]
   }),
   computed: {
     ...mapGetters("AUTH", ["isAuthenticated", "user"]),
@@ -129,8 +141,10 @@ export default {
       this.showSearchModal = value;
     },
 
-    $on_itemClicked(index) {
-      this.$refs["navbar-dropdown"][index]?.toggle();
+    $onItemClicked() {
+      this.$refs["post-dropdown"].newActive = this.$refs[
+        "test-dropdown"
+      ].newActive = false;
     },
 
     $_toggleDropdown() {

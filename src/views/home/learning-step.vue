@@ -19,7 +19,7 @@
           :data-aos-anchor="anchor"
         >
           <h1 class="is-size-2 has-text-weight-bold mb-3">{{ title }}</h1>
-          <p class="is-size-4 has-text-weight-light">{{ subtitle }}</p>
+          <p class="is-size-4">{{ subtitle }}</p>
         </div>
 
         <div

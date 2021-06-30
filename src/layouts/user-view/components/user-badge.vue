@@ -28,7 +28,7 @@
             />
           </div>
           <div class="media-content">
-            <div class="is-size-5 has-text-weight-bold">
+            <div class="is-size-6 has-text-weight-bold">
               {{ user.profile.display_name }}
             </div>
             <b-button

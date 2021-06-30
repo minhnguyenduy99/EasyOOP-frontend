@@ -22,11 +22,12 @@
                 <b-tag
                   v-for="tag in listTagValues"
                   :key="tag.id"
-                  type="is-primary-light"
+                  type="is-primary-dark"
                   >{{ tag }}</b-tag
                 >
               </b-taglist>
             </div>
+            <hr />
           </div>
           <slot v-if="trigger" name="trigger-header" v-bind="{ post }">
             <div class="is-flex is-flex-direction-column">
@@ -51,7 +52,6 @@
           </slot>
         </div>
       </slot>
-      <hr />
       <!-- <div class="post-title">
         <span class="is-size-2-tablet is-size-3">{{ post.post_title }}</span>
       </div> -->
@@ -224,9 +224,11 @@ export default {
 <style scoped lang="scss">
 .post-view-detail {
   position: relative;
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: stretch;
+
+  .post-detail {
+    width: 100%;
+    overflow: hidden;
+  }
 
   .post-view-index-wrapper {
     display: none;
@@ -246,7 +248,7 @@ export default {
 
     &.has-index {
       column-gap: 2rem;
-      grid-template-columns: 3fr 1fr;
+      grid-template-columns: 1fr 250px;
     }
 
     .post-view-index-wrapper {
@@ -255,10 +257,6 @@ export default {
       height: fit-content;
       top: 0;
       right: 0;
-    }
-
-    .post-detail {
-      grid-column: 1 / span 1;
     }
   }
 }

@@ -9,7 +9,7 @@
       "
       :items="topic.list_tests"
       field="title"
-      @navigate="$toggleDropdown()"
+      @navigate="$emit('item-clicked')"
     />
   </div>
 </template>

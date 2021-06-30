@@ -5,10 +5,7 @@
     <div class="columns post-info__container">
       <div class="column is-half is-0-mobile">
         <div class="post-info__topic">
-          <b-image
-            class="post-info__topic__thumbnail"
-            :src="topicThumbnailImage"
-          />
+          <img class="post-info__topic__thumbnail" :src="topicThumbnailImage" />
         </div>
       </div>
       <div
@@ -107,10 +104,10 @@ export default {
 
   &__thumbnail {
     position: absolute;
-    top: -2rem;
-    left: calc(50% - 150px);
-    max-width: 350px;
-    height: auto;
+    top: -1.5rem;
+    left: calc(30%);
+    width: auto;
+    height: 350px;
   }
 }
 </style>

@@ -1,7 +1,3 @@
-
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
 .github-markdown-body {
   --blockquote-border-color: #00A8E8;
   --blockquote-color: rgba(0, 0, 0, 0.6);
@@ -46,7 +42,7 @@
 /* [heading] */
 .github-markdown-body h1 {
   font-size: 2.5em;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0.75em 0;
 }
 
@@ -63,7 +59,7 @@
 
 .github-markdown-body h4 {
   font-size: 1.25em;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .github-markdown-body h5 {

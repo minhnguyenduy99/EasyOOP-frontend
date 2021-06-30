@@ -44,6 +44,7 @@
         </div>
       </div>
     </div>
+    <b-modal> </b-modal>
   </div>
 </template>
 
@@ -80,7 +81,8 @@ export default {
     test: null,
     testResult: null,
     sentences: [],
-    selectedOrder: null
+    selectedOrder: null,
+    routeTo: null
   }),
   created: function() {
     this.$_updateTest().then(() => {
@@ -101,6 +103,14 @@ export default {
   },
   beforeDestroy() {
     this.$_unregisterWindowUnloadEvent();
+  },
+  beforeRouteLeave: function(to, from, next) {
+    if (this.routeTo || this.isOnInit) {
+      next();
+      return;
+    }
+    this.routeTo = to;
+    this.$_callDialogConfirmForRouteChange();
   },
   watch: {
     testId() {
@@ -187,10 +197,7 @@ export default {
       });
     },
     $_registerWindowUnloadEvent() {
-      window.addEventListener(
-        "beforeunload",
-        this.$_setupConfirmDialog.bind(this)
-      );
+      window.addEventListener("beforeunload", this.$_setupConfirmDialog);
     },
     $_unregisterWindowUnloadEvent() {
       window.removeEventListener("beforeunload", this.$_setupConfirmDialog);
@@ -202,6 +209,19 @@ export default {
       e.preventDefault();
       e.returnValue = "Bạn muốn rời trang này ?";
       return "Bạn muốn rời trang này ?";
+    },
+    $_callDialogConfirmForRouteChange() {
+      this.$buefy.dialog.confirm({
+        title: "CHUYỂN TRANG",
+        message:
+          "Bạn còn đang trong tình trạng làm bài hoặc chưa lưu kết quả<br /><strong>Bạn chắc chắn muốn rời khỏi trang này ?</strong>",
+        confirmText: "Rời trang",
+        cancelText: "Ở lại",
+        type: "is-danger",
+        hasIcon: true,
+        onConfirm: () => this.$router.push(this.routeTo),
+        onCancel: () => (this.routeTo = null)
+      });
     }
   }
 };
