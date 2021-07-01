@@ -18,6 +18,8 @@
         <b-button
           :icon-left="saved ? 'check' : null"
           type="is-primary"
+          :disabled="saved"
+          :loading="saveButtonLoading"
           @click="$on_saveResultButtonClicked"
           >{{ saved ? "Đã lưu" : "Lưu kết quả" }}</b-button
         >
@@ -70,7 +72,8 @@ export default {
   },
   data: () => ({
     showLoginModal: false,
-    saved: false
+    saved: false,
+    saveButtonLoading: false
   }),
   computed: {
     ...mapGetters("VIEWER_TEST", [
@@ -139,15 +142,21 @@ export default {
         : "is-danger";
     },
     $_saveTestResult() {
+      if (this.saved) {
+        return;
+      }
+      this.saveButtonLoading = true;
       const { test_id, results } = this.testResult;
       this.viewer_createTestResult({ test_id, results, save: true }).then(
         result => {
-          const { error, data } = result;
+          this.saveButtonLoading = false;
+          const { error } = result;
           if (error) {
             return;
           }
           this.saved = true;
           ToastNotifier.success(this.$buefy.toast, "Lưu kết quả thành công");
+          this.$emit("result-saved");
         }
       );
     }

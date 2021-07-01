@@ -40,11 +40,11 @@
             :testResult="testResult"
             :state="state"
             :selectedOrder.sync="selectedOrder"
+            @result-saved="resultSaved = true"
           />
         </div>
       </div>
     </div>
-    <b-modal> </b-modal>
   </div>
 </template>
 
@@ -82,7 +82,8 @@ export default {
     testResult: null,
     sentences: [],
     selectedOrder: null,
-    routeTo: null
+    routeTo: null,
+    resultSaved: false
   }),
   created: function() {
     this.$_updateTest().then(() => {
@@ -105,7 +106,7 @@ export default {
     this.$_unregisterWindowUnloadEvent();
   },
   beforeRouteLeave: function(to, from, next) {
-    if (this.routeTo || this.isOnInit) {
+    if (this.routeTo || this.isOnInit || this.resultSaved) {
       next();
       return;
     }
@@ -203,7 +204,7 @@ export default {
       window.removeEventListener("beforeunload", this.$_setupConfirmDialog);
     },
     $_setupConfirmDialog(e) {
-      if (this.isOnInit) {
+      if (this.isOnInit || this.resultSaved) {
         return;
       }
       e.preventDefault();

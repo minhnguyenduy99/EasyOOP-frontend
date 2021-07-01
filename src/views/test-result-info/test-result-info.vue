@@ -58,8 +58,8 @@ export default {
       this.$emit("order-selected", order);
     },
     $_buttonTypeHandler(sentence, index) {
-      const { answer, user_answer, answered } = sentence;
-      return !answered
+      const { answer, user_answer } = sentence;
+      return user_answer === -1
         ? "is-light"
         : answer === user_answer
         ? "is-success"
