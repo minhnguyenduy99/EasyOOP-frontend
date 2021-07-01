@@ -9,13 +9,21 @@
     >
       <div class="ha-vertical-layout-6 p-3">
         <div
-          :class="[
-            'is-flex',
-            reduce
-              ? 'is-justify-content-flex-start'
-              : 'is-justify-content-flex-end'
-          ]"
+          :class="{
+            'is-flex is-align-items-center': true,
+            'is-justify-content-center is-flex-direction-column': reduce,
+            'is-justify-content-space-between': !reduce
+          }"
         >
+          <router-link to="/" class="is-block">
+            <img
+              :class="{
+                'admin-sidebar__logo': true,
+                'mb-3': reduce
+              }"
+              src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1625106194/oop-learning-helper/color_n8tsdj.png"
+            />
+          </router-link>
           <b-button
             type="is-primary-dark"
             outlined
@@ -142,6 +150,12 @@ $sidebar-width-reduce: 80px;
       }
     }
   }
+}
+
+.admin-sidebar__logo {
+  height: 36px;
+  width: auto;
+  cursor: pointer;
 }
 
 .sidebar-filler {

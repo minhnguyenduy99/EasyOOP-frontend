@@ -49,18 +49,21 @@
           </div>
         </b-dropdown-item>
       </b-dropdown>
-      <b-button type="is-primary" outlined @click="$on_logOut"
+      <b-button type="is-primary-dark" outlined @click="$on_logOut"
         >Đăng xuất</b-button
       >
     </div>
-    <div v-else class="ha-vertical-layout-6">
+    <div
+      v-else
+      class="ha-vertical-layout-6 is-flex is-flex-direction-column is-align-items-center"
+    >
       <b-button
         type="is-primary"
         icon-right="user"
         @click="$on_accountButtonClicked"
       />
       <b-button
-        type="is-primary"
+        type="is-primary-dark"
         outlined
         icon-right="sign-out-alt"
         @click="$on_logOut"
