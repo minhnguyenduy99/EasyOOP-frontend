@@ -13,13 +13,14 @@ import {
   AOSPlugin,
   VueAppConfigPlugin
 } from "./plugins";
-import mockApiService from "./mocks";
+import VueMeta from "vue-meta";
 
 console.log("App is running in " + process.env.NODE_ENV);
 const appConfig = config[process.env.NODE_ENV || "development"];
 
 Vue.config.productionTip = false;
 
+Vue.use(VueMeta);
 Vue.use(VueAppConfigPlugin);
 Vue.use(VueCompositionAPI);
 Vue.use(Buefy, {
@@ -28,10 +29,6 @@ Vue.use(Buefy, {
 Vue.use(AOSPlugin);
 Vue.use(new FormValidatorPlugin());
 Vue.use(VueMarkdownPlugin);
-Vue.use(ApiServicePlugin, {
-  apiService: mockApiService,
-  key: "$api"
-});
 
 // Init API services
 const apiPack = createAPIPack({

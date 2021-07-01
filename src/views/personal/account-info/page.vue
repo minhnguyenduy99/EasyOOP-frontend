@@ -36,6 +36,11 @@ export default {
       password: ""
     }
   }),
+  metaInfo() {
+    return {
+      title: `Thông tin cá nhân - ${this.$appConfig.VUE_APP_NAME}`
+    };
+  },
   mounted: function() {
     this.$_getUserInfo();
   },

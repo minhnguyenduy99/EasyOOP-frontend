@@ -56,6 +56,22 @@ export default {
     "post-info": () => import("./post-info.vue")
   },
   inject: ["$p_loadPage"],
+  metaInfo() {
+    const title = `${this.post?.post_title} - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title,
+      meta: [
+        {
+          property: "og:title",
+          content: title
+        },
+        {
+          property: "og:image",
+          content: this.post?.thumbnail_file_url
+        }
+      ]
+    };
+  },
   props: {
     postId: String
   },

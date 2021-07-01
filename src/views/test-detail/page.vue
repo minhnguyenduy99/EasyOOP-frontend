@@ -62,6 +62,23 @@ export default {
     "sentence-panel": () => import("@/components/sentence-panel/sentence-panel")
   },
   mixins: [sessionStateProvider(Vue)],
+  metaInfo() {
+    const title = `Làm bài test: ${this.test?.title} - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title,
+      meta: [
+        {
+          property: "og:title",
+          content: title
+        },
+        {
+          property: "og:image",
+          content:
+            "https://res.cloudinary.com/dml8e1w0z/image/upload/v1625112588/oop-learning-helper/white_3_vwauzw.png"
+        }
+      ]
+    };
+  },
   props: {
     testId: String,
     sessionId: String

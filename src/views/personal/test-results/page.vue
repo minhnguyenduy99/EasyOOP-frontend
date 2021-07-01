@@ -14,6 +14,11 @@ export default {
   name: "PersonalTestResultsPage",
   components: {
     "test-result-table": () => import("./test-result-table")
+  },
+  metaInfo() {
+    return {
+      title: `Thông tin cá nhân - ${this.$appConfig.VUE_APP_NAME}`
+    };
   }
 };
 </script>

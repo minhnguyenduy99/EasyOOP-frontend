@@ -77,6 +77,27 @@ export default {
     posts: [],
     topics: []
   }),
+  metaInfo() {
+    const title = `Trang chủ - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title,
+      meta: [
+        {
+          property: "og:title",
+          content: title
+        },
+        {
+          property: "og:description",
+          content: "Trang web hỗ trợ học OOP"
+        },
+        {
+          property: "og:image",
+          content:
+            "https://ahrefs.com/blog/wp-content/uploads/2019/12/fb-how-to-become-an-seo-expert.png"
+        }
+      ]
+    };
+  },
   mounted: function() {
     this.$_getTopics();
   },
