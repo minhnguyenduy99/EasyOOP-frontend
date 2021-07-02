@@ -12,12 +12,12 @@
         <b-taginput
           maxtags="1"
           icon="tag"
-          :data="filteredTags"
+          :data="searchTags"
           v-model="chosenTags"
           autocomplete
           type="is-primary-dark"
           field="tag_id"
-          @typing="$on_tagInputTyping"
+          @typing="$_requestUnusedTags"
           :create-tag="tag => tag.tag_id"
           :allow-new="false"
         >
@@ -51,10 +51,11 @@
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import { ValidationObserver } from "vee-validate";
 import { ValidatedFormElement, ModalForm } from "@/components";
-import { ToastNotifier } from "../../../utils";
-import { mapActions } from "vuex";
+import { ToastNotifier, FunctionDelayer } from "../../../utils";
+import { FindTagsMixin } from "./mixins";
 
 export default {
   name: "CreateQuestionForm",
@@ -63,14 +64,15 @@ export default {
     ValidatedFormElement,
     ModalForm
   },
+  mixins: [FindTagsMixin({ mapActions })],
   data: () => ({
     form: {
       question: "",
       answer: "",
       tag_id: ""
     },
-    filteredTags: [],
-    chosenTags: []
+    chosenTags: [],
+    tagHandler: new FunctionDelayer()
   }),
   computed: {
     validator() {
@@ -78,7 +80,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("QANDA", ["createQuestion", "getUnusedQuestionTags"]),
+    ...mapActions("QANDA", ["createQuestion"]),
 
     async $on_submitButtonClicked() {
       const isValid = await this.validator.validate();
@@ -97,17 +99,6 @@ export default {
         }
         ToastNotifier.success(this.$buefy.toast, "Tạo câu hỏi thành công");
         this.$emit("submitted", { data: this.form, success: true });
-      });
-    },
-    $on_tagInputTyping(value) {
-      this.getUnusedQuestionTags({ search: value }).then(result => {
-        const { error, data } = result;
-        this.filteredTags.length = 0;
-        if (error) {
-          return;
-        }
-        const { results } = data;
-        this.filteredTags.push(...results);
       });
     }
   }

@@ -19,22 +19,44 @@
           </a>
         </div>
       </template>
-      <div
-        v-if="items.length > 0"
-        :class="[panelContentClass ? panelContentClass : 'panel-content']"
-      >
-        <div
-          v-for="item in items"
-          :key="item.id"
-          class="panel-item is-clickable"
-        >
-          <slot name="item" v-bind="{ item }" />
+      <slot v-if="loading" name="loading">
+        <div class="search-panel__loading">
+          <b-loading
+            :is-full-page="false"
+            v-model="loading"
+            :can-cancel="false"
+          >
+            <div class="is-flex is-flex-direction-column is-align-items-center">
+              <b-icon
+                pack="fas"
+                icon="sync-alt"
+                size="is-large"
+                custom-class="fa-spin"
+              >
+              </b-icon>
+              <p v-if="loadingText">{{ loadingText }}</p>
+            </div>
+          </b-loading>
         </div>
-      </div>
-      <div v-else class="is-flex is-justify-content-center py-5">
-        <slot name="empty">
-          <p class="is-size-5 has-text-grey">{{ emptyText }}</p>
-        </slot>
+      </slot>
+      <div v-else>
+        <div
+          v-if="items.length > 0"
+          :class="[panelContentClass ? panelContentClass : 'panel-content']"
+        >
+          <div
+            v-for="item in items"
+            :key="item.id"
+            class="panel-item is-clickable"
+          >
+            <slot name="item" v-bind="{ item }" />
+          </div>
+        </div>
+        <div v-else class="is-flex is-justify-content-center py-5">
+          <slot name="empty">
+            <p class="is-size-5 has-text-grey">{{ emptyText }}</p>
+          </slot>
+        </div>
       </div>
     </b-collapse>
   </div>
@@ -49,6 +71,11 @@ export default {
       type: Boolean,
       default: () => true
     },
+    loading: {
+      type: Boolean,
+      default: () => false
+    },
+    loadingText: String,
     items: {
       type: Array,
       default: () => []
@@ -58,3 +85,12 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.search-panel__loading {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>

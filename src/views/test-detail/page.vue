@@ -62,6 +62,7 @@ export default {
     "sentence-panel": () => import("@/components/sentence-panel/sentence-panel")
   },
   mixins: [sessionStateProvider(Vue)],
+  inject: ["$p_loadPage"],
   metaInfo() {
     const title = `Làm bài test: ${this.test?.title} - ${this.$appConfig.VUE_APP_NAME}`;
     return {
@@ -100,7 +101,8 @@ export default {
     sentences: [],
     selectedOrder: null,
     routeTo: null,
-    resultSaved: false
+    resultSaved: false,
+    isSentencePanelLoading: false
   }),
   created: function() {
     this.$_updateTest().then(() => {
@@ -169,9 +171,11 @@ export default {
       });
     },
     $_navigatePage(page) {
+      this.$p_loadPage(true);
       return this.navigateToPage({
         page
       }).then(result => {
+        this.$p_loadPage(false);
         const { error, data } = result;
         if (error) {
           return;

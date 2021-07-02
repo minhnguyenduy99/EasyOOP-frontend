@@ -11,12 +11,12 @@
         <b-taginput
           maxtags="1"
           icon="tag"
-          :data="filteredTags"
+          :data="searchTags"
           v-model="chosenTags"
           autocomplete
           type="is-primary-dark"
           field="tag_id"
-          @typing="$on_tagInputTyping"
+          @typing="$_requestUnusedTags"
           :create-tag="tag => tag.tag_id"
           :allow-new="false"
         >
@@ -54,6 +54,7 @@ import { ValidationObserver } from "vee-validate";
 import { ValidatedFormElement, ModalForm } from "@/components";
 import { ToastNotifier } from "@/utils";
 import { mapActions } from "vuex";
+import { FindTagsMixin } from "./mixins";
 
 export default {
   name: "EditQuestionForm",
@@ -62,6 +63,7 @@ export default {
     ValidatedFormElement,
     ModalForm
   },
+  mixins: [FindTagsMixin({ mapActions })],
   props: {
     question: Object
   },
@@ -72,7 +74,6 @@ export default {
       answer: "",
       tag_id: ""
     },
-    filteredTags: [],
     chosenTags: []
   }),
   computed: {
@@ -91,7 +92,7 @@ export default {
     this.chosenTags = [tag_id];
   },
   methods: {
-    ...mapActions("QANDA", ["updateQuestion", "getUnusedQuestionTags"]),
+    ...mapActions("QANDA", ["updateQuestion"]),
 
     async $on_submitButtonClicked() {
       const isValid = await this.validator.validate();
@@ -114,17 +115,6 @@ export default {
         }
         ToastNotifier.success(this.$buefy.toast, "Cập nhật câu hỏi thành công");
         this.$emit("submitted", { data: this.form, success: true });
-      });
-    },
-    $on_tagInputTyping(value) {
-      this.getUnusedQuestionTags({ search: value }).then(result => {
-        const { error, data } = result;
-        if (error) {
-          return;
-        }
-        this.filteredTags.length = 0;
-        const { results } = data;
-        this.filteredTags.push(...results);
       });
     }
   }

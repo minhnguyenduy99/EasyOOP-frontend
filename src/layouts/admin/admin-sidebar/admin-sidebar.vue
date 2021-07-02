@@ -21,7 +21,7 @@
                 'admin-sidebar__logo': true,
                 'mb-3': reduce
               }"
-              src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1625106194/oop-learning-helper/color_n8tsdj.png"
+              src="https://res.cloudinary.com/dml8e1w0z/image/upload/v1625188482/oop-learning-helper/color_tnvl21.png"
             />
           </router-link>
           <b-button

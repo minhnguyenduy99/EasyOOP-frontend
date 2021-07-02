@@ -25,6 +25,8 @@
               panel-title="Bài viết"
               :items="listPosts"
               emptyText="Không tìm thấy bài viết"
+              :loading="isLoadingPost"
+              loadingText="Tải bài viết"
             >
               <template #item="{ item }">
                 <search-post-view :post="item" @click="$_navigateToPostView" />
@@ -34,6 +36,8 @@
               panel-title="Bài test"
               :items="listTests"
               emptyText="Không tìm thấy bài test"
+              :loading="isLoadingTest"
+              loadingText="Tải bài test"
             >
               <template #item="{ item }">
                 <test-detail :test="item" @click="$_navigateToTestDetail" />
@@ -79,6 +83,20 @@
                 >
               </template>
             </tag-list>
+            <b-loading
+              :is-full-page="false"
+              v-model="isLoadingTag"
+              :can-cancel="false"
+            >
+              <b-icon
+                pack="fas"
+                icon="sync-alt"
+                size="is-large"
+                custom-class="fa-spin"
+              >
+              </b-icon>
+              <p>Tải nhãn dán</p>
+            </b-loading>
           </div>
         </div>
       </div>
@@ -110,7 +128,10 @@ export default {
     handler: new FunctionDelayer(),
     testHandler: new FunctionDelayer(),
     selectedTags: [],
-    tagSearchType: 0
+    tagSearchType: 0,
+    isLoadingTag: false,
+    isLoadingTest: false,
+    isLoadingPost: false
   }),
   watch: {
     search(val) {
@@ -169,9 +190,11 @@ export default {
       });
     },
     $_requestSearchTags() {
+      this.isLoadingTag = true;
       this.searchTag({
         type: "post"
       }).then(result => {
+        this.isLoadingTag = false;
         const { error, data } = result;
         if (error) {
           return;
@@ -181,6 +204,7 @@ export default {
       });
     },
     async $_updateFilteredPosts() {
+      this.isLoadingPost = true;
       return this.getPosts({
         searchOptions: {
           search: this.search,
@@ -188,6 +212,7 @@ export default {
           tagSearchType: this.tagSearchType
         }
       }).then(result => {
+        this.isLoadingPost = false;
         const { error, data } = result;
         if (error) {
           return;
@@ -208,7 +233,9 @@ export default {
       });
     },
     async $_updateListTests() {
+      this.isLoadingTest = true;
       return this.viewer_searchTest({ title: this.search }).then(result => {
+        this.isLoadingTest = false;
         const { error, data } = result;
         if (error) {
           return;

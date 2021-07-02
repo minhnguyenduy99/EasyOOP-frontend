@@ -37,7 +37,6 @@ export default {
   },
   toBlobFromURL: async url => {
     try {
-      url = url.replace(/^https:\/\//i, "http://");
       let response = await fetch(url);
       return response.blob();
     } catch (err) {

@@ -126,7 +126,7 @@ export default {
       return new Date(this.post.created_date).toLocaleDateString("en-GB");
     },
     postURL() {
-      return `${process.env.VUE_APP_HOST}/posts/${this.post.post_id}`;
+      return `${this.$appConfig.VUE_APP_HOST}/posts/${this.post.post_id}`;
     },
     isPostActive() {
       return this.post.post_status === 0;

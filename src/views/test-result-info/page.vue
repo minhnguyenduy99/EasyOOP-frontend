@@ -55,6 +55,7 @@ export default {
     "test-result-info": () => import("./test-result-info"),
     "sentence-panel": () => import("@/components/sentence-panel/sentence-panel")
   },
+  inject: ["$p_loadPage"],
   metaInfo() {
     const title = `Kết quả bài test: ${this.test?.title} - ${this.$appConfig.VUE_APP_NAME}`;
     return {
@@ -102,15 +103,6 @@ export default {
       ]
     };
   },
-  // watch: {
-  //   selectedOrder(val) {
-  //     const page = Math.ceil(val / this.SENTENCES_PER_PAGE);
-  //     if (page === this.page) {
-  //       return;
-  //     }
-  //     this.$_navigatePage(page);
-  //   }
-  // },
   mounted: function() {
     this.$_updateTestResult();
     this.$_navigatePage(1);
@@ -145,10 +137,12 @@ export default {
       );
     },
     $_navigatePage(page) {
+      this.$p_loadPage(true);
       return this.viewer_getDetailOfTestResult({
         result_id: this.resultId,
         page
       }).then(result => {
+        this.$p_loadPage(false);
         const { error, data } = result;
         if (error) {
           return;
