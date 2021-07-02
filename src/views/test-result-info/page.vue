@@ -57,7 +57,7 @@ export default {
   },
   inject: ["$p_loadPage"],
   metaInfo() {
-    const title = `Kết quả bài test: ${this.test?.title} - ${this.$appConfig.VUE_APP_NAME}`;
+    const title = `${this.testResult?.title} | Kết quả bài test - ${this.$appConfig.VUE_APP_NAME}`;
     return {
       title,
       meta: [

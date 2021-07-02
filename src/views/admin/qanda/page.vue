@@ -74,6 +74,12 @@ export default {
     "create-question-form": () => import("./create-question.form"),
     "qanda-search": () => import("./qanda-search")
   },
+  metaInfo() {
+    const title = `Quản lí câu hỏi - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   inject: ["$p_loadPage"],
   provide() {
     return {

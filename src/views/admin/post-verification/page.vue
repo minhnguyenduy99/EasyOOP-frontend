@@ -137,6 +137,12 @@ export default {
     "post-view-detail": () =>
       import("@/components/post-preview/post-view-detail")
   },
+  metaInfo() {
+    const title = `Quản lí bài duyệt - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   provide() {
     return {
       manager_getPendingVerifications: this.manager_getPendingVerifications,

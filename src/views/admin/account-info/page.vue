@@ -86,6 +86,12 @@ export default {
     "creator-section": () => import("./creator-section/creator-section"),
     "manager-section": () => import("./manager-section/manager-section")
   },
+  metaInfo() {
+    const title = `Tài khoản - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   data: () => ({
     ROLE_MAPPING: {
       manager: {

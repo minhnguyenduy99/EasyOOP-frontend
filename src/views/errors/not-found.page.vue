@@ -21,7 +21,13 @@
 
 <script>
 export default {
-  name: "PageNotFound"
+  name: "PageNotFound",
+  metaInfo() {
+    const title = `Không tìm thấy trang - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  }
 };
 </script>
 

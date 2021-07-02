@@ -47,6 +47,12 @@ export default {
     "create-post-form": () => import("./create-post.form"),
     "post-preview": async () => (await import("@/components")).PostPreview
   },
+  metaInfo() {
+    const title = `Tạo bài viết - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   provide() {
     return {
       $api_findTopics: this.creator_getAvailableTopics,

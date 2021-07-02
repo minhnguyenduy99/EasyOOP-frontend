@@ -34,6 +34,12 @@ export default {
       import("../components/sentence-panel/sentence-panel"),
     "create-test-form": () => import("./create-test-form")
   },
+  metaInfo() {
+    const title = `Tạo bài test - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   data: () => ({
     areSentencesValid: false,
     sentences: []

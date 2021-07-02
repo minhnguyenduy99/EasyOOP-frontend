@@ -44,6 +44,12 @@ export default {
     "creator-info": () => import("./creator-info"),
     "creator-form": () => import("./creator-form")
   },
+  metaInfo() {
+    const title = `Quản lí tác giả - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   provide() {
     return {
       $api_findCreators: this.creatorRole_findCreators

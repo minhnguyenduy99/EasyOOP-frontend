@@ -29,6 +29,12 @@ export default {
       import("../components/admin-content/admin-content.vue"),
     breadcrumb: () => import("@/components/base/breadcrumb.vue")
   },
+  metaInfo() {
+    const title = `${this.post?.post_title} | Chi tiết bài viết - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   inject: ["$p_loadPage"],
   props: {
     postId: String

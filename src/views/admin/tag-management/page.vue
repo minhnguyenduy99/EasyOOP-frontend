@@ -84,6 +84,12 @@ export default {
     "tag-form": () => import("./tag-form.vue"),
     "edit-tag-form": () => import("./edit-tag-form")
   },
+  metaInfo() {
+    const title = `Quản lí nhãn dán - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   inject: ["$p_loadPage"],
   data: () => ({
     title: "Quản lí nhãn dán",

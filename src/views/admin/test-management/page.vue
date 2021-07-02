@@ -33,6 +33,12 @@ export default {
     "list-test-table": () => import("./list-test-table.vue"),
     "list-test-search": () => import("./list-test-search.vue")
   },
+  metaInfo() {
+    const title = `Quản lí bài test - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   provide() {
     return {
       $api_searchTests: this.searchTest.bind(this)

@@ -65,6 +65,12 @@ export default {
       import("../components/test-sentence/test-sentence-editable"),
     "edit-test-form": () => import("./edit-test-form")
   },
+  metaInfo() {
+    const title = `${this.test?.title} | Cập nhật bài test - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   props: {
     testId: String
   },

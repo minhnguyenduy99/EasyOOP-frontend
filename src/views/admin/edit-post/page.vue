@@ -50,6 +50,12 @@ export default {
     "post-preview": () => import("@/components/post-preview/post-preview.vue"),
     breadcrumb: () => import("@/components/base/breadcrumb.vue")
   },
+  metaInfo() {
+    const title = `${this.initialPost?.post_title} | Cập nhật bài viết - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   props: {
     postId: String
   },

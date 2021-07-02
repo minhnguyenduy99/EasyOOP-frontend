@@ -147,6 +147,12 @@ export default {
       showPostPreview: this.$_showPostPreview
     };
   },
+  metaInfo() {
+    const title = `Bài viết chờ duyệt - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   data: () => ({
     TAB_STATUS_MAPS: [
       {

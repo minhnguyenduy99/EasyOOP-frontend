@@ -30,6 +30,12 @@ export default {
     "post-search": () => import("./post-search"),
     "post-table": () => import("./post-table")
   },
+  metaInfo() {
+    const title = `Danh sách bài viết - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   provide() {
     return {
       findPosts: this.creator_findPosts,

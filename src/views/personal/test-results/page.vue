@@ -17,7 +17,7 @@ export default {
   },
   metaInfo() {
     return {
-      title: `Thông tin cá nhân - ${this.$appConfig.VUE_APP_NAME}`
+      title: `Danh sách kết quả bài test - ${this.$appConfig.VUE_APP_NAME}`
     };
   }
 };

@@ -46,6 +46,12 @@ export default {
     "manager-info": () => import("./manager-info"),
     "create-manager-form": () => import("./create-manager-form")
   },
+  metaInfo() {
+    const title = `Danh sách quản lí - ${this.$appConfig.VUE_APP_NAME}`;
+    return {
+      title
+    };
+  },
   provide() {
     return {
       $api_findManagers: this.managerRole_findManagers
