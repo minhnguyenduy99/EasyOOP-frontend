@@ -1,7 +1,5 @@
-import { APP_CONFIG } from "@/utils";
-
 /* eslint-disable no-undef */
-const facebookAppId = APP_CONFIG.VUE_APP_FACEBOOK_APP_ID;
+const facebookAppId = process.env.VUE_APP_FACEBOOK_APP_ID;
 
 export function initFacebookSdk() {
   return new Promise(resolve => {

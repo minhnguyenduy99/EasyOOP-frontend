@@ -1,5 +1,3 @@
-import { APP_CONFIG } from "@/utils";
-
 /* eslint-disable no-undef */
 var auth2;
 export function signIn() {
@@ -20,7 +18,7 @@ export function signIn() {
 }
 
 export const initGoogleSdk = () => {
-  const GOOGLE_CLIENT_ID = APP_CONFIG.VUE_APP_GOOGLE_APP_ID;
+  const GOOGLE_CLIENT_ID = process.env.VUE_APP_GOOGLE_APP_ID;
 
   gapi.load("auth2", function() {
     // Retrieve the singleton for the GoogleAuth library and set up the client.
