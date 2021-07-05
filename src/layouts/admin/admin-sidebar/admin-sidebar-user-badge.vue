@@ -97,17 +97,17 @@ export default {
       creator: {
         icon: "user-edit",
         text: "Creator",
-        redirect: "Dashboard"
+        redirect: "ListPosts"
       },
       manager: {
         icon: "user-tie",
         text: "Quản lí",
-        redirect: "Dashboard"
+        redirect: "PostVerification"
       },
       admin: {
         icon: "user-cog",
         text: "Quản trị",
-        redirect: "Dashboard"
+        redirect: "Q&A"
       }
     }
   }),

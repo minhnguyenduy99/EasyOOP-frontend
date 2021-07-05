@@ -122,17 +122,17 @@ export default {
       creator: {
         icon: "user-edit",
         text: "Đăng nhập với Creator",
-        redirect: "Dashboard"
+        redirect: "ListPosts"
       },
       manager: {
         icon: "user-tie",
         text: "Đăng nhập với Manager",
-        redirect: "Dashboard"
+        redirect: "PostVerification"
       },
       admin: {
         icon: "users-cog",
         text: "Đăng nhập với Admin",
-        redirect: "Dashboard"
+        redirect: "Q&A"
       }
     },
     open: false

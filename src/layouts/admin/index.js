@@ -7,14 +7,6 @@ export default () => ({
   props: () => ({
     navigations: [
       {
-        name: "Dashboard",
-        icon: "th-large",
-        pack: "fas",
-        title: "Dashboard",
-        roles: [],
-        to: { name: "Dashboard" }
-      },
-      {
         name: "ListPosts",
         icon: "clipboard",
         pack: "fas",
