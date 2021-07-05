@@ -101,7 +101,7 @@ export default {
         {
           value: "Bài viết",
           to: {
-            name: "Dashboard"
+            name: "ListPosts"
           }
         },
         {
@@ -158,7 +158,7 @@ export default {
         ToastNotifier.success(this.$buefy.toast, "Tạo bài viết thành công");
         setTimeout(
           function() {
-            this.$router.push({ name: "Dashboard" });
+            this.$router.push({ name: "ListPosts" });
           }.bind(this),
           1000
         );

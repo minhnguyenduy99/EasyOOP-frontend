@@ -10,7 +10,7 @@
       <div class="tags-modal__content card-content">
         <div>
           <tag-list
-            :tags="tags"
+            :tags="filteredTags"
             emptyText="Không có nhãn nào"
             :displayTagId="false"
             :rounded="true"
@@ -25,10 +25,9 @@
                     Danh sách nhãn
                   </p>
                   <b-input
-                    v-model="searchTagValue"
+                    v-model.lazy="searchTagValue"
                     placeholder="Tìm kiếm nhãn dán"
                     icon-right="search"
-                    @keyup.enter.native="$on_searchTags"
                   />
                 </div>
                 <hr class="is-hr" />
@@ -36,15 +35,15 @@
             </template>
             <template #tags>
               <b-checkbox-button
-                v-for="tag in tags"
+                v-for="(tag, index) in filteredTagIds"
                 :key="tag.id"
                 class="checkbox-tag is-rounded is-primary-dark is-outlined"
                 size="is-small"
                 type="is-primary-dark"
-                v-model="selectedTags"
+                v-model="selectedTagIds"
                 :native-value="tag"
                 ref="checkbox-tag"
-                >{{ tag.tag_value }}</b-checkbox-button
+                >{{ filteredTags[index].tag_value }}</b-checkbox-button
               >
             </template>
           </tag-list>
@@ -66,6 +65,7 @@
 
 <script>
 import { mapActions } from "vuex";
+import { FunctionDelayer } from "@/utils";
 
 export default {
   name: "ListTagsModal",
@@ -84,10 +84,22 @@ export default {
   },
   data: () => ({
     tags: [],
-    selectedTags: [],
+    filteredTags: [],
+    selectedTagIds: [],
     searchTagValue: "",
-    isSearching: false
+    isSearching: false,
+    searchTagsHandler: new FunctionDelayer(300)
   }),
+  watch: {
+    searchTagValue(val) {
+      this.searchTagsHandler.execute(() => {
+        this.filteredTags.length = 0;
+        this.filteredTags = this.tags.filter(tag =>
+          tag.tag_value.toLowerCase().includes(val)
+        );
+      });
+    }
+  },
   computed: {
     _open: {
       get() {
@@ -96,6 +108,14 @@ export default {
       set(val) {
         this.$emit("opened", val);
       }
+    },
+    filteredTagIds() {
+      return this.filteredTags.map(tag => tag.tag_id);
+    },
+    selectedTags() {
+      return this.tags.filter(
+        tag => this.selectedTagIds.indexOf(tag.tag_id) !== -1
+      );
     }
   },
   mounted: function() {
@@ -113,6 +133,7 @@ export default {
         }
         this.tags.length = 0;
         this.tags = data;
+        this.filteredTags = [...data];
       });
     }
   }

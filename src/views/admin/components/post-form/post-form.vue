@@ -148,13 +148,14 @@
         <div class="form-group--upload">
           <validated-form-element
             name="thumbnail"
-            rules="required"
+            rules="required|is-image"
             label="Chọn ảnh đại diện"
           >
             <b-upload
               class="is-fullwidth"
               v-model="form.thumbnail_file"
               drag-drop
+              accept="image/png, image/jpeg"
               @input="$on_SelectedThumbnailChanged"
             >
               <section class="section">
@@ -285,6 +286,7 @@ export default {
     $on_SelectedThumbnailChanged() {
       const thumbnail = this.form.thumbnail_file;
       if (!thumbnail) {
+        this.thumbnailDataURL = null;
         return;
       }
 

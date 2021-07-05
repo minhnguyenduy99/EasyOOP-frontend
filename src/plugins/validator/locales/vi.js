@@ -9,7 +9,8 @@ export default {
     min: "Độ dài của {_field_} phải từ {length} ký tự trở lên",
     minmax: "Độ dài của {_field_} phải từ {min} đến {max} ký tự",
     min_value: "Gía trị tối thiểu của {_field_} phải là {min}",
-    "tag-unique": "Nhãn dán có ID này đã tồn tại"
+    "tag-unique": "Nhãn dán có ID này đã tồn tại",
+    "is-image": "Tệp file này không hợp lệ"
   },
   names: {
     post_title: "tiêu đề",
