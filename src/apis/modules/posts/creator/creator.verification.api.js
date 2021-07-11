@@ -5,8 +5,8 @@ const endpoints = {
   updateVerification: "",
   cancelVerification: "/cancel",
   findVerifications: "/search",
-  getById: "",
-  getGroupInfo: "/summary"
+  getHistoryOfPost: "/posts",
+  getById: ""
 };
 
 export class CreatorVerificationAPI extends BaseAPI {
@@ -34,17 +34,7 @@ export class CreatorVerificationAPI extends BaseAPI {
       verification_id
     );
     try {
-      console.log(data);
       const response = await this._context.put(endpoint, data);
-      return this._formatter.getDataFormat(response);
-    } catch (err) {
-      return this._formatter.getErrorFormat(err);
-    }
-  }
-
-  async getGroupInfo() {
-    try {
-      const response = await this._context.get(endpoints.getGroupInfo);
       return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err);
@@ -76,15 +66,24 @@ export class CreatorVerificationAPI extends BaseAPI {
     }
   }
 
+  async getHistoryOfPost(opts) {
+    const { post_id } = opts;
+    const endpoint = this._addURLParams(endpoints.getHistoryOfPost, post_id);
+    try {
+      const response = await this._context.get(endpoint);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
   async findVerifications(options) {
     const {
       page,
       search = null,
-      sort_by = "created_date",
+      sort_by = "last_edited_date",
       sort_order = "desc",
-      type = null,
-      status = null,
-      group = false
+      status = null
     } = options;
     const endpoint = this._addURLParams(endpoints.findVerifications, page);
     try {
@@ -93,9 +92,7 @@ export class CreatorVerificationAPI extends BaseAPI {
           search,
           sort_by,
           sort_order,
-          type,
-          status,
-          group
+          status
         }
       });
       return this._formatter.getDataFormat(response);
@@ -111,7 +108,7 @@ export class CreatorVerificationAPI extends BaseAPI {
       cancelVerification: this.cancelVerification.bind(this),
       getVerificationById: this.getVerificationById.bind(this),
       findVerifications: this.findVerifications.bind(this),
-      getGroupInfo: this.getGroupInfo.bind(this)
+      getHistoryOfPost: this.getHistoryOfPost.bind(this)
     };
   }
 

@@ -165,7 +165,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("POST", ["getPosts"]),
+    ...mapActions("POST", ["getPosts", "searchPostTags"]),
     ...mapActions("TAG", ["searchTag"]),
     ...mapActions("VIEWER_TEST", ["viewer_searchTest"]),
 
@@ -191,9 +191,7 @@ export default {
     },
     $_requestSearchTags() {
       this.isLoadingTag = true;
-      this.searchTag({
-        type: "post"
-      }).then(result => {
+      this.searchPostTags().then(result => {
         this.isLoadingTag = false;
         const { error, data } = result;
         if (error) {

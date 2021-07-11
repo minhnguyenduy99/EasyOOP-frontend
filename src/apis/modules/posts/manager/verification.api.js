@@ -1,52 +1,22 @@
 import { BaseAPI } from "@/apis/base";
 
 const endpoints = {
-  getPendingVerifications: "/pending/search",
   findVerifications: "/search",
-  groupSummary: "/summary",
+  getHistoryOfPost: "/posts",
   verify: "",
-  unverify: ""
+  unverify: "",
+  getById: ""
 };
 
 export class ManagerVerificationAPI extends BaseAPI {
-  async getPendingVerifications(options) {
-    const {
-      search = null,
-      sort_by = "created_date",
-      sort_order = "desc",
-      type = null,
-      group = false,
-      page = 1
-    } = options;
-    const endpoint = this._addURLParams(
-      endpoints.getPendingVerifications,
-      page
-    );
-    try {
-      const response = await this._context.get(endpoint, {
-        params: {
-          search,
-          sort_by,
-          sort_order,
-          type,
-          group
-        }
-      });
-      return this._formatter.getDataFormat(response);
-    } catch (err) {
-      return this._formatter.getErrorFormat(err);
-    }
-  }
-
   async findVerifications(options) {
     const {
+      page,
       search = null,
-      sort_by = "created_date",
+      sort_by = "last_edited_date",
       sort_order = "desc",
-      type = null,
-      group = false,
       status = null,
-      page = 1
+      creator_id = null
     } = options;
     const endpoint = this._addURLParams(endpoints.findVerifications, page);
     try {
@@ -55,9 +25,8 @@ export class ManagerVerificationAPI extends BaseAPI {
           search,
           sort_by,
           sort_order,
-          type,
           status,
-          group
+          creator_id
         }
       });
       return this._formatter.getDataFormat(response);
@@ -66,9 +35,22 @@ export class ManagerVerificationAPI extends BaseAPI {
     }
   }
 
-  async getGroupSummary() {
+  async getVerificationById(opts) {
+    const { verification_id } = opts;
+    const endpoint = this._addURLParams(endpoints.getById, verification_id);
     try {
-      const response = await this._context.get(endpoints.groupSummary);
+      const response = await this._context.get(endpoint);
+      return this._formatter.getDataFormat(response);
+    } catch (err) {
+      return this._formatter.getErrorFormat(err);
+    }
+  }
+
+  async getHistoryOfPost(opts) {
+    const { post_id } = opts;
+    const endpoint = this._addURLParams(endpoints.getHistoryOfPost, post_id);
+    try {
+      const response = await this._context.get(endpoint);
       return this._formatter.getDataFormat(response);
     } catch (err) {
       return this._formatter.getErrorFormat(err);
@@ -107,11 +89,11 @@ export class ManagerVerificationAPI extends BaseAPI {
 
   getEndpointObject() {
     return {
-      getPendingVerifications: this.getPendingVerifications.bind(this),
+      getHistoryOfPost: this.getHistoryOfPost.bind(this),
       findVerifications: this.findVerifications.bind(this),
-      getGroupSummary: this.getGroupSummary.bind(this),
       verify: this.verify.bind(this),
-      unverify: this.unverify.bind(this)
+      unverify: this.unverify.bind(this),
+      getVerificationById: this.getVerificationById.bind(this)
     };
   }
 

@@ -12,97 +12,77 @@
             <post-search @search="$on_search" />
           </div>
           <section class="px-3 py-5">
-            <b-tabs
-              id="pending-post-tabs"
-              class="is-no-vertical-padding"
-              position="is-centered"
-              :animated="false"
-              v-model="activeTab"
-            >
-              <b-tab-item>
-                <template #header>
-                  <div class="tab-header">
-                    <b-icon icon="check" type="is-success"></b-icon>
-                    <span class="tab-header-title">
-                      {{ TAB_STATUS_MAPS[0].text }}
-                      <b-tag rounded> {{ TAB_STATUS_MAPS[0].count }} </b-tag>
-                    </span>
-                  </div>
-                </template>
-
-                <template>
-                  <pending-post-section
-                    :active="activeTab === 0"
-                    :verificationStatus="TAB_STATUS_MAPS[0].status"
-                    :searchOptions="searchOptions"
-                    @selected-changed="$on_selectedPostChanged"
-                    @count-changed="$on_itemCountChanged(0, $event)"
-                  />
-                </template>
-              </b-tab-item>
-
-              <b-tab-item>
-                <template #header>
-                  <div class="tab-header">
-                    <b-icon icon="spinner"></b-icon>
-                    <span class="tab-header-title">
-                      {{ TAB_STATUS_MAPS[1].text }}
-                      <b-tag type="is-light" rounded>
-                        {{ TAB_STATUS_MAPS[1].count }}
-                      </b-tag>
-                    </span>
-                  </div>
-                </template>
-
-                <template>
-                  <pending-post-section
-                    :active="activeTab === 1"
-                    :verificationStatus="TAB_STATUS_MAPS[1].status"
-                    :searchOptions="searchOptions"
-                    @selected-changed="$on_selectedPostChanged"
-                    @count-changed="$on_itemCountChanged(1, $event)"
-                  />
-                </template>
-              </b-tab-item>
-
-              <b-tab-item>
-                <template #header>
-                  <div class="tab-header">
-                    <b-icon icon="minus" type="is-danger"></b-icon>
-                    <span class="tab-header-title">
-                      {{ TAB_STATUS_MAPS[2].text }}
-                      <b-tag rounded> {{ TAB_STATUS_MAPS[2].count }} </b-tag>
-                    </span>
-                  </div>
-                </template>
-
-                <template>
-                  <pending-post-section
-                    :active="activeTab === 2"
-                    :verificationStatus="TAB_STATUS_MAPS[2].status"
-                    :searchOptions="searchOptions"
-                    @selected-changed="$on_selectedPostChanged"
-                    @count-changed="$on_itemCountChanged(2, $event)"
-                  />
-                </template>
-              </b-tab-item>
-            </b-tabs>
-            <b-loading v-model="isSearching" :is-full-page="false"></b-loading>
+            <verification-table
+              :searchOptions="searchOptions"
+              @selected="$on_verificationSelected"
+            />
           </section>
         </div>
-        <section id="pending-post-detail-section" class="card">
+        <section id="verification-detail-section" class="card">
           <div class="card-content p-0">
             <b-tabs
-              v-if="selectedPost"
+              v-if="selectedVerification"
+              v-model="activeTab"
               id="post-detail-tabs"
               class="is-paddingless"
               type="is-toggle"
             >
               <b-tab-item label="Duyệt">
-                <verification-info-tab :post="selectedPost" />
+                <verification-detail
+                  v-if="!loading"
+                  actionHeaderText="Hành động khác"
+                  :loading="verificationUpdating"
+                  :verification="selectedVerification"
+                  @update="$_updateVerification"
+                >
+                  <template #actions>
+                    <div
+                      v-if="
+                        selectedVerification &&
+                          selectedVerification.status === 2
+                      "
+                    >
+                      <div class="verification-detail__header">
+                        <span>Hủy duyệt</span>
+                        <hr />
+                      </div>
+                      <div class="verification-detail__content">
+                        <div
+                          class="is-flex is-flex-direction-column ha-vertical-layout-7"
+                        >
+                          <b-button
+                            type="is-danger"
+                            outlined
+                            @click="$on_cancelVerification"
+                            >Hủy duyệt</b-button
+                          >
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </verification-detail>
+                <verification-detail-skeleton v-else />
               </b-tab-item>
-              <b-tab-item label="Bài viết" v-if="activeTab !== 2">
-                <pending-post-detail :post="selectedDetailedPost" />
+              <b-tab-item label="Bài viết">
+                <verification-post-skeleton v-if="loading" />
+                <verification-post
+                  v-else-if="selectedDetailedPost.post_id"
+                  :post="selectedDetailedPost"
+                  :editable="isPostEditable"
+                  @preview="showPostModal = true"
+                />
+                <div v-else class="has-text-centered p-3">
+                  <span class="has-text-grey is-size-5"
+                    >Bài viết đã bị xóa</span
+                  >
+                </div>
+              </b-tab-item>
+              <b-tab-item label="Lịch sử duyệt">
+                <verification-history-skeleton v-if="loading" :count="5" />
+                <verification-history
+                  v-else
+                  :verifications="historyVerifications"
+                />
               </b-tab-item>
             </b-tabs>
             <div v-else class="p-3 is-flex is-justify-content-center">
@@ -117,9 +97,8 @@
     <b-modal v-model="showPostModal" scroll="keep">
       <div class="card is-page-responsive py-6">
         <post-preview
-          v-if="detailedPost"
           :useUrl="true"
-          :contentUrl="detailedPost.content_file_url"
+          :contentUrl="selectedDetailedPost.content_file_url"
         />
       </div>
     </b-modal>
@@ -127,25 +106,31 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import {
+  VerificationHistorySkeleton,
+  VerificationDetailSkeleton,
+  VerificationPostSkeleton
+} from "@/components/skeletons";
+import { ToastNotifier } from "@/utils";
+
 export default {
   name: "PendingPostsPage",
   components: {
+    VerificationHistorySkeleton,
+    VerificationDetailSkeleton,
+    VerificationPostSkeleton,
     "admin-content": () =>
       import("../components/admin-content/admin-content.vue"),
-    "pending-post-section": () => import("./pending-post-section"),
-    "pending-post-detail": () =>
-      import("./pending-post-detail/pending-post-detail"),
-    "verification-info-tab": () =>
-      import("./pending-post-detail/verification-info-tab"),
+    "verification-table": () => import("./verification-table.vue"),
+    "verification-detail": () =>
+      import("../components/verification/verification-detail.vue"),
+    "verification-post": () =>
+      import("../components/verification/verification-post.vue"),
+    "verification-history": () =>
+      import("../components/verification/verification-history.vue"),
     "post-search": () => import("./post-search"),
     "post-preview": () => import("@/components/post-preview/post-preview.vue")
-  },
-  provide() {
-    return {
-      creator_findVerifications: this.creator_findVerifications,
-      showPostPreview: this.$_showPostPreview
-    };
   },
   metaInfo() {
     const title = `Bài viết chờ duyệt - ${this.$appConfig.VUE_APP_NAME}`;
@@ -154,78 +139,126 @@ export default {
     };
   },
   data: () => ({
-    TAB_STATUS_MAPS: [
-      {
-        status: 1,
-        text: "Đã duyệt ",
-        count: 0
-      },
-      {
-        status: 2,
-        text: "Chờ duyệt ",
-        count: 0
-      },
-      {
-        status: 0,
-        text: "Không được duyệt ",
-        count: 0
-      }
-    ],
-    searchOptions: null,
-    selectedPost: null,
-    searchResult: null,
     activeTab: -1,
+    searchOptions: null,
+    selectedVerification: null,
+    searchResult: null,
     isSearching: false,
     showPostModal: false,
-    detailedPost: null
+    detailedPost: null,
+    historyVerifications: [],
+    loading: false,
+    verificationUpdating: false
   }),
-  mounted: function() {
-    this.$_loadVerificationGroupInfo();
-  },
   computed: {
+    ...mapGetters("AUTH", ["activeRole"]),
+
     selectedDetailedPost() {
-      return this.selectedPost?.post ?? {};
+      return this.selectedVerification?.post ?? {};
+    },
+    isPostEditable() {
+      return this.selectedDetailedPost.post_status === 0;
     }
   },
   watch: {
-    activeTab(val, oldVal) {
-      if (oldVal === -1) {
+    activeTab(val) {
+      if (val !== 2) {
         return;
       }
-      this.selectedPost = null;
+      this.$_requestPostHistory();
     }
   },
   methods: {
     ...mapActions("POST", [
-      "creator_findVerifications",
-      "creator_getGroupInfo"
+      "creator_getVerificationById",
+      "creator_getHistoryOfPost",
+      "creator_updateVerification",
+      "creator_cancelVerification"
     ]),
-    $on_selectedPostChanged(post) {
-      this.selectedPost = post;
+
+    $on_verificationSelected(verification) {
+      if (!verification) {
+        this.selectedVerification = null;
+        return;
+      }
+      this.selectedVerification = {};
+      this.loading = true;
+      const { verification_id } = verification;
+      this.creator_getVerificationById({ verification_id }).then(result => {
+        const { error, data } = result;
+        if (error) {
+          this.loading = false;
+          return;
+        }
+        this.selectedVerification = data;
+        if (this.activeTab !== 2) {
+          this.loading = false;
+          return;
+        }
+        this.$_requestPostHistory();
+      });
     },
     $on_search(searchOptions) {
       this.searchOptions = searchOptions;
     },
-    $on_itemCountChanged(tabIndex, count) {
-      this.TAB_STATUS_MAPS[tabIndex].count = count;
+    $on_cancelVerification() {
+      if (!this.selectedVerification) {
+        return;
+      }
+      this.$buefy.dialog.confirm({
+        title: "Hủy bài duyệt",
+        message:
+          "Bạn chắc chắc muốn hủy bài duyệt này ?</br>Bài duyệt đã hủy sẽ không thể hồi phục",
+        confirmText: "Đồng ý",
+        cancelText: "Hủy bỏ",
+        type: "is-danger",
+        onConfirm: () => {
+          const { verification_id } = this.selectedVerification;
+          this.creator_cancelVerification({ verification_id }).then(result => {
+            const { error } = result;
+            if (error) {
+              return;
+            }
+            ToastNotifier.success(this.$buefy.toast, "Hủy duyệt thành công");
+            this.searchOptions = null;
+            this.$_resetComponentData();
+          });
+        }
+      });
     },
-    $_loadVerificationGroupInfo() {
-      this.creator_getGroupInfo().then(result => {
+    $_updateVerification(data) {
+      this.verificationUpdating = true;
+      this.creator_updateVerification({
+        verification_id: this.selectedVerification.verification_id,
+        data
+      }).then(result => {
+        this.verificationUpdating = false;
+        const { error } = result;
+        if (error) {
+          return;
+        }
+        ToastNotifier.success(this.$buefy.toast, "Cập nhật thành công");
+      });
+    },
+    $_requestPostHistory() {
+      const { post_id } = this.selectedVerification;
+      if (!post_id) {
+        return;
+      }
+      this.loading = true;
+      this.historyVerifications.length = 0;
+      this.creator_getHistoryOfPost({ post_id }).then(result => {
+        this.loading = false;
         const { error, data } = result;
         if (error) {
           return;
         }
-        this.$_updateGroupInfo(data);
+        this.historyVerifications = data;
       });
     },
-    $_showPostPreview(post) {
-      this.showPostModal = true;
-      this.detailedPost = post;
-    },
-    $_updateGroupInfo(data) {
-      this.TAB_STATUS_MAPS.forEach(tab => {
-        tab.count = data[tab.status]?.count ?? 0;
-      });
+    $_resetComponentData() {
+      this.selectedVerification = null;
+      this.historyVerifications.length = 0;
     }
   }
 };
@@ -240,11 +273,11 @@ export default {
       flex-grow: 1;
     }
 
-    #pending-post-detail-section {
+    #verification-detail-section {
       display: block;
       position: sticky;
-      width: 300px;
-      height: calc(100vh - 5rem);
+      width: 330px;
+      height: calc(100vh - 1rem);
       overflow: auto;
       top: 1rem;
       right: 0;
@@ -255,5 +288,22 @@ export default {
 .tab-header {
   display: flex;
   align-items: center;
+}
+
+#verification-detail-section {
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #dedede;
+    &:hover {
+      background-color: #ababab;
+    }
+  }
 }
 </style>

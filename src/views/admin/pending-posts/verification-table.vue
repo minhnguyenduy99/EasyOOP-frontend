@@ -108,7 +108,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions("POST", ["manager_findVerifications"]),
+    ...mapActions("POST", ["creator_findVerifications"]),
 
     $on_rowClicked(row) {
       if (row.verification_id === this.selectedVerificationId) {
@@ -127,13 +127,13 @@ export default {
     },
     $_loadAsyncData(options = {}) {
       this.loading = true;
-      const { sort = false } = options;
+      const { sort = false } = options ?? {};
       let search = {
         ...this.searchOptions,
         ...(sort && this.sorter),
         page: this.page
       };
-      this.manager_findVerifications(search).then(result => {
+      this.creator_findVerifications(search).then(result => {
         this.loading = false;
         const { error, data } = result;
         if (error) {

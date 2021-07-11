@@ -1,0 +1,9 @@
+.field-info {
+  > * {
+    display: block;
+  }
+
+  &__label {
+    color: $grey;
+  }
+}

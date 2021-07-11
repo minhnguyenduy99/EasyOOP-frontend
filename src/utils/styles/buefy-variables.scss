@@ -76,6 +76,9 @@ $table-cell-padding: 1rem;
 $table-row-active-background-color: #dbdbdb80;
 $table-row-active-color: $text;
 
+// Tab
+$tabs-toggle-link-active-background-color: $primary;
+
 @import "~bulma";
 @import "~buefy/src/scss/buefy";
 @import "./utils.scss";
