@@ -4,7 +4,7 @@
       <div class="buttons">
         <b-button
           v-show="currentPage > 1"
-          type="is-primary-light"
+          type="is-primary"
           outlined
           class="is-icon-button"
           size="is-small"
@@ -13,7 +13,7 @@
         ></b-button>
         <b-button
           v-show="currentPage < pageCount"
-          type="is-primary-light"
+          type="is-primary"
           outlined
           class="is-icon-button"
           size="is-small"
@@ -56,7 +56,7 @@
       <div class="buttons">
         <b-button
           v-show="currentPage > 1"
-          type="is-primary-light"
+          type="is-primary"
           outlined
           class="is-icon-button"
           size="is-small"
@@ -65,7 +65,7 @@
         ></b-button>
         <b-button
           v-show="currentPage < pageCount"
-          type="is-primary-light"
+          type="is-primary"
           outlined
           class="is-icon-button"
           size="is-small"

@@ -39,6 +39,7 @@
             v-else-if="testResult"
             :testResult="testResult"
             :state="state"
+            :sessionId="sessionId"
             :selectedOrder.sync="selectedOrder"
             @result-saved="resultSaved = true"
           />
@@ -82,7 +83,10 @@ export default {
   },
   props: {
     testId: String,
-    sessionId: String
+    sessionId: {
+      type: String,
+      default: () => null
+    }
   },
   provide() {
     return {
@@ -113,19 +117,19 @@ export default {
     });
   },
   mounted: function() {
-    this.$_registerWindowUnloadEvent();
     if (this.sessionId) {
       this.$on("session-ended", this.$_getTestResultBySession);
       this.$endSession();
       return;
     }
+    this.$_registerWindowUnloadEvent();
     this.$on("session-ended", this.$on_sessionEnd);
   },
   beforeDestroy() {
     this.$_unregisterWindowUnloadEvent();
   },
   beforeRouteLeave: function(to, from, next) {
-    if (this.routeTo || this.isOnInit || this.resultSaved) {
+    if (this.routeTo || this.isLeavable) {
       next();
       return;
     }
@@ -150,7 +154,11 @@ export default {
       "currentPage",
       "pageCount",
       "totalAnswers"
-    ])
+    ]),
+
+    isLeavable() {
+      return this.isOnInit || this.resultSaved || !!this.sessionId;
+    }
   },
   methods: {
     ...mapActions("VIEWER_TEST", [
@@ -225,7 +233,7 @@ export default {
       window.removeEventListener("beforeunload", this.$_setupConfirmDialog);
     },
     $_setupConfirmDialog(e) {
-      if (this.isOnInit || this.resultSaved) {
+      if (this.isLeavable) {
         return;
       }
       e.preventDefault();
@@ -268,6 +276,6 @@ export default {
 
 #sticky-test-info {
   position: sticky;
-  top: 100px;
+  top: 70px;
 }
 </style>

@@ -11,6 +11,10 @@
           </div>
           <div>
             <div class="test-field">
+              <span class="test-field-label">Chủ đề: </span>
+              <span class="test-field-value">{{ test.topic_title }}</span>
+            </div>
+            <div class="test-field">
               <span class="test-field-label">Số lượng câu hỏi: </span>
               <span class="test-field-value">{{ numberOfSentences }}</span>
             </div>

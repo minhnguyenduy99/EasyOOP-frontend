@@ -87,11 +87,8 @@ export default {
     answer: -1
   }),
   mounted: function() {
-    if (this.showAnswer) {
-      this.answer = this.sentence.answer;
-      return;
-    }
-    this.answer = this.userAnswer?.user_answer ?? -1;
+    this.showAnswer && (this.answer = this.sentence.answer);
+    return;
   },
   computed: {
     questionOrderTitle() {
@@ -99,6 +96,12 @@ export default {
     }
   },
   watch: {
+    showAnswer(val) {
+      if (val) {
+        this.answer = this.sentence.answer;
+        return;
+      }
+    },
     answer(val, oldVal) {
       if (this.showAnswer) {
         this.answer = this.sentence.answer;

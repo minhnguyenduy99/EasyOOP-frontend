@@ -68,6 +68,10 @@ export default {
       type: Object,
       default: () => null
     },
+    sessionId: {
+      type: String,
+      default: () => null
+    },
     selectedOrder: Number
   },
   data: () => ({
@@ -91,6 +95,9 @@ export default {
     obtainedScoreText() {
       const { obtained_score, total_score } = this.testResult;
       return `${obtained_score} / ${total_score}`;
+    },
+    hasSession() {
+      return !!this.sessionId;
     }
   },
   watch: {
@@ -104,11 +111,14 @@ export default {
       if (!val) {
         return;
       }
-      this.$_saveTestResult();
+      this.$on_saveResultButtonClicked();
     }
   },
   methods: {
-    ...mapActions("VIEWER_TEST", ["viewer_createTestResult"]),
+    ...mapActions("VIEWER_TEST", [
+      "viewer_createTestResult",
+      "viewer_createTestResultBySession"
+    ]),
     $on_sentenceSelected(order) {
       const page = this.pageOfSentence(order);
       if (page === this.currentPage) {
@@ -128,6 +138,10 @@ export default {
     },
     $on_saveResultButtonClicked() {
       if (this.isAuthenticated) {
+        if (this.hasSession) {
+          this.$_saveTestResultBySession();
+          return;
+        }
         this.$_saveTestResult();
         return;
       }
@@ -159,6 +173,24 @@ export default {
           this.$emit("result-saved");
         }
       );
+    },
+    $_saveTestResultBySession() {
+      if (this.saved) {
+        return;
+      }
+      this.saveButtonLoading = true;
+      this.viewer_createTestResultBySession({
+        session_id: this.sessionId
+      }).then(result => {
+        this.saveButtonLoading = false;
+        const { error } = result;
+        if (error) {
+          return;
+        }
+        this.saved = true;
+        ToastNotifier.success(this.$buefy.toast, "Lưu kết quả thành công");
+        this.$emit("result-saved");
+      });
     }
   }
 };
