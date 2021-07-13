@@ -10,7 +10,7 @@
           Tạo câu hỏi mới
         </b-button>
       </template>
-      <div id="common-question-area">
+      <div>
         <div id="unused-tag-list" class="py-2 ha-vertical-layout-6">
           <div class="input-group ha-vertical-layout-7">
             <b-input
@@ -24,7 +24,8 @@
               >Tìm kiếm</b-button
             >
           </div>
-          <div class="buttons is-flex-grow-0">
+          <div>
+            <p class="mb-3 has-text-grey">Nhãn dán có sẵn</p>
             <tag-list
               headerless
               :tags="unusedTags"

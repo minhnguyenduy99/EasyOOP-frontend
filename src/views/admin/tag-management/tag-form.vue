@@ -60,7 +60,7 @@
             <b-tag
               v-for="(tag, index) in form.tags"
               :key="tag.tag_id"
-              type="is-primary-light"
+              type="is-primary-dark"
               closable
               size="is-medium"
               aria-close-label="Close tag"

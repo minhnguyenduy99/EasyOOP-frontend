@@ -13,9 +13,9 @@
         :class="['animated', 'faster', valid ? '' : 'headShake']"
         :message="errors[0]"
         :type="{
-          'is-primary': !errors && valid,
-          'is-danger': errors[0],
-          'is-success': valid
+          'is-primary': showValidateIcon && !errors && valid,
+          'is-danger': showValidateIcon && errors[0],
+          'is-success': showValidateIcon && valid
         }"
       >
         <slot></slot>
@@ -36,6 +36,12 @@ import { ValidationProvider } from "vee-validate";
 export default {
   name: "ValidatedFormElement",
   inheritAttrs: false,
+  props: {
+    showValidateIcon: {
+      type: Boolean,
+      default: () => true
+    }
+  },
   components: {
     ValidationProvider
   }

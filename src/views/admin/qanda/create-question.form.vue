@@ -34,8 +34,8 @@
       </validated-form-element>
       <validated-form-element
         name="answer"
-        rules="required"
         label="Câu trả lời"
+        :showValidateIcon="false"
       >
         <b-input type="textarea" v-model="form.answer" />
       </validated-form-element>

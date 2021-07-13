@@ -31,8 +31,25 @@
             <div class="is-size-6 has-text-weight-bold">
               {{ user.profile.display_name }}
             </div>
+            <div class="is-flex is-align-items-center mt-0">
+              <span class="has-text-grey is-size-7">ID</span>
+              <span
+                class="has-text-primary is-size-7 ml-2 is-clickable"
+                @click="$_copyUserID"
+                >{{ user.user_id }}</span
+              >
+              <!-- <b-button
+                inverted
+                size="is-small"
+                rounded
+                type="is-primary"
+                class="p-0 px-1"
+                @click="$_copyUserID"
+                >{{ user.user_id }}</b-button
+              > -->
+            </div>
             <b-button
-              class="mt-2"
+              class="mt-1"
               outlined
               rounded
               size="is-small"
@@ -103,6 +120,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { ToastNotifier } from "../../../utils";
 export default {
   name: "UserBadge",
   props: {
@@ -169,6 +187,16 @@ export default {
 
     $on_navigate(name) {
       this.$router.push({ name });
+    },
+
+    $_copyUserID() {
+      const el = document.createElement("textarea");
+      el.value = this.user?.user_id;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+      ToastNotifier.success(this.$buefy.toast, "Sao chép ID người dùng");
     }
   }
 };

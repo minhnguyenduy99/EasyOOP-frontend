@@ -1,7 +1,7 @@
 <template>
   <ValidationObserver tag="form" ref="validator" class="ha-vertical-layout-7">
     <div class="form-group-row-2">
-      <validated-form-element name="alias" rules="required" label="Alias">
+      <validated-form-element name="alias" rules="required" label="Biệt danh">
         <b-input v-model="form.alias" />
       </validated-form-element>
     </div>

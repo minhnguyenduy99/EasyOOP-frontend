@@ -10,7 +10,6 @@ export default ({
   }),
   layout: () => import("./layout"),
   props: route => {
-    console.log(route);
     const { layout = {} } = route.meta;
     const { headerTransition = false, paddingless = false } = layout;
     return {
