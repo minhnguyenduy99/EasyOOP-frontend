@@ -20,34 +20,32 @@
 <body>
   <!-- Messenger Chat Plugin Code -->
   <div id="fb-root"></div>
-
   <!-- Your Chat Plugin code -->
   <div id="fb-customer-chat" class="fb-customerchat">
   </div>
 
   <script>
     var chatbox = document.getElementById('fb-customer-chat');
-    chatbox.setAttribute("page_id", "101520228810049");
-    chatbox.setAttribute("attribution", "setup_tool");
+    chatbox.setAttribute("page_id", "103544971808546");
+    chatbox.setAttribute("attribution", "biz_inbox");
 
-    window.fbAsyncInit = function () {
+    window.fbAsyncInit = function() {
       FB.init({
-        xfbml: true,
-        version: 'v11.0'
+        appId: "559034045055548",
+        cookie: true,
+        xfbml            : true,
+        version          : 'v11.0'
       });
     };
 
-    (function (d, s, id) {
+    (function(d, s, id) {
       var js, fjs = d.getElementsByTagName(s)[0];
       if (d.getElementById(id)) return;
       js = d.createElement(s); js.id = id;
-      js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+      js.src = 'https://connect.facebook.net/vi_VN/sdk/xfbml.customerchat.js';
       fjs.parentNode.insertBefore(js, fjs);
     }(document, 'script', 'facebook-jssdk'));
   </script>
-  <script async defer crossorigin="anonymous"
-    src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v10.0&appId=264438068585260&autoLogAppEvents=1"
-    nonce="Lurfhsbm"></script>
   <noscript>
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
         Please enable it to continue.</strong>

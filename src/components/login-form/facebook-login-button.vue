@@ -36,7 +36,7 @@ export default {
     }
   },
   mounted: function() {
-    initFacebookSdk();
+    // initFacebookSdk();
   }
 };
 </script>
